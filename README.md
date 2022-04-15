@@ -1,6 +1,6 @@
 # ML Enablement Handson
 
-[![Open in SageMaker Studio Lab](https://studiolab.sagemaker.aws/studiolab.svg)](https://studiolab.sagemaker.aws/import/github/aws-studiolab-jp/aws-ml-enablement-handson/blob/main/notebooks/00_environment_setup.ipynb)
+[![Open in SageMaker Studio Lab](https://studiolab.sagemaker.aws/studiolab.svg)](https://studiolab.sagemaker.aws/import/github/aws-samples/aws-ml-enablement-handson/blob/main/notebooks/00_environment_setup.ipynb)
 [![security: bandit](https://img.shields.io/badge/security-bandit-yellow.svg)](https://github.com/PyCQA/bandit)
 
 機械学習モデルがビジネス価値に貢献するよう開発するための方法を学ぶためのハンズオン資料です。
