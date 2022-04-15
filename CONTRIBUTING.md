@@ -39,6 +39,13 @@ To send us a pull request, please:
 GitHub provides additional document on [forking a repository](https://help.github.com/articles/fork-a-repo/) and
 [creating a pull request](https://help.github.com/articles/creating-a-pull-request/).
 
+## Ask Questions and Share Knowledge
+
+We welcome you to ask questions about contents and share your knowledge in discussion.
+Please try to include as much information as you can. Details like these are incredibly useful:
+
+* The link to the content you ask.
+* The situation that you use this content.
 
 ## Finding contributions to work on
 Looking at the existing issues is a great way to find something to contribute on. As our projects, by default, use the default GitHub issue labels (enhancement/bug/duplicate/help wanted/invalid/question/wontfix), looking at any 'help wanted' issues is a great place to start.
