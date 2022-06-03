@@ -1,0 +1,10 @@
+name: ml-handson
+channels:
+  - conda-forge
+dependencies:
+  - python
+  - ipykernel
+  - ipython
+  - matplotlib
+  - pandas
+  - scikit-learn
