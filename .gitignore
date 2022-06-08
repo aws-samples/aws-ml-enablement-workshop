@@ -130,3 +130,4 @@ dmypy.json
 
 data/
 model/
+notebooks/environment_handson.yml
