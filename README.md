@@ -22,6 +22,8 @@
 
 (Comming Soon)
 
+[Issue](https://github.com/aws-samples/aws-ml-enablement-handson/issues/new?assignees=&labels=enhancement&template=case-study.md&title=)から、ハンズオンを利用した事例をご連絡ください！
+
 ## Contribution
 
 ハンズオンコンテンツについてのご要望や質問を歓迎します！事前に [CONTRIBUTING](CONTRIBUTING.md#security-issue-notifications)に目を通して頂ければ幸いです。

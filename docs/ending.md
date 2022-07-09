@@ -33,4 +33,4 @@
 1. 学んだ内容を活かし、プロダクトマネージャーやデータサイエンティストらと機械学習の活用方法についてディスカッションしましょう。[Event Storming](https://www.eventstorming.com/)は関係者を一堂に会し要件を話し合うのに適した手法です。
    * AWSよりワークショップを準備中です。
 2. データサイエンティストがまだプロジェクトにいない場合、機械学習の知識を補完しながらモデルの開発にチャレンジしましょう。[awesome-studio-lab-jp](https://github.com/aws-sagemaker-jp/awesome-studio-lab-jp)に学習リソースが揃っています。
-3. ハンズオンを通じて得られた学びを社内外で共有しましょう。`Customer Cases`への掲載依頼をお待ちしています！
+3. ハンズオンを通じて得られた学びを社内外で共有しましょう。[`Customer Cases`への掲載依頼](https://github.com/aws-samples/aws-ml-enablement-handson/issues/new?assignees=&labels=enhancement&template=case-study.md&title=)をお待ちしています！
