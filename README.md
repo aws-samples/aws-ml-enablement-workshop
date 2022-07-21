@@ -2,9 +2,28 @@
 
 [![security: bandit](https://img.shields.io/badge/security-bandit-yellow.svg)](https://github.com/PyCQA/bandit)
 
-機械学習モデルをビジネス価値に貢献するよう開発する方法を学ぶことができるハンズオンです。
+機械学習モデルをビジネス価値に貢献するよう開発する方法を学ぶことができるハンズオンです。次の3つの特徴があります。
 
-## 目次
+:dart: **Practical**
+* プロジェクトの立ち上げフェーズで行う価値定義の方法から解説([Business Understanding](https://studiolab.sagemaker.aws/import/github/aws-samples/aws-ml-enablement-handson/blob/main/notebooks/01_business_understanding.ipynb))。
+* データの分析からテストまで各工程で必要となるPythonの基本的な実装を学習可能(例: [Analyze](https://studiolab.sagemaker.aws/import/github/aws-samples/aws-ml-enablement-handson/blob/main/notebooks/02_analyze.ipynb), [Preprocess](https://studiolab.sagemaker.aws/import/github/aws-samples/aws-ml-enablement-handson/blob/main/notebooks/04_preprocess.ipynb))。
+* 実プロジェクトで欠かせない異なるロール間のコミュニケーション方法を演習を通じ学習可能。
+
+:bulb: **Understandable**
+
+* なにをするのか、なぜするのか、どうおこなうのか、順を追って工程の必然性を解説。
+* Jupyter Notebookによるインタラクティブに学べる教材。
+* YouTube動画による講義コンテンツを提供(例: [機械学習の価値を計算する](https://youtu.be/csiMBxUkAEc))。
+
+:octocat: **Open Source**
+
+* GitHubでOSSとして教材を公開。
+* ハンズオンに使用する[SageMaker Studio Lab](https://studiolab.sagemaker.aws/)も無料で利用いただけます。
+* ライセンスの範囲でForkし編集して利用いただけます。
+
+## Get Started
+
+目次のNo.1から順に進めていくことで各開発プロセスでなにを行うのか、なぜ行うのか、どう行うのかを学ぶことができます。
 
 |No   |Process|Title|Content|Video|
 |:----|:------|:----|:----|:----|
@@ -24,7 +43,7 @@
 
 [Issue](https://github.com/aws-samples/aws-ml-enablement-handson/issues/new?assignees=&labels=enhancement&template=case-study.md&title=)から、ハンズオンを利用した事例をご連絡ください！
 
-## Contribution
+## Support
 
 ハンズオンコンテンツについてのご要望や質問を歓迎します！事前に [CONTRIBUTING](CONTRIBUTING.md#security-issue-notifications)に目を通して頂ければ幸いです。
 
@@ -33,6 +52,6 @@
 * セキュリティに関するご連絡: [CONTRIBUTING](CONTRIBUTING.md#security-issue-notifications)
 
 
-## ライセンス
+## LICENSE
 
 [MIT-0 License](LICENSE)
