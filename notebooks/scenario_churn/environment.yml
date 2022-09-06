@@ -1,0 +1,15 @@
+name: ml-handson-churn
+channels:
+  - conda-forge
+dependencies:
+  - python
+  - ipykernel
+  - ipython
+  - matplotlib
+  - pandas
+  - jinja2
+  - scikit-learn
+  - boto3
+  - sagemaker
+  - awscli
+  - xgboost
