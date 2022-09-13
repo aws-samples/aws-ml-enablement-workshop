@@ -41,7 +41,7 @@
 
 実践的なビジネス課題を題材に機械学習モデル開発プロジェクトの進め方を体験できます。
 
-* [顧客離反分析シナリオ](notebooks/scenario_churn)
+* [サービスの解約率改善シナリオ](notebooks/scenario_churn)
 
 ## Customer Use Cases
 
