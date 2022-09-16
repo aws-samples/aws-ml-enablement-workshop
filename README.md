@@ -1,8 +1,8 @@
-# ML Enablement Handson
+# ML Enablement Workshop
 
 [![security: bandit](https://img.shields.io/badge/security-bandit-yellow.svg)](https://github.com/PyCQA/bandit)
 
-機械学習モデルをビジネス価値に貢献するよう開発する方法を学ぶことができるハンズオンです。次の3つの特徴があります。
+機械学習モデルをビジネス価値に貢献するよう開発する方法を学ぶことができるワークショップです。次の3つの特徴があります。
 
 :dart: **Practical**
 * プロジェクトの立ち上げフェーズで行う価値定義の方法から解説([Business Understanding](https://studiolab.sagemaker.aws/import/github/aws-samples/aws-ml-enablement-handson/blob/main/notebooks/01_business_understanding.ipynb))。
@@ -36,6 +36,12 @@
 |7    |Train|機械学習モデルを学習する|[![Open in SageMaker Studio Lab](https://studiolab.sagemaker.aws/studiolab.svg)](https://studiolab.sagemaker.aws/import/github/aws-samples/aws-ml-enablement-handson/blob/main/notebooks/05_train.ipynb)|(Comming Soon)|
 |8    |Test|機械学習モデルを評価する|[![Open in SageMaker Studio Lab](https://studiolab.sagemaker.aws/studiolab.svg)](https://studiolab.sagemaker.aws/import/github/aws-samples/aws-ml-enablement-handson/blob/main/notebooks/06_test.ipynb)|(Comming Soon)|
 |9    |Ending|機械学習モデルの開発から運用へ|[![Markdown](https://img.shields.io/badge/markdown-%23000000.svg?style=for-the-badge&logo=markdown&logoColor=white)](docs/ending.md)|(Comming Soon)|
+
+### Scenarios
+
+実践的なビジネス課題を題材に機械学習モデル開発プロジェクトの進め方を体験できます。
+
+* [サービスの解約率改善シナリオ](notebooks/scenario_churn)
 
 ## Customer Use Cases
 
