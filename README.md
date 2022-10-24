@@ -5,24 +5,35 @@
 機械学習モデルをビジネス価値に貢献するよう開発する方法を学ぶことができるワークショップです。次の3つの特徴があります。
 
 :dart: **Practical**
-* プロジェクトの立ち上げフェーズで行う価値定義の方法から解説([Business Understanding](https://studiolab.sagemaker.aws/import/github/aws-samples/aws-ml-enablement-handson/blob/main/notebooks/01_business_understanding.ipynb))。
-* データの分析からテストまで各工程で必要となるPythonの基本的な実装を学習可能(例: [Analyze](https://studiolab.sagemaker.aws/import/github/aws-samples/aws-ml-enablement-handson/blob/main/notebooks/02_analyze.ipynb), [Preprocess](https://studiolab.sagemaker.aws/import/github/aws-samples/aws-ml-enablement-handson/blob/main/notebooks/04_preprocess.ipynb))。
-* 実プロジェクトで欠かせない異なるロール間のコミュニケーション方法を演習を通じ学習可能。
+* プロダクトの機能を決定するプロダクトマネージャーが機械学習を理解できるよう、機械学習の解説資料を提供。開発者向けハンズオンでも、プロジェクトの立ち上げフェーズで行う価値定義の方法から解説([Business Understanding](https://studiolab.sagemaker.aws/import/github/aws-samples/aws-ml-enablement-handson/blob/main/notebooks/01_business_understanding.ipynb))。
+* 実際のプロジェクトで欠かせない異なるロール間のコミュニケーションを醸成するため、関係者を集め機械学習のユースケースを発見するアイデアソンの資料を提供。開発者向けハンズオンでも、他のロールとコミュニケーションをとるための演習を提供。
+* ハンズオンでは、データの分析からテストまで各工程で必要となるPythonの基本的な実装を学習可能(例: [Analyze](https://studiolab.sagemaker.aws/import/github/aws-samples/aws-ml-enablement-handson/blob/main/notebooks/02_analyze.ipynb), [Preprocess](https://studiolab.sagemaker.aws/import/github/aws-samples/aws-ml-enablement-handson/blob/main/notebooks/04_preprocess.ipynb))。
 
 :bulb: **Understandable**
 
-* なにをするのか、なぜするのか、どうおこなうのか、順を追って工程の必然性を解説。
-* Jupyter Notebookによるインタラクティブに学べる教材。
-* YouTube動画による講義コンテンツを提供(例: [機械学習の価値を計算する](https://youtu.be/csiMBxUkAEc))。
+* プロダクトマネージャーにはプロダクトマネージャー向け、開発者には開発者向けと、ロールごとの前提知識と関心事項に分けた資料を提供。
+* ハンズオンでは、なにをするのか、なぜするのか、どうおこなうのか、順を追って工程の必然性を解説。
+* YouTube動画による講義コンテンツを提供(例: [機械学習の価値を計算する](https://youtu.be/csiMBxUkAEc))。好きな時に好きな箇所を学ぶことができる。
 
 :octocat: **Open Source**
 
 * GitHubでOSSとして教材を公開。
-* ハンズオンに使用する[SageMaker Studio Lab](https://studiolab.sagemaker.aws/)も無料で利用いただけます。
-* ライセンスの範囲でForkし編集して利用いただけます。
+* ハンズオンに使用する[SageMaker Studio Lab](https://studiolab.sagemaker.aws/)も無料で利用が可能。
+* ライセンスの範囲でForkし編集して利用が可能。
 
-## Get Started
+## Machine Learning for Product Manager
 
+プロダクトマネージャー様向けの機械学習のインプット資料です。
+
+|No   |Title|Content|
+|:----|:----|:----|
+|1    |MLの入門| [機械学習の仕組み、強みと弱み、適用事例などを解説](docs/presentations/ml-enablement-workshop-module1.pdf)   ![ml-enablement-workshop-module1.png](docs/images/ml-enablement-workshop-module1.png) |
+|2    |MLプロジェクトの計画 | [機械学習プロジェクトの進め方と、機械学習採用の判断基準を解説](docs/presentations/ml-enablement-workshop-module2.pdf) ![ml-enablement-workshop-module2.png](docs/images/ml-enablement-workshop-module2.png)
+|3    | ML活用組織へのシフト|[機械学習を推進するための組織とリーダーシップについて解説](docs/presentations/ml-enablement-workshop-module3.pdf) ![ml-enablement-workshop-module3.png](docs/images/ml-enablement-workshop-module3.png)      |
+
+## Hands-on for Engineer
+
+開発者様向けの機械学習ハンズオン資料です。
 目次のNo.1から順に進めていくことで各開発プロセスでなにを行うのか、なぜ行うのか、どう行うのかを学ぶことができます。
 
 |No   |Process|Title|Content|Video|
@@ -42,6 +53,12 @@
 実践的なビジネス課題を題材に機械学習モデル開発プロジェクトの進め方を体験できます。
 
 * [サービスの解約率改善シナリオ](notebooks/scenario_churn)
+
+## Ideathon for All
+
+プロダクトマネージャー、開発者、データサイエンティストの3者でユーザーの業務と課題を理解し、機械学習のユースケースを発見するアイデアソンを実施するための資料です。
+
+(Comming Soon)
 
 ## Customer Use Cases
 
