@@ -27,9 +27,9 @@
 
 |No   |Title|Content|
 |:----|:----|:----|
-|1    |MLの入門| [機械学習の仕組み、強みと弱み、適用事例などを解説](docs/presentations/ml-enablement-workshop-module1.pdf)   ![ml-enablement-workshop-module1.png](docs/images/ml-enablement-workshop-module1.png) |
-|2    |MLプロジェクトの計画 | [機械学習プロジェクトの進め方と、機械学習採用の判断基準を解説](docs/presentations/ml-enablement-workshop-module2.pdf) ![ml-enablement-workshop-module2.png](docs/images/ml-enablement-workshop-module2.png)
-|3    | ML活用組織へのシフト|[機械学習を推進するための組織とリーダーシップについて解説](docs/presentations/ml-enablement-workshop-module3.pdf) ![ml-enablement-workshop-module3.png](docs/images/ml-enablement-workshop-module3.png)      |
+|1    |MLの入門| [機械学習の仕組み、強みと弱み、適用事例などを解説 ![ml-enablement-workshop-module1.png](docs/images/ml-enablement-workshop-module1.png)](docs/presentations/ml-enablement-workshop-module1.pdf)  |
+|2    |MLプロジェクトの計画 | [機械学習プロジェクトの進め方と、機械学習採用の判断基準を解説 ![ml-enablement-workshop-module2.png](docs/images/ml-enablement-workshop-module2.png)](docs/presentations/ml-enablement-workshop-module2.pdf)
+|3    | ML活用組織へのシフト|[機械学習を推進するための組織とリーダーシップについて解説 ![ml-enablement-workshop-module3.png](docs/images/ml-enablement-workshop-module3.png)](docs/presentations/ml-enablement-workshop-module3.pdf) |
 
 ## Hands-on for Engineer
 
