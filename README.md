@@ -46,8 +46,8 @@
 |No   |Title|Content|
 |:----|:----|:----|
 |4    |アイデアソン解説(Day1用)| [アイデアソンの進め方を解説 ![ml-enablement-workshop-ideathon-day1.png](docs/images/ml-enablement-workshop-ideathon-day1.png)](docs/presentations/ml-enablement-workshop-ideathon-day1.pdf)  |
-|5    |Event Storming演習 | [目覚まし時計の例でEvent Stormingを体験 ![event-storming-board.png](docs/images/event-storming-board.png)](https://miro.com/app/board/uXjVOq7OXDo=/?share_link_id=645601919622) ※リンク先のボードをコピーして使用してください ![event-storming-board-copy.png](docs/images/event-storming-board-copy.png) |
-|6    |ユースケースリスト化 | [ML Usecase Discovery Worksheetでユーザーとユーザーの課題を切り口に、ユースケースをリストアップして優先順位付けと機械学習の適用可能性を評価してください ![ml-usecase-discovery-worksheet.png](docs/images/ml-usecase-discovery-worksheet.png)](docs/presentations/ML_Usecase_Discovery_Worksheet.xlsx) |
+|5    |Event Storming演習 | [目覚まし時計の例でEvent Stormingを体験 (※リンク先のボードをコピーして使用してください) ![event-storming-board.png](docs/images/event-storming-board.png)](https://miro.com/app/board/uXjVOq7OXDo=/?share_link_id=645601919622) ![event-storming-board-copy.png](docs/images/event-storming-board-copy.png) |
+|6    |ユースケースリスト化 | [ML Usecase Discovery Worksheetでユーザーとユーザーの課題を切り口に、ユースケースをリストアップして優先順位付けと機械学習の適用可能性を評価してください  ![ml-usecase-discovery-worksheet.png](docs/images/ml-usecase-discovery-worksheet.png)](docs/presentations/ML_Usecase_Discovery_Worksheet.xlsx) |
  
 
 ## Day2: ハンズオン
@@ -79,10 +79,10 @@
 
 |No   |Title|Content|
 |:----|:----|:----|
-|1    | Event Storming準備 | [アイデアソンで使用するEvent Stormingのボードを準備します ![event-storming-board.png](docs/images/event-storming-board.png)](https://miro.com/app/board/uXjVOq7OXDo=/?share_link_id=645601919622) ※リンク先のボードをコピーして使用してください ![event-storming-board-copy.png](docs/images/event-storming-board-copy.png) |
+|1    | Event Storming準備 | [アイデアソンで使用するEvent Stormingのボードを準備します(※リンク先のボードをコピーして使用してください) ![event-storming-board.png](docs/images/event-storming-board.png)](https://miro.com/app/board/uXjVOq7OXDo=/?share_link_id=645601919622) ![event-storming-board-copy.png](docs/images/event-storming-board-copy.png) |
 |2    |アイデアソン: 前半| [アイデアソンの進め方を解説し、現状のユーザーの業務、課題、プロダクトのアプローチを整理 ![ml-enablement-workshop-ideathon-day3-1.png](docs/images/ml-enablement-workshop-ideathon-day3-1.png)](docs/presentations/ml-enablement-workshop-ideathon-day3.pdf)  |
 |3    |アイデアソン: 後半| [機械学習が有効なユースケースの特定とアプローチ方法の定義 ![ml-enablement-workshop-ideathon-day3-2.png](docs/images/ml-enablement-workshop-ideathon-day3-2.png)](docs/presentations/ml-enablement-workshop-ideathon-day3.pdf)  |
-|4    |ユースケース評価 | [ML Usecase Discovery Worksheetのユースケースに、Event Stormingで検証した価値、また実現のための課題を反映します。![ml-usecase-discovery-worksheet-2.png](docs/images/ml-usecase-discovery-worksheet-2.png)](docs/presentations/ML_Usecase_Discovery_Worksheet.xlsx) |
+|4    |ユースケース評価 | [ユースケースに、Event Stormingで検証した価値、また実現のための課題を反映します。![ml-usecase-discovery-worksheet-2.png](docs/images/ml-usecase-discovery-worksheet-2.png)](docs/presentations/ML_Usecase_Discovery_Worksheet.xlsx) |
 
 
 ## 活用事例
