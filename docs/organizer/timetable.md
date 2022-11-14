@@ -19,8 +19,8 @@
 |13:00|2 時間|機械学習のインプット|インプット資料の説明 ([module 1 ~ 3](https://github.com/aws-samples/aws-ml-enablement-workshop/tree/main/docs/presentations))|
 |15:00|15 分|休憩||
 |15:15|1 時間|Event Storming の理解・実践|Day 1 用アイデアソン資料(Coming Soon)の説明|
-|16:15|1 時間 15 分|休憩||
-|17:30|1 時間|Day 3 に向けたチームディスカッション|ML Usecase Discovery Worksheet(Coming Soon)を使い、Day 3 でフォーカスする業務を特定する|
+|16:15|15 分|休憩||
+|16:30|1 時間|Day 3 に向けたチームディスカッション|ML Usecase Discovery Worksheet(Coming Soon)を使い、Day 3 でフォーカスする業務を特定する|
 
 ## Day 2
 
