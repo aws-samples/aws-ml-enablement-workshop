@@ -20,7 +20,7 @@
 |15:00|15 分|休憩||
 |15:15|1 時間|Event Storming の理解・実践|Day 1 用アイデアソン資料(Coming Soon)の説明|
 |16:15|15 分|休憩||
-|16:30|1 時間|Day 3 に向けたチームディスカッション|ML Usecase Discovery Worksheet(Coming Soon)を使い、Day 3 でフォーカスする業務を特定する|
+|16:30|1 時間 30 分|Day 3 に向けたチームディスカッション|ML Usecase Discovery Worksheet(Coming Soon)を使い、Day 3 でフォーカスする業務を特定する|
 
 ## Day 2
 
