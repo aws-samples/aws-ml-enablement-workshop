@@ -5,4 +5,5 @@
 * [開催の要件確認](requirements.md)
 * [開催者のタスク](tasks.md)
 * [ワークショップのタイムテーブル例](timetable.md)
+* [ワークショップの進め方ガイド](guide.md)
 * [FAQ](faq.md)

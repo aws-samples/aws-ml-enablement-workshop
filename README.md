@@ -2,20 +2,31 @@
 
 [![security: bandit](https://img.shields.io/badge/security-bandit-yellow.svg)](https://github.com/PyCQA/bandit)
 
-プロダクトを開発するチームが、**課題解決の選択肢として機械学習を選択できるようになること**をゴールとしたワークショップです。ワークショップは3部構成となっています。
+プロダクトを開発するチームが、**課題解決の選択肢として機械学習を選択できるようになること**をゴールとしたワークショップです。
 
-1. 機械学習インプット(プロダクトマネージャ向け)
-2. ハンズオン(開発者向け)
-3. アイデアソン
+:books: **ML Enablement Workshop Content**
 
-3部構成のコンテンツは、機械学習プロジェクトをはじめるときに直面する3つの課題をそれぞれ解決するために作成されています。
+ワークショップは3部構成となっています。
 
-🌧️ **Machine Learning Project Problems**
-1. プロダクトマネージャーが機械学習を十分理解しておらず、機械学習を用いたプロダクト機能を発案できない。
+1. [Day1: 機械学習インプット](https://github.com/aws-samples/aws-ml-enablement-workshop#day1-%E6%A9%9F%E6%A2%B0%E5%AD%A6%E7%BF%92%E3%82%A4%E3%83%B3%E3%83%97%E3%83%83%E3%83%88)
+2. [Day2: ハンズオン](https://github.com/aws-samples/aws-ml-enablement-workshop#day2-%E3%83%8F%E3%83%B3%E3%82%BA%E3%82%AA%E3%83%B3)
+3. [Day3: アイデアソン](https://github.com/aws-samples/aws-ml-enablement-workshop#day3-%E3%82%A2%E3%82%A4%E3%83%87%E3%82%A2%E3%82%BD%E3%83%B3)
+
+
+:gift: **ML Enablement Workshop Benefit**
+
+3部構成のコンテンツは、機械学習をプロダクトで活用する時の3つの課題をそれぞれ解決するために作成されています。
+
+1. プロダクトマネージャーが機械学習を十分理解しておらず、機械学習を用いた機能を発案できない。
+   * Day1ではプロダクトマネージャーを対象に機械学習に取り組む動機、計画の立て方、組織作りなどを解説します。
 2. 開発エンジニアに機械学習の知見がなく、研究開発部門から手取り足取りの支援が必要。
+   * Day2では開発者を対象に機械学習の実装に必要なプログラミングとプロジェクトを推進するためのコミュニケーションを学びます。
 3. 研究開発部門がユーザー課題を認識できておらず、機械学習活用の適切な提案ができない。
+   * Day3ではプロダクトマネージャー、開発者、研究開発者3者が集まりユーザーの課題を起点に機械学習の利用が適切なユースケースを発見します。
 
-**実践的**、**わかりやすい**、**無料**であることがコンテンツの特徴です。
+ :rocket: **ML Enablement Workshop Feature**
+
+**実践的**、**わかりやすい**、**無料**であることがML Enablement Workshopの特徴です。
 
 * :dart: **実践的**
    * 機械学習インプット、ハンズオンではビジネスゴールの設定方法から解説([Business Understanding](https://youtu.be/csiMBxUkAEc))。
@@ -28,7 +39,7 @@
 * :octocat: **無料**
    * GitHubでOSSとして教材を公開。
    * ハンズオンに使用する[SageMaker Studio Lab](https://studiolab.sagemaker.aws/)も無料で利用が可能。
-   * ライセンスの範囲でForkし編集して利用が可能。
+   * ライセンスの範囲で自由に利用が可能。教材を使用した[ワークショップを開催するためのガイド](https://github.com/aws-samples/aws-ml-enablement-workshop#%E9%96%8B%E5%82%AC%E8%80%85%E5%90%91%E3%81%91%E3%82%AC%E3%82%A4%E3%83%89)も提供。
 
 ## Day1: 機械学習インプット
 
@@ -71,7 +82,7 @@
 
 * [サービスの解約率改善シナリオ](notebooks/scenario_churn)
 
-## アイデアソン
+## Day3: アイデアソン
 
 プロダクトマネージャー、開発者、データサイエンティストの3者でユーザーの業務と課題を理解し、機械学習のユースケースを発見するアイデアソンを実施するための資料です。
 
