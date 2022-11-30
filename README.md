@@ -32,23 +32,21 @@
 
 ## Day1: 機械学習インプット
 
-プロダクトマネージャーの方に機械学習を理解いただくため、機械学習の入門、プロジェクト計画、機械学習を活用できる組織へのシフト方法の3つを解説します。
+プロダクトマネージャーの方に機械学習を理解いただくため、機械学習の入門、プロジェクト計画、機械学習を活用できる組織へのシフト方法の3つを解説します。動画は[YouTubeの再生リストから視聴できます](https://www.youtube.com/playlist?list=PLAOq15s3RbuL5p1v3bSuWr_QVgCBW5wUG)。
 
-|No   |Title|Content|
-|:----|:----|:----|
-|1    |MLの入門| [機械学習の仕組み、強みと弱み、適用事例などを解説 ![ml-enablement-workshop-module1.png](docs/images/ml-enablement-workshop-module1.png)](docs/presentations/ml-enablement-workshop-module1.pdf)  |
-|2    |MLプロジェクトの計画 | [機械学習プロジェクトの進め方と、機械学習採用の判断基準を解説 ![ml-enablement-workshop-module2.png](docs/images/ml-enablement-workshop-module2.png)](docs/presentations/ml-enablement-workshop-module2.pdf)
-|3    | ML活用組織へのシフト|[機械学習を推進するための組織とリーダーシップについて解説 ![ml-enablement-workshop-module3.png](docs/images/ml-enablement-workshop-module3.png)](docs/presentations/ml-enablement-workshop-module3.pdf) |
-
+|No   |Title|Content| Video |
+|:----|:----|:----|:----|
+|1    |MLの入門| [機械学習の仕組み、事例、制約などを解説 ![ml-enablement-workshop-module1.png](docs/images/ml-enablement-workshop-module1.png)](docs/presentations/ml-enablement-workshop-module1.pdf)  | [![YouTube](https://img.shields.io/badge/YouTube-%23FF0000.svg?style=for-the-badge&logo=YouTube&logoColor=white)](https://youtu.be/1aX2Tf1SelE) |
+|2    |MLプロジェクトの計画 | [ユースケースの発見方法と要件の確認方法を解説 ![ml-enablement-workshop-module2.png](docs/images/ml-enablement-workshop-module2.png)](docs/presentations/ml-enablement-workshop-module2.pdf)| [![YouTube](https://img.shields.io/badge/YouTube-%23FF0000.svg?style=for-the-badge&logo=YouTube&logoColor=white)](https://youtu.be/Tj-RDb9Yd_U) |
+|3    | ML活用組織へのシフト|[機械学習を推進するための組織戦略を解説 ![ml-enablement-workshop-module3.png](docs/images/ml-enablement-workshop-module3.png)](docs/presentations/ml-enablement-workshop-module3.pdf) | [![YouTube](https://img.shields.io/badge/YouTube-%23FF0000.svg?style=for-the-badge&logo=YouTube&logoColor=white)](https://youtu.be/MQ1hgZ6qE_8) |
 
 プロダクトマネージャーの方は、アイデアソンでユーザーの業務と課題を開発者とデータサイエンティストにEvent Stormingで効果的に伝えて頂きます。当日ファシリテートができるよう、Event Stormingについて解説します。
 
-|No   |Title|Content|
-|:----|:----|:----|
-|4    |アイデアソン解説(Day1用)| [アイデアソンの進め方を解説 ![ml-enablement-workshop-ideathon-day1.png](docs/images/ml-enablement-workshop-ideathon-day1.png)](docs/presentations/ml-enablement-workshop-ideathon-day1.pdf)  |
-|5    |Event Storming演習 | [目覚まし時計の例でEvent Stormingを体験 (※リンク先のボードをコピーして使用してください) ![event-storming-board.png](docs/images/event-storming-board.png)](https://miro.com/app/board/uXjVOq7OXDo=/?share_link_id=645601919622) ![event-storming-board-copy.png](docs/images/event-storming-board-copy.png) |
-|6    |ユースケースリスト化 | [ML Usecase Discovery Worksheetでユーザーとユーザーの課題を切り口に、ユースケースをリストアップして優先順位付けと機械学習の適用可能性を評価してください  ![ml-usecase-discovery-worksheet.png](docs/images/ml-usecase-discovery-worksheet.png)](docs/presentations/ML_Usecase_Discovery_Worksheet.xlsx) |
- 
+|No   |Title|Content| Video |
+|:----|:----|:----|:----|
+|4    |アイデアソン解説(Day1用)| [アイデアソンで使用するEvent Stormingを解説 ![ml-enablement-workshop-ideathon-day1.png](docs/images/ml-enablement-workshop-ideathon-day1.png)](docs/presentations/ml-enablement-workshop-ideathon-day1.pdf)  | [![YouTube](https://img.shields.io/badge/YouTube-%23FF0000.svg?style=for-the-badge&logo=YouTube&logoColor=white)](https://youtu.be/FCjAl_Nnsa0) |
+|5    |Event Storming演習 | [目覚まし時計の例でEvent Stormingを実践 ![event-storming-board.png](docs/images/event-storming-board.png)](https://miro.com/app/board/uXjVOq7OXDo=/?share_link_id=645601919622) |  |
+|6    |ユースケースリスト化 | [ML Usecase Discovery Worksheetでユースケースを洗い出す ![ml-usecase-discovery-worksheet.png](docs/images/ml-usecase-discovery-worksheet.png)](docs/presentations/ML_Usecase_Discovery_Worksheet.xlsx) |  |
 
 ## Day2: ハンズオン
 
