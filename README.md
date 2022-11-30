@@ -45,7 +45,7 @@
 |No   |Title|Content| Video |
 |:----|:----|:----|:----|
 |4    |アイデアソン解説(Day1用)| [アイデアソンで使用するEvent Stormingを解説 ![ml-enablement-workshop-ideathon-day1.png](docs/images/ml-enablement-workshop-ideathon-day1.png)](docs/presentations/ml-enablement-workshop-ideathon-day1.pdf)  | [![YouTube](https://img.shields.io/badge/YouTube-%23FF0000.svg?style=for-the-badge&logo=YouTube&logoColor=white)](https://youtu.be/FCjAl_Nnsa0) |
-|5    |Event Storming演習 | [目覚まし時計の例でEvent Stormingを実践 ![event-storming-board.png](docs/images/event-storming-board.png)](https://miro.com/app/board/uXjVOq7OXDo=/?share_link_id=645601919622) ![event-storming-board-copy.png](docs/images/event-storming-board-copy.png) |  |
+|5    |Event Storming演習 | [目覚まし時計の例でEvent Stormingを実践 ![event-storming-board.png](docs/images/event-storming-board.png)](https://miro.com/app/board/uXjVOq7OXDo=/?share_link_id=645601919622) |  |
 |6    |ユースケースリスト化 | [ML Usecase Discovery Worksheetでユースケースを洗い出す ![ml-usecase-discovery-worksheet.png](docs/images/ml-usecase-discovery-worksheet.png)](docs/presentations/ML_Usecase_Discovery_Worksheet.xlsx) |  |
 
 ## Day2: ハンズオン
