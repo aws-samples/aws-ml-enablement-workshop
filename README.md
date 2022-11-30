@@ -46,7 +46,7 @@
 |:----|:----|:----|:----|
 |4    |アイデアソン解説(Day1用)| [アイデアソンで使用するEvent Stormingを解説 ![ml-enablement-workshop-ideathon-day1.png](docs/images/ml-enablement-workshop-ideathon-day1.png)](docs/presentations/ml-enablement-workshop-ideathon-day1.pdf)  | [![YouTube](https://img.shields.io/badge/YouTube-%23FF0000.svg?style=for-the-badge&logo=YouTube&logoColor=white)](https://youtu.be/FCjAl_Nnsa0) |
 |5    |Event Storming演習 | [目覚まし時計の例でEvent Stormingを実践 ![event-storming-board.png](docs/images/event-storming-board.png)](https://miro.com/app/board/uXjVOq7OXDo=/?share_link_id=645601919622) |  |
-|6    |ユースケースリスト化 | [ML Usecase Discovery Worksheetでユースケースを洗い出す ![ml-usecase-discovery-worksheet.png](docs/images/ml-usecase-discovery-worksheet.png)](docs/presentations/ML_Usecase_Discovery_Worksheet.xlsx) |  |
+|6    |個社ワーク | [ML Usecase Discovery Worksheetでユースケースを洗い出す等 ![ml-usecase-discovery-worksheet.png](docs/images/ml-usecase-discovery-worksheet.png)](docs/presentations/ML_Usecase_Discovery_Worksheet.xlsx) |  |
 
 ## Day2: ハンズオン
 
@@ -91,6 +91,15 @@
    * マネーフォワードでは 「Money Forwardクラウド」 の中長期の重要テーマとしてバックオフィス業務の自動・自律化を目指す 「Autonomous Backoffice」 を標榜し、AI 活用の取組みを進めています。推進するうえでの課題や課題に対する取組み、今後の展望についてお伝えするとともに、AI ユースケース創出のための取組みとして、AWS 支援による PdM を対象としたワークショップについてもご紹介します。
 
 活用頂いた事例を掲載頂ける場合は、[Issue](https://github.com/aws-samples/aws-ml-enablement-handson/issues/new?assignees=&labels=enhancement&template=case-study.md&title=)よりご連絡ください。
+
+## 開催者向けガイド
+
+ML Enablement Workshopの教材を利用して、社内でワークショップを開催頂くことができます。
+
+[開催者向けガイド](docs/organizer)
+
+* [ライセンス](LICENSE)に従い、著作権者であるAWSを明記を頂くと共に著作権法に定める引用の要件を満たすようご利用ください。
+* AWS以外の個人や法人が「ML Enablement Workshop」の名称もしくは同一とみなされる名称でワークショップを開催することを禁止します。お客様の混乱を防ぐための措置で、ご理解をお願い致します。
 
 ## Contribution
 
