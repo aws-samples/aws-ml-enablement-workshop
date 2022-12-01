@@ -18,11 +18,10 @@ ML Enablement Workshop開催者に向けて、 Day 1 ~ 3 のタイムテーブ�
 
 |進行時間|所要時間|次第|内容|
 |:--|:--|:--|:--|
-|13:00|2 時間| 機械学習のインプット| No1~3を実施 ( [Module1](https://github.com/aws-samples/aws-ml-enablement-workshop/blob/main/docs/presentations/ml-enablement-workshop-module1.pdf), [Module2](https://github.com/aws-samples/aws-ml-enablement-workshop/blob/main/docs/presentations/ml-enablement-workshop-module2.pdf), [Module3](https://github.com/aws-samples/aws-ml-enablement-workshop/blob/main/docs/presentations/ml-enablement-workshop-module3.pdf) ) |
-|15:00|15 分|休憩||
-|15:15|1 時間|Event Storming の理解・実践| No4~5 を実施 ([Day1 用アイデアソン説明資料](https://github.com/aws-samples/aws-ml-enablement-workshop/blob/main/docs/presentations/ml-enablement-workshop-ideathon-day1.pdf)の  Event Storming 演習まで) |
-|16:15|15 分|休憩||
-|16:30|1 時間 30 分| Day 3 に向けた個社ワーク。|No6 を実施 ([Day1 用アイデアソン説明資料](https://github.com/aws-samples/aws-ml-enablement-workshop/blob/main/docs/presentations/ml-enablement-workshop-ideathon-day1.pdf)) の 個社ワーク) |
+|13:00|1 時間 45分 | 機械学習のインプット| No1~3を実施 ( [Module1](https://github.com/aws-samples/aws-ml-enablement-workshop/blob/main/docs/presentations/ml-enablement-workshop-module1.pdf), [Module2](https://github.com/aws-samples/aws-ml-enablement-workshop/blob/main/docs/presentations/ml-enablement-workshop-module2.pdf), [Module3](https://github.com/aws-samples/aws-ml-enablement-workshop/blob/main/docs/presentations/ml-enablement-workshop-module3.pdf) ) |
+|14:45|15 分|休憩||
+|15:00|2 時間|Event Storming の理解・実践| No4~5 を実施 ([Day1 用アイデアソン説明資料](https://github.com/aws-samples/aws-ml-enablement-workshop/blob/main/docs/presentations/ml-enablement-workshop-ideathon-day1.pdf)の  Event Storming 演習まで) |
+|17:00|1 時間| Day 3 に向けた個社ワーク。|No6 を実施 ([Day1 用アイデアソン説明資料](https://github.com/aws-samples/aws-ml-enablement-workshop/blob/main/docs/presentations/ml-enablement-workshop-ideathon-day1.pdf)) の 個社ワーク) |
 
 個社ワークではアイデアソンに向けてユーザーの業務と課題の洗い出しを進めてもらいます。このボードはDay3で引き続き利用します。
 
