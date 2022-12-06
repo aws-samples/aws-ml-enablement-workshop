@@ -37,9 +37,18 @@ ML Enablement Workshop開催者に向けて、 Day 1 ~ 3 のタイムテーブ�
    - SageMaker Studio Labのアカウント
    - オンライン会議システム
 
-|進行時間|所要時間|次第|内容|
+|進行時間|所要時間|Process|内容|
 |:--|:--|:--|:--|
-|13:00|3 時間|ML Enablement Workshop Handson|[ハンズオン資料](https://github.com/aws-samples/aws-ml-enablement-workshop#day2-%E3%83%8F%E3%83%B3%E3%82%BA%E3%82%AA%E3%83%B3)のContentを上から順に説明する （適宜休憩を入れる）|
+|13:00|10分|Introduction|[ハンズオン資料](https://github.com/aws-samples/aws-ml-enablement-workshop/blob/main/docs/introduction.md)|
+|13:10|30分|Environment Setup|[ハンズオン資料](https://studiolab.sagemaker.aws/import/github/aws-samples/aws-ml-enablement-handson/blob/main/notebooks/00_environment_setup.ipynb)|
+|13:40|20分|Business Understanding|[ハンズオン資料](https://studiolab.sagemaker.aws/import/github/aws-samples/aws-ml-enablement-handson/blob/main/notebooks/01_business_understanding.ipynb)|
+|14:00|30分|Analyze|[ハンズオン資料](https://studiolab.sagemaker.aws/import/github/aws-samples/aws-ml-enablement-handson/blob/main/notebooks/02_analyze.ipynb)|
+|14:30|15分|休憩| - |
+|14:45| 5分|Prepare|[ハンズオン資料](https://studiolab.sagemaker.aws/import/github/aws-samples/aws-ml-enablement-handson/blob/main/notebooks/03_prepare.ipynb)|
+|14:50|25分|Preprocess|[ハンズオン資料](https://studiolab.sagemaker.aws/import/github/aws-samples/aws-ml-enablement-handson/blob/main/notebooks/04_preprocess.ipynb)|
+|15:15|15分|Train|[ハンズオン資料](https://studiolab.sagemaker.aws/import/github/aws-samples/aws-ml-enablement-handson/blob/main/notebooks/05_train.ipynb)|
+|15:30|20分|Test|[ハンズオン資料](https://studiolab.sagemaker.aws/import/github/aws-samples/aws-ml-enablement-handson/blob/main/notebooks/06_test.ipynb)|
+|15:50|10分|Ending|[ハンズオン資料](https://github.com/aws-samples/aws-ml-enablement-workshop/blob/main/docs/ending.md)|
 
 ## Day 3
 
