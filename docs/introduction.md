@@ -10,6 +10,16 @@
 
 本ハンズオンではデータサイエンスの専門的な知識を身に着けることはできませんが、専門知識を持つデータサイエンティストやビジネスゴールを設定するプロダクトマネージャーとコミュニケーションするための技術的・ビジネス的素養を獲得できます。
 
+## ハンズオン受講前の確認事項
+
+ハンズオン受講前に、ハンズオンから学びたいものが学べるかご確認ください。
+
+* 機械学習の知識をお持ちの方にとってプログラミング演習は既知の内容と思います。[ビジネス面の解説(Business Understanding)](https://github.com/aws-samples/aws-ml-enablement-workshop/blob/main/notebooks/01_business_understanding.ipynb)、コミュニケーション演習など非技術的要素がご自身にとって有益か検討したうえで参加ください。
+* プログラミング経験があるソフトウェアエンジニアの方を対象としています。ハンズオンではPythonを使用しますが、Pythonを直接学んだことがなくとも他のプログラミング言語の知識があれば類推できる内容は解説していません。具体的には変数への代入やクラスのメソッド呼び出し方法などです。プログラミング経験がない方は、解説がないことを前提に有益か判断し参加ください。Pythonのプログラミングについて学びたい方は[Python早見帳](https://aws.amazon.com/jp/blogs/news/python-hayamicho-is-available-in-sagemaker-studio-lab/)等をご参照ください。
+* ハンズオンでは機械学習アルゴリズムの理論的な解説は行っていませんのでご了承ください。理論的な内容を学びたい方は[機械学習帳の学習ノート](https://github.com/icoxfog417/mlnote-note)等をご参照ください。深層学習に関心がある方は[ゼロから作る Deep Learning](https://github.com/oreilly-japan/deep-learning-from-scratch)等をご参照ください。
+* ハンズオンはプロジェクトの進め方に重点を置いているため、コーディングの時間は多くありません。機械学習の実装について学びたい方は[Machine Learning University](https://aws.amazon.com/jp/machine-learning/mlu/)等をご参照ください。Machine Learning Universityでは、Final Projectで実践的な課題に取り組むことができます。
+* ハンズオンではSageMakerは使用しません。SageMakerの使い方に関心がある方は、[AI/ML Dark Partの動画シリーズ](https://www.youtube.com/playlist?list=PLAOq15s3RbuL32mYUphPDoeWKUiEUhcug)をご参照ください。
+
 ## ハンズオンの内容
 
 機械学習モデルの要件確認から運用監視までを10のプロセスで定義し、そのうち「開発」にあたる6つのプロセスを本教材の対象としています。次の図では、既存のソフトウェア開発プロセスをDevOpsとし、機械学習モデルの開発プロセスをMLOpsとし上下に分けて示しています。本教材の対象は、図のオレンジの枠で囲った箇所です。
