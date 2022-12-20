@@ -43,7 +43,9 @@
 
 ## Day1: 機械学習インプット
 
-プロダクトマネージャーの方に機械学習を理解いただくため、機械学習の入門、プロジェクト計画、機械学習を活用できる組織へのシフト方法の3つを解説します。動画は[YouTubeの再生リストから視聴できます](https://www.youtube.com/playlist?list=PLAOq15s3RbuL5p1v3bSuWr_QVgCBW5wUG)。
+プロダクトマネージャーの方に機械学習を理解いただくため、機械学習の入門、プロジェクト計画、機械学習を活用できる組織へのシフト方法の3つを解説します。解説の後、アイデアソンを実施するための準備を行います。
+動画は[YouTubeの再生リストから視聴できます](https://www.youtube.com/playlist?list=PLAOq15s3RbuL5p1v3bSuWr_QVgCBW5wUG)。
+
 
 |No   |Title|Content| Video |
 |:----|:----|:----|:----|
@@ -65,7 +67,7 @@
 ## Day2: ハンズオン
 
 開発者向けの機械学習ハンズオン資料です。
-目次のNo.1から順に進めていくことで各開発プロセスでなにを行うのか、なぜ行うのか、どう行うのかを学ぶことができます。
+目次のNo.1から順に進めていくことで各開発プロセスでなにを行うのか、なぜ行うのか、どう行うのかを学ぶことができます。ハンズオンは Amazon SageMaker Studio Lab を使用し進めます。アカウントの作成方法や使い方は[Amazon SageMaker Studio Lab の使い方](https://github.com/aws-sagemaker-jp/awesome-studio-lab-jp/blob/main/README_usage.md)を参照してください。
 
 |No   |Process|Title|Content|Video|
 |:----|:------|:----|:----|:----|
