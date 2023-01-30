@@ -8,3 +8,4 @@ dependencies:
   - matplotlib
   - pandas
   - scikit-learn
+  - jinja2
