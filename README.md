@@ -93,8 +93,8 @@
 
 |No   |Title|Content|
 |:----|:----|:----|
-|1    |アイデアソン: 前半| [アイデアソンの進め方を解説し、現状のユーザーの業務、課題、プロダクトのアプローチを整理 ![ml-enablement-workshop-ideathon-day3-1.png](docs/images/ml-enablement-workshop-ideathon-day3-1.png)](docs/presentations/ml-enablement-workshop-ideathon-day3.pdf)  |
-|2    |アイデアソン: 後半| [機械学習が有効なユースケースの特定とアプローチ方法の定義 ![ml-enablement-workshop-ideathon-day3-2.png](docs/images/ml-enablement-workshop-ideathon-day3-2.png)](docs/presentations/ml-enablement-workshop-ideathon-day3.pdf)  |
+|1    |アイデアソン: 前半| [ユーザーの業務と課題、論理的な処理のまとまりを整理 ![ml-enablement-workshop-ideathon-day3-1.png](docs/images/ml-enablement-workshop-ideathon-day3-1.png)](docs/presentations/ml-enablement-workshop-ideathon-day3.pdf)  |
+|2    |アイデアソン: 後半| [課題を解決する機械学習のユースケースを特定 ![ml-enablement-workshop-ideathon-day3-2.png](docs/images/ml-enablement-workshop-ideathon-day3-2.png)](docs/presentations/ml-enablement-workshop-ideathon-day3.pdf)  |
 
 ## 活用事例
 
