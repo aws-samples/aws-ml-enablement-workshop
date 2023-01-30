@@ -58,7 +58,7 @@
 |No   |Title|Content| Video |
 |:----|:----|:----|:----|
 |4    |アイデアソン解説(Day1用)| [アイデアソンで使用するEvent Stormingを解説 ![ml-enablement-workshop-ideathon-day1.png](docs/images/ml-enablement-workshop-ideathon-day1.png)](docs/presentations/ml-enablement-workshop-ideathon-day1.pdf)  | [![YouTube](https://img.shields.io/badge/YouTube-%23FF0000.svg?style=for-the-badge&logo=YouTube&logoColor=white)](https://youtu.be/FCjAl_Nnsa0) |
-|5    |Event Storming演習 | [目覚まし時計を題材に、Event Stormingを実践 ![event-storming-board.png](docs/images/event-storming-board.png)](https://miro.com/app/board/uXjVOq7OXDo=/?moveToWidget=3458764540014205923&cot=14) |  |
+|5    |Event Storming演習 | [宿・ホテルサイトの体験改善を題材に、Event Stormingを実践 ![event-storming-board.png](docs/images/event-storming-board.png)](https://miro.com/app/board/uXjVOq7OXDo=/?moveToWidget=3458764540014205923&cot=14) |  |
 |6    |個社ワーク | [ML Usecase Discovery Worksheetでユースケースを洗い出す等 ![ml-usecase-discovery-worksheet.png](docs/images/ml-usecase-discovery-worksheet.png)](https://docs.google.com/spreadsheets/d/1Ob-bxF8ZDUn7RIOnR9S923MoFPuhbvcgjMpbXTr98Po/edit?usp=sharing) |  |
 
 個社ワークで使用するML Usecase Discovery Worksheetはコピーして使用してください。開けない場合、[Excel版](docs/presentations/ML_Usecase_Discovery_Worksheet.xlsx)をダウンロードして利用ください。
