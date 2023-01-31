@@ -105,7 +105,7 @@
 
 **様々なお客様のプロダクトチームで、ワークショップをご活用頂いています**
 
-<a href="https://jp.sansan.com/" target="_blcnk"><img src="docs/images/logo/SanSanLogo.png" width=320></a>
+<a href="https://jp.sansan.com/" target="_blcnk"><img src="docs/images/logo/Sansan_Logo.png" width=320></a>
 
 活用頂いた事例を掲載頂ける場合は、[Issue](https://github.com/aws-samples/aws-ml-enablement-handson/issues/new?assignees=&labels=enhancement&template=case-study.md&title=)よりご連絡ください。
 
