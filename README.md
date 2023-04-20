@@ -2,69 +2,35 @@
 
 [![security: bandit](https://img.shields.io/badge/security-bandit-yellow.svg)](https://github.com/PyCQA/bandit)
 
-プロダクトを開発するチームが、**課題解決の選択肢として機械学習を選択できるようになること**をゴールとしたワークショップです。
+プロダクトマネージャーが、機械学習の「勝ちパターン」を実現するチームとロードマップが作れるワークショップです。
 
-:books: **ML Enablement Workshop Content**
+## :books: Contents
 
 ワークショップは3部構成となっています。
 
-1. [Day1: 機械学習インプット](https://github.com/aws-samples/aws-ml-enablement-workshop#day1-%E6%A9%9F%E6%A2%B0%E5%AD%A6%E7%BF%92%E3%82%A4%E3%83%B3%E3%83%97%E3%83%83%E3%83%88)
-2. [Day2: ハンズオン](https://github.com/aws-samples/aws-ml-enablement-workshop#day2-%E3%83%8F%E3%83%B3%E3%82%BA%E3%82%AA%E3%83%B3)
-3. [Day3: アイデアソン](https://github.com/aws-samples/aws-ml-enablement-workshop#day3-%E3%82%A2%E3%82%A4%E3%83%87%E3%82%A2%E3%82%BD%E3%83%B3)
+| Title |[理解編: ベストプラクティスの理解](docs/presentations/ml-enablement-01-architect.pdf)|[応用編: 顧客体験改善への応用](docs/presentations/ml-enablement-02-application.pdf)|[開始編: 顧客体験の改善を開始する](docs/presentations/ml-enablement-03-action.pdf)|
+|:--------|:---------|:------|:------|
+| Image |![Architect](docs/images/top/ml-enablement-01-architect.png)|![Application](docs/images/top/ml-enablement-02-application.png)|![Action](docs/images/top/ml-enablement-03-action.png)|
+| Video | Coming Soon|Coming Soon|Coming Soon|
 
+**理解編**で、機械学習の「勝ちパターン」とは何なのか、勝ちパターンが成立したベストプラクティス事例はどのようなものがあるのかを学びます。**応用編**で、**開始編**で、勝ちパターン成立に向け効果を確認しながら投資とチームを拡大できるよう、段階的なステップを設計します。
 
-:gift: **ML Enablement Workshop Benefit**
+ML Enablement Workshopを利用いただくメリットは3つです。
 
-3部構成のコンテンツは、機械学習をプロダクトで活用する時の3つの課題をそれぞれ解決するために作成されています。
-
-1. プロダクトマネージャーが機械学習を十分理解しておらず、機械学習を用いた機能を発案できない。
-   * Day1ではプロダクトマネージャーを対象に機械学習に取り組む動機、計画の立て方、組織作りなどを解説します。
-2. 開発エンジニアに機械学習の知見がなく、研究開発部門から手取り足取りの支援が必要。
-   * Day2では開発者を対象に機械学習の実装に必要なプログラミングとプロジェクトを推進するためのコミュニケーションを学びます。
-3. 研究開発部門がユーザー課題を認識できておらず、機械学習活用の適切な提案ができない。
-   * Day3ではプロダクトマネージャー、開発者、研究開発者3者が集まりユーザーの課題を起点に機械学習の利用が適切なユースケースを発見します。
-
- :rocket: **ML Enablement Workshop Feature**
-
-**実践的**、**わかりやすい**、**無料**であることがML Enablement Workshopの特徴です。
-
-* :dart: **実践的**
-   * 機械学習インプット、ハンズオンではビジネスゴールの設定方法から解説([Business Understanding](https://youtu.be/csiMBxUkAEc))。
-   * ハンズオンでは他のロールとコミュニケーションをとるための演習を実施。
-   * アイデアソンではプロダクトマネージャー、開発者、データサイエンティスト全員が集まりユーザーの業務、課題を深掘り。
-* :bulb: **わかりやすい**
-   * 機械学習インプットは開発の知識を要求しない内容で解説。
-   * ハンズオンでは、なにをするのか、なぜするのか、どうおこなうのか、順を追って工程の必然性を解説。YouTube動画で好きな時に学習可能(例: [機械学習の価値を計算する](https://youtu.be/csiMBxUkAEc))。
-   * ハンズオンでは、インタラクティブなJupyter Notebookでデータの分析からテストまで各工程で必要となるPythonの基本的な実装を学習可能(例: [Analyze](https://studiolab.sagemaker.aws/import/github/aws-samples/aws-ml-enablement-handson/blob/main/notebooks/02_analyze.ipynb), [Preprocess](https://studiolab.sagemaker.aws/import/github/aws-samples/aws-ml-enablement-handson/blob/main/notebooks/04_preprocess.ipynb))。
+* 💪 **実践的**
+   * AWSで機械学習の活用を支援したノウハウが詰め込まれています。ワークショップの提供から得られたつまづきや成功の知見、お客様からのフィードバックを随時反映し「活きた知見」を提供します。
+* 🛠️ **実現性**
+   * AWSのサービスとプログラムでロードマップの実現を支援します。無料で利用可能な[Amazon SageMaker Studio Lab](https://studiolab.sagemaker.aws/)や表計算ソフト間隔で使える[Amazon SageMaker Canvas](https://aws.amazon.com/jp/sagemaker/canvas)など、熟練したデータサイエンティストがいなくても機械学習が実装できるサービスを提供しています。AWSのエキスパートによるモデル構築支援を行う[ML Solutions Lab](https://aws.amazon.com/jp/ml-solutions-lab/)等も含め、サービスとプログラム両面で機械学習による勝ちパターンの実現を支援します。
 * :octocat: **無料**
-   * GitHubでOSSとして教材を公開。
-   * ハンズオンに使用する[SageMaker Studio Lab](https://studiolab.sagemaker.aws/)も無料で利用が可能。
-   * ライセンスの範囲で自由に利用が可能。教材を使用した[ワークショップを開催するためのガイド](https://github.com/aws-samples/aws-ml-enablement-workshop#%E9%96%8B%E5%82%AC%E8%80%85%E5%90%91%E3%81%91%E3%82%AC%E3%82%A4%E3%83%89)も提供。
+   * GitHubでOSSとして教材を公開しており、ライセンスの範囲で自由に利用頂くことができます。[ワークショップを開催するためのガイド](https://github.com/aws-samples/aws-ml-enablement-workshop#%E9%96%8B%E5%82%AC%E8%80%85%E5%90%91%E3%81%91%E3%82%AC%E3%82%A4%E3%83%89)も提供し、社内でのデータ活用推進などに活かしていただきます。
 
-## Day1: 機械学習インプット
+## :rocket: ML Enablement Camp
 
-プロダクトマネージャーの方に機械学習を理解いただくため、機械学習の入門、プロジェクト計画、機械学習を活用できる組織へのシフト方法の3つを解説します。解説の後、アイデアソンを実施するための準備を行います。
-動画は[YouTubeの再生リストから視聴できます](https://www.youtube.com/playlist?list=PLAOq15s3RbuL5p1v3bSuWr_QVgCBW5wUG)。
+AWSのサービスやソリューションを活用し、数日での本番導入を目指すCampコンテンツを提供します。
 
+* Amazon Personalize Prototyping Camp: プロダクトに推薦機能を実装するプログラム。(コンテンツ準備中)
 
-|No   |Title|Content| Video |
-|:----|:----|:----|:----|
-|1    |MLの入門| [機械学習の仕組み、事例、制約などを解説 ![ml-enablement-workshop-module1.png](docs/images/ml-enablement-workshop-module1.png)](docs/presentations/ml-enablement-workshop-module1.pdf)  | [![YouTube](https://img.shields.io/badge/YouTube-%23FF0000.svg?style=for-the-badge&logo=YouTube&logoColor=white)](https://youtu.be/1aX2Tf1SelE) |
-|2    |MLプロジェクトの計画 | [ユースケースの発見方法と要件の確認方法を解説 ![ml-enablement-workshop-module2.png](docs/images/ml-enablement-workshop-module2.png)](docs/presentations/ml-enablement-workshop-module2.pdf)| [![YouTube](https://img.shields.io/badge/YouTube-%23FF0000.svg?style=for-the-badge&logo=YouTube&logoColor=white)](https://youtu.be/Tj-RDb9Yd_U) |
-|3    | ML活用組織へのシフト|[機械学習を推進するための組織戦略を解説 ![ml-enablement-workshop-module3.png](docs/images/ml-enablement-workshop-module3.png)](docs/presentations/ml-enablement-workshop-module3.pdf) | [![YouTube](https://img.shields.io/badge/YouTube-%23FF0000.svg?style=for-the-badge&logo=YouTube&logoColor=white)](https://youtu.be/MQ1hgZ6qE_8) |
-
-プロダクトマネージャーの方は、アイデアソンでユーザーの業務と課題を開発者とデータサイエンティストにEvent Stormingで効果的に伝えて頂きます。当日ファシリテートができるよう、Event Stormingについて解説します。
-
-|No   |Title|Content| Video |
-|:----|:----|:----|:----|
-|4    |アイデアソン解説(Day1用)| [アイデアソンで使用するEvent Stormingを解説 ![ml-enablement-workshop-ideathon-day1.png](docs/images/ml-enablement-workshop-ideathon-day1.png)](docs/presentations/ml-enablement-workshop-ideathon-day1.pdf)  | [![YouTube](https://img.shields.io/badge/YouTube-%23FF0000.svg?style=for-the-badge&logo=YouTube&logoColor=white)](https://youtu.be/79fE0uv18Vc) |
-|5    |Event Storming演習 | [宿・ホテルサイトの体験改善を題材に、Event Stormingを実践 ![event-storming-board.png](docs/images/event-storming-board.png)](https://miro.com/app/board/uXjVOq7OXDo=/?moveToWidget=3458764540014205923&cot=14) |  |
-|6    |個社ワーク | [ML Usecase Discovery Worksheetでユースケースを洗い出す等 ![ml-usecase-discovery-worksheet.png](docs/images/ml-usecase-discovery-worksheet.png)](https://docs.google.com/spreadsheets/d/1Ob-bxF8ZDUn7RIOnR9S923MoFPuhbvcgjMpbXTr98Po/edit?usp=sharing) |  |
-
-個社ワークで使用するML Usecase Discovery Worksheetはコピーして使用してください。開けない場合、[Excel版](docs/presentations/ML_Usecase_Discovery_Worksheet.xlsx)をダウンロードして利用ください。
-
-
-## Day2: ハンズオン
+## ⚡ ML Enablement Handson
 
 開発者向けの機械学習ハンズオン資料です。
 目次のNo.1から順に進めていくことで各開発プロセスでなにを行うのか、なぜ行うのか、どう行うのかを学ぶことができます。ハンズオンは Amazon SageMaker Studio Lab を使用し進めます。アカウントの作成方法や使い方は[Amazon SageMaker Studio Lab の使い方](https://github.com/aws-sagemaker-jp/awesome-studio-lab-jp/blob/main/README_usage.md)を参照してください。
@@ -87,14 +53,6 @@
 
 * [サービスの解約率改善シナリオ](notebooks/scenario_churn)
 
-## Day3: アイデアソン
-
-プロダクトマネージャー、開発者、データサイエンティストの3者でユーザーの業務と課題を理解し、機械学習のユースケースを発見するアイデアソンを実施するための資料です。Event Stormingのボード、後半で絞り込んだユースケースを書き込むワークシートはDay1で使用したものを継続して使用してください。
-
-|No   |Title|Content|
-|:----|:----|:----|
-|1    |アイデアソン: 前半| [ユーザーの業務と課題、論理的な処理のまとまりを整理 ![ml-enablement-workshop-ideathon-day3-1.png](docs/images/ml-enablement-workshop-ideathon-day3-1.png)](docs/presentations/ml-enablement-workshop-ideathon-day3.pdf)  |
-|2    |アイデアソン: 後半| [課題を解決する機械学習のユースケースを特定 ![ml-enablement-workshop-ideathon-day3-2.png](docs/images/ml-enablement-workshop-ideathon-day3-2.png)](docs/presentations/ml-enablement-workshop-ideathon-day3.pdf)  |
 
 ## 活用事例
 
