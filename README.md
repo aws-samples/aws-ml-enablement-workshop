@@ -14,7 +14,7 @@
 | Work  | [ベストプラクティス一覧](https://docs.google.com/spreadsheets/d/1lJmDi1Fx50HzEWXq8YU--I1HOdFIEcN7YJVAsMlAtQI/edit?usp=sharing) | [Event Storming用ボード](https://miro.com/app/board/uXjVMSMR38c=/?share_link_id=286437223244) |Coming Soon|
 | Video | Coming Soon|Coming Soon|Coming Soon|
 
-**理解編**で、機械学習の「勝ちパターン」とは何なのか、勝ちパターンが成立したベストプラクティス事例はどのようなものがあるのかを学びます。**応用編**で、**開始編**で、勝ちパターン成立に向け効果を確認しながら投資とチームを拡大できるよう、段階的なステップを設計します。
+**理解編**で、機械学習の「勝ちパターン」と勝ちパターンを成立させたベストプラクティス事例を学びます。**応用編**で、事例を下地にプロダクトの顧客体験が改善するプロセスを可視化します。**開始編**で、勝ちパターン成立に向け効果を確認しながら投資とチームを拡大できるよう、段階的なステップを設計します。
 
 ML Enablement Workshopを利用いただくメリットは3つです。
 
