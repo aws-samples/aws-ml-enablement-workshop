@@ -6,11 +6,12 @@
 
 ## :books: Contents
 
-ワークショップは3部構成となっています。
+ワークショップは3部構成となっています。Titleのリンクから資料へ、Workから成果物用のテンプレートにアクセスできます。
 
 | Title |[理解編: ベストプラクティスの理解](docs/presentations/ml-enablement-01-architect.pdf)|[応用編: 顧客体験改善への応用](docs/presentations/ml-enablement-02-application.pdf)|[開始編: 顧客体験の改善を開始する](docs/presentations/ml-enablement-03-action.pdf)|
 |:--------|:---------|:------|:------|
 | Image |![Architect](docs/images/top/ml-enablement-01-architect.png)|![Application](docs/images/top/ml-enablement-02-application.png)|![Action](docs/images/top/ml-enablement-03-action.png)|
+| Work  | [ベストプラクティス一覧](https://docs.google.com/spreadsheets/d/1lJmDi1Fx50HzEWXq8YU--I1HOdFIEcN7YJVAsMlAtQI/edit?usp=sharing) | [Event Storming用ボード](https://miro.com/app/board/uXjVMSMR38c=/?share_link_id=286437223244) |Coming Soon|
 | Video | Coming Soon|Coming Soon|Coming Soon|
 
 **理解編**で、機械学習の「勝ちパターン」とは何なのか、勝ちパターンが成立したベストプラクティス事例はどのようなものがあるのかを学びます。**応用編**で、**開始編**で、勝ちパターン成立に向け効果を確認しながら投資とチームを拡大できるよう、段階的なステップを設計します。
