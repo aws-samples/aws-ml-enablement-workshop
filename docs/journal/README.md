@@ -12,6 +12,10 @@
 
 海外のプロダクトマネージャーがどんな職歴や経歴なのか、あまり知られていないと思うので判別可能な限り LinkedIn のプロフィールへのリンクを載せています。なお、肩書は当時のものです。
 
+**新着 Q&A を見逃したくない方は[トップページ](https://github.com/aws-samples/aws-ml-enablement-workshop)で Star すればお気に入りから参照できます！**。Watch をすることで GitHub 上で通知を受け取ることもできます。
+
+![star_and_watch.png](./images/star_and_watch.png)
+
 ## Q&A 一覧
 
 * 機械学習を使った機能の発見から実装まではどんな流れですか ?
