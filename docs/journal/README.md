@@ -22,6 +22,7 @@
 * プロダクトの中で機械学習やデータサイエンスはどんな役割を果たしていますか ?
 * 顧客から信頼される AI 機能を作るために気を付けるべきことは ? 
 * AI の登場で人間のプロダクトマネージャーは不要になりますか ?
+* データサイエンティストの仕事をどのように定義すればよいですか ?
 
 ## Q&A
 
@@ -70,3 +71,11 @@
 Associate PM はユーザーストーリーを課題や機能に落とし込むこと、 PM は新しい機能のリリース、 Senior PM は新しいプロダクトのリリース、 Product Leader は複数プロダクトのポートフォリオの実現に責任を持つイメージ。
 
 ([Webinar: Will AI Make Human Product Managers Obsolete? by Amazon Sr PM, Siddharth Ilangovan](https://youtu.be/7RmHV-XYM48?t=354) (2023) より)
+
+### データサイエンティストの仕事をどのように定義すればよいですか ?
+
+**Airbnb の Director, Head of Data Science [Elena Tej Grewal](https://www.linkedin.com/in/elena-grewal/) の場合**
+
+Airbnb では、データサイエンティストを Analytics 、 Inference 、 Algorithms の 3 つの職種に分けている。 Analytics はモニタリングするビジネスメトリクスを決めてダッシュボードの作成や可視化を通じビジネス状況を表すこと、 Inference は統計検定や因果推論によりデータから意思決定の支援を行うこと、 Altorithms は機械学習アルゴリズムを用いてデータから Airbnb のサービスやプロセスを改善することを主な役割とする。このように役割を分けた背景には、 2015 年から 2018 年にかけてある時はデータ分析、ある時は機械学習など異なるビジネスニーズに応じて採用を続けた結果、職掌の異なるデータサイエンティストが混在し何をなすべきか個々人が自信を持てなくなったことがある。そのため、会社にとってのデータサイエンスの価値を提議しそれぞれに専門的にコミットするロールを 3 つ提議した。現在 (2018年時点) では Analytics が 34% 、 Inference が 47% 、 Algorithms が 28% となっている。ただ、組織が小さい頃は分ける必要がないと思う。Airbnb では 2015 年の 30 人の段階では分けておらず、 2018 年に 100 人を超えてからロールを定義した。
+
+([One Data Science Job Doesn’t Fit All](https://www.linkedin.com/pulse/one-data-science-job-doesnt-fit-all-elena-grewal/) (2018) より)
