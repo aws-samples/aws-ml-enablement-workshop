@@ -44,6 +44,18 @@
 
 ([What is Marketplace Product Management by Uber Product Manager](https://youtu.be/t4cnrwu465Q?t=2131) (2019) より)
 
+**[The Lean Product Playbook](https://leanproductplaybook.com/) の著者 [Dan Olsen](https://www.linkedin.com/in/danolsen98/) の場合**
+
+定量、定性の分析は Product Market Fit (PMF) とその先の成長に向けたフェーズの課題を解決するのに不可欠である。プロダクトのフェーズは PMF の前段階として 1) Before release, 2) After release, PMF した後として 3) After PMF の 3 段階に分けることができる。 3) に至るため PMF がまず目指すべき点であり、 PMF しているかどうかのシグナルは顧客の利用継続率を表す AARRR モデルで言うところの **Retention** から得られる (下図左)。 1) の段階では想定顧客の要求や感情など内面を知るための直接的なインタビューなどが有効であり、 2) の段階では 1) の定性的な手法に加え Release したプロダクトから定量的なデータを取るユーザーテストなどが有効になる (下図右)。 3) のフェーズでは定量的な分析が中心となり、顧客サーベイや A/B テストが主になる。
+
+| AARRR モデル   | ログイン行動分析例 |
+| ---- | ---- |
+|  ![lean_product_playbook_dan_olsen_001](./images/lean_product_playbook_dan_olsen_001.png)  |  ![lean_product_playbook_dan_olsen_002](./images/lean_product_playbook_dan_olsen_002.png)  |
+
+
+([Webinar: Actionable Advice for Integrating Quantitative and Qualitative Insights by Heap](https://youtu.be/ZYJij0RsQeg0) (2023) より引用)
+
+
 ### 顧客から信頼される AI 機能を作るために気を付けるべきことは ? 
 
 **Shopify の Senior Product Manager [Ellen Dunne](https://www.linkedin.com/in/ellendunne/) の場合**
