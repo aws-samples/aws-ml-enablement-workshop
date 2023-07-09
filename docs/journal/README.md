@@ -18,15 +18,16 @@
 
 ## Q&A 一覧
 
-* 機械学習を使った機能の発見から実装まではどんな流れですか ?
+* 機械学習を使った機能を実装するステップは ?
 * プロダクトの中で機械学習やデータサイエンスはどんな役割を果たしていますか ?
 * 顧客から信頼される AI 機能を作るために気を付けるべきことは ? 
+* データサイエンティストの Job Description をどのように書けばいいですか ?
+* データサイエンスのプロジェクトでもスクラム開発を適用できますか ?
 * AI の登場で人間のプロダクトマネージャーは不要になりますか ?
-* データサイエンティストの仕事をどのように定義すればよいですか ?
 
 ## Q&A
 
-### 機械学習を使った機能の発見から実装まではどんな流れですか ?
+### 機械学習を使った機能を実装するステップは ?
 
 **Spotify の Product Leader [Derya Isler](https://www.linkedin.com/in/deryaisler/details/experience/) の場合**
 
@@ -55,7 +56,6 @@
 
 ([Webinar: Actionable Advice for Integrating Quantitative and Qualitative Insights by Heap](https://youtu.be/ZYJij0RsQeg0) (2023) より引用)
 
-
 ### 顧客から信頼される AI 機能を作るために気を付けるべきことは ? 
 
 **Shopify の Senior Product Manager [Ellen Dunne](https://www.linkedin.com/in/ellendunne/) の場合**
@@ -70,6 +70,24 @@
 
 ([#ProductCon NYC: How to Build Trustworthy AI Products by Philosophie Director of AI](https://www.youtube.com/watch?v=DIwyKwPzrjc) (2018) より)
 
+### データサイエンティストの Job Description をどのように書けばいいですか ?
+
+**Airbnb の Director, Head of Data Science [Elena Tej Grewal](https://www.linkedin.com/in/elena-grewal/) の場合**
+
+Airbnb では、データサイエンティストを Analytics 、 Inference 、 Algorithms の 3 つの職種に分けている。 Analytics はモニタリングするビジネスメトリクスを決めてダッシュボードの作成や可視化を通じビジネス状況を表すこと、 Inference は統計検定や因果推論によりデータから意思決定の支援を行うこと、 Altorithms は機械学習アルゴリズムを用いてデータから Airbnb のサービスやプロセスを改善することを主な役割とする。このように役割を分けた背景には、 2015 年から 2018 年にかけてある時はデータ分析、ある時は機械学習など異なるビジネスニーズに応じて採用を続けた結果、職掌の異なるデータサイエンティストが混在し何をなすべきか個々人が自信を持てなくなったことがある。そのため、会社にとってのデータサイエンスの価値を提議しそれぞれに専門的にコミットするロールを 3 つ提議した。現在 (2018年時点) では Analytics が 34% 、 Inference が 47% 、 Algorithms が 28% となっている。ただ、組織が小さい頃は分ける必要がないと思う。Airbnb では 2015 年の 30 人の段階では分けておらず、 2018 年に 100 人を超えてからロールを定義した。
+
+([One Data Science Job Doesn’t Fit All](https://www.linkedin.com/pulse/one-data-science-job-doesnt-fit-all-elena-grewal/) (2018) より)
+
+### データサイエンスのプロジェクトでもスクラム開発を適用できますか ?
+
+**Amazon の Applied Scientist [Eugene Yan](https://www.linkedin.com/in/eugeneyan/) の場合**
+
+Yes 。期間で区切り、優先順位をつけて有望な手法にベットしていくこと、デモを通じクライアントと成果を共有しながら進めることはデータサイエンスのプロジェクトでも有効である。あなたが機械学習を扱ったことがあるなら、データ分析とモデル構築は何度か往復するためソフトウェア開発のようにタスクの完了を積み上げていくことはできないと感じるかもしれない ( というか筆者自身そう感じていた )　。しかし、タイムボックスを区切るスクラムの手法は、限られた時間をモデル、データ、ハイパーパラメーターなど複数の選択肢のどれに割り当てるかという思考を要求する。この思考は予算が限られたプロジェクトで必要だし、頻繁なリリースとデモで顧客への説明責任を果たすことで納得感を醸成することができる。最初の 1~2 iteration は問題の特定に当て、 1 iteration ごと計画、デモ、振り返り、など固定で 3~4 時間は必要となる。
+
+※日本でも KLab がこの方式で成果を出している : [モバイルゲーム会社の機械学習グループを立ち上げた話](https://qiita.com/hmkz/items/f7aa7f21e39cc8df1ce0)
+
+([What I Love about Scrum for Data Science](https://eugeneyan.com/writing/what-i-love-about-scrum-for-data-science/) (2020) より)
+
 ### AI の登場で人間のプロダクトマネージャーは不要になりますか ?
 
 **Amazon の Senior Product Manager [Siddharth Ilangovan](https://www.linkedin.com/in/sid-i/) の場合**
@@ -83,11 +101,3 @@
 Associate PM はユーザーストーリーを課題や機能に落とし込むこと、 PM は新しい機能のリリース、 Senior PM は新しいプロダクトのリリース、 Product Leader は複数プロダクトのポートフォリオの実現に責任を持つイメージ。
 
 ([Webinar: Will AI Make Human Product Managers Obsolete? by Amazon Sr PM, Siddharth Ilangovan](https://youtu.be/7RmHV-XYM48?t=354) (2023) より)
-
-### データサイエンティストの仕事をどのように定義すればよいですか ?
-
-**Airbnb の Director, Head of Data Science [Elena Tej Grewal](https://www.linkedin.com/in/elena-grewal/) の場合**
-
-Airbnb では、データサイエンティストを Analytics 、 Inference 、 Algorithms の 3 つの職種に分けている。 Analytics はモニタリングするビジネスメトリクスを決めてダッシュボードの作成や可視化を通じビジネス状況を表すこと、 Inference は統計検定や因果推論によりデータから意思決定の支援を行うこと、 Altorithms は機械学習アルゴリズムを用いてデータから Airbnb のサービスやプロセスを改善することを主な役割とする。このように役割を分けた背景には、 2015 年から 2018 年にかけてある時はデータ分析、ある時は機械学習など異なるビジネスニーズに応じて採用を続けた結果、職掌の異なるデータサイエンティストが混在し何をなすべきか個々人が自信を持てなくなったことがある。そのため、会社にとってのデータサイエンスの価値を提議しそれぞれに専門的にコミットするロールを 3 つ提議した。現在 (2018年時点) では Analytics が 34% 、 Inference が 47% 、 Algorithms が 28% となっている。ただ、組織が小さい頃は分ける必要がないと思う。Airbnb では 2015 年の 30 人の段階では分けておらず、 2018 年に 100 人を超えてからロールを定義した。
-
-([One Data Science Job Doesn’t Fit All](https://www.linkedin.com/pulse/one-data-science-job-doesnt-fit-all-elena-grewal/) (2018) より)
