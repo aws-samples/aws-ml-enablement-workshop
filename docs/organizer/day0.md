@@ -12,8 +12,11 @@
 ## ワークショップの概要
 
 ![Workshop Agenda](./assets/ws_agenda.png)
-ML Enablement Workshop のアウトプット
+
+**ML Enablement Workshop のアウトプット**
+
 ビジネスモデルの作成から始まり、ユーザーストーリーによる詳細化、行動計画への詳細化、と進みます。
+
 ![Workshop Outputs](./assets/output_image.png)
 
 ## ワークショップで期待される役割について
@@ -63,6 +66,7 @@ MLEWは**ワークショップの場だけでなく今後も連携を続け機�
 - [ ] 自社版のビジネスモデルキャンバスの作成
 
 ![Business Model Canvas of Canva](./assets/canva_business_model_canvas.png)
+
 CanvaにおけるStability AIのStable Diffusion を使用したイラスト生成 AI 機能の実装、提供事例の分析例
 
 #### Day2 [応用]
@@ -76,6 +80,7 @@ CanvaにおけるStability AIのStable Diffusion を使用したイラスト生�
 
 
 ![Event Storming Sample](./assets/event_storming_sample.png)
+
 Event Stormingの例。ペルソナを黄色のポストイット、時系列のイベントをオレンジ、課題を赤、が基本で他のポストイットや矢印は必要に応じ。
 
 ※Event StormingのうちBig Pictureと呼ばれるステップのみ行います。もしEvent Stormingの手法に関心がある場合は [Event Storming](https://www.eventstorming.com/) 発案者のサイトを参考してください。
