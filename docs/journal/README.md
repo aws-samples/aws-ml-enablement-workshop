@@ -64,7 +64,7 @@
 
 ### データ分析チームはプロダクトチームにどのように関わるべきですか ?
 
-**Amplitude の [Adam Greco](https://www.linkedin.com/in/adamgreco/), WillowTree の [Jeremy Stern](https://www.linkedin.com/in/jeremy-stern-9a774611/) の場合**
+**Amplitude の Product Evangelist [Adam Greco](https://www.linkedin.com/in/adamgreco/), WillowTree の Director of Product Analysis [Jeremy Stern](https://www.linkedin.com/in/jeremy-stern-9a774611/) の場合**
 
 データ分析チームの役割は、プロダクトを成長させるために答えるべきビジネス上の質問を定義・合意し、回答に必要なデータを収集するための実装を初期段階から開発チームに依頼するべき。データから得られたインサイトを積極的に共有することで仮説検証や問題解決のアクションに転換し、収益向上に貢献することで信頼を獲得することが必要。
 データは収集しているがそこから回答できるビジネス上の質問の半分以上に経営層が関心がない、開発終盤でリソースがひっ迫しデータを収集するための SDK や JavaScript の実装が削除されたためにリリース後経営層に何も報告できない、あるいは Web と Mobile で別々の項目として収集され統合できない、といった状況に陥ってはならない。
