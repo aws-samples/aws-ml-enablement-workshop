@@ -19,8 +19,12 @@
 ## Q&A 一覧
 
 * 機械学習を使った機能を実装するステップは ?
-* プロダクトの中で機械学習やデータサイエンスはどんな役割を果たしていますか ?
-* 顧客から信頼される AI 機能を作るために気を付けるべきことは ? 
+* プロダクトを改善するためにデータを活用する
+* プロダクトの種類によって、どのようにデータサイエンスの使い方が変わりますか ?
+* プロダクトのフェーズによって、どのようにデータサイエンスの使い方が変わりますか ?
+* データ分析チームはプロダクトチームにどのように関わるべきですか ?
+* 顧客から信頼される AI 機能を作るために気を付けるべきことは ?
+* 顧客から信頼される対話型 UI を作るために気を付けるべきことは ? 
 * データサイエンティストの Job Description をどのように書けばいいですか ?
 * データサイエンスのプロジェクトでもスクラム開発を適用できますか ?
 * AI の登場で人間のプロダクトマネージャーは不要になりますか ?
@@ -37,13 +41,15 @@
 
 ([Webinar: Managing Machine Learning Products by Spotify Product Leader, Derya Isler](https://youtu.be/EhlHKhQv0Qg?t=1343) (2020) より引用)
 
-### プロダクトの中で機械学習やデータサイエンスはどんな役割を果たしていますか ?
+### プロダクトの種類によって、どのようにデータサイエンスの使い方が変わりますか ?
 
 **Uber の Product Lead [Tanvi Surti](https://www.linkedin.com/in/tanvisurti/) の場合**
 
-前提として、 Software 型のプロダクトと、 Marketplace 型のプロダクトは異なる。 Uber は Marketplace のプロダクトであり、そこでは需要者と供給者のマッチングが肝になる。 Software 型ではクリック数やユーザー数などサービス上で計測可能な値を重視するが、 Marketplace では市場自体を成立させる需要者と供給者、それらを結び付けるアルゴリズムを重視する。だいたい 50% のデータサイエンス (ML) と、 50% の Ops (実行) で運営されている。
+プロダクトは Software 型のプロダクトと、 Marketplace 型のプロダクトに分けられる。 Uber は Marketplace のプロダクトであり、そこでは需要者と供給者のマッチングが肝になる。 Software 型ではクリック数やユーザー数などサービス上で計測可能な値を重視するが、 Marketplace では市場自体を成立させる需要者と供給者、それらを結び付けるアルゴリズムを重視する。だいたい 50% のデータサイエンス (ML) と、 50% の Ops (実行) で運営されている。
 
 ([What is Marketplace Product Management by Uber Product Manager](https://youtu.be/t4cnrwu465Q?t=2131) (2019) より)
+
+### プロダクトのフェーズによって、どのようにデータサイエンスの使い方が変わりますか ?
 
 **[The Lean Product Playbook](https://leanproductplaybook.com/) の著者 [Dan Olsen](https://www.linkedin.com/in/danolsen98/) の場合**
 
@@ -56,7 +62,27 @@
 
 ([Webinar: Actionable Advice for Integrating Quantitative and Qualitative Insights by Heap](https://youtu.be/ZYJij0RsQeg0) (2023) より引用)
 
+### データ分析チームはプロダクトチームにどのように関わるべきですか ?
+
+**Amplitude の [Adam Greco](https://www.linkedin.com/in/adamgreco/), WillowTree の [Jeremy Stern](https://www.linkedin.com/in/jeremy-stern-9a774611/) の場合**
+
+データ分析チームの役割は、プロダクトを成長させるために答えるべきビジネス上の質問を定義・合意し、回答に必要なデータを収集するための実装を初期段階から開発チームに依頼するべき。データから得られたインサイトを積極的に共有することで仮説検証や問題解決のアクションに転換し、収益向上に貢献することで信頼を獲得することが必要。
+データは収集しているがそこから回答できるビジネス上の質問の半分以上に経営層が関心がない、開発終盤でリソースがひっ迫しデータを収集するための SDK や JavaScript の実装が削除されたためにリリース後経営層に何も報告できない、あるいは Web と Mobile で別々の項目として収集され統合できない、といった状況に陥ってはならない。
+データ分析チームが機能するには、マーケティングチームとプロダクト開発チームから突きつけられる異なる目標、異なるシステム的要求の調整に取り組まなければならないことがある。例えば、マーケティング側は集約されたダッシュボードを求める一方、プロダクト側は単一ユーザーの行動を細かく追跡できるセッションレコーディングを求めることがある。システム的要求として、マーケティング側は中央集権型の管理を好む一方、プロダクト側はセルフサービス型で自由に分析できる方式を好むことがある。いわゆる BI ツールはマーケティングの文脈で進化してきており、プロダクト側のメトリクス収集ツールはバグやパフォーマンスの問題点検知を目的に進化してきたため、 2 つのチームの要求を満たす単一のツールは現時点でそんなに簡単には見つからない。また、 2 つのチームからの異なる要求の背景には、 KPI の差があることもある。例えば、マーケティングは Lead の獲得、プロダクト開発チームは Conversion を KPI としているなど。この時、プロダクト開発チームはマーケティングの質の低い Lead にイライラすることになる。
+答えるべき質問、取るべきデータ、マーケティング/プロダクトからの要求は刻々と変化するため、定期的に問い直す必要がある。
+
+[Webinar: Top 10 Digital Analytics Mistakes by Amplitude's Adam Greco and WillowTree's Jeremy Stern](https://youtu.be/6TImOjgju4s)
+
+
 ### 顧客から信頼される AI 機能を作るために気を付けるべきことは ? 
+
+**KAYAK の Director of Global Mobile Monetization [Chris Butler](https://www.linkedin.com/in/chrisbu/) の場合**
+
+機械学習は目標値を最大/最小化するよう学習するが、最適な体験は数値だけでなくプロトタイプを通じたメンタルモデルの観察から理解する必要がある。 AI のエラーは想像以上に不信感を生むため、合目的な利用と説明性が不可欠。
+
+([#ProductCon NYC: How to Build Trustworthy AI Products by Philosophie Director of AI](https://www.youtube.com/watch?v=DIwyKwPzrjc) (2018) より)
+
+### 顧客から信頼される対話型 UI を作るために気を付けるべきことは ? 
 
 **Shopify の Senior Product Manager [Ellen Dunne](https://www.linkedin.com/in/ellendunne/) の場合**
 
@@ -64,11 +90,6 @@
 
 ([The Future is Conversational by Shopify Sr. PM](https://www.youtube.com/watch?v=0epxFiYhBQA) (2018) より)
 
-**KAYAK の Director of Global Mobile Monetization [Chris Butler](https://www.linkedin.com/in/chrisbu/) の場合**
-
-機械学習は目標値を最大/最小化するよう学習するが、最適な体験は数値だけでなくプロトタイプを通じたメンタルモデルの観察から理解する必要がある。 AI のエラーは想像以上に不信感を生むため、合目的な利用と説明性が不可欠。
-
-([#ProductCon NYC: How to Build Trustworthy AI Products by Philosophie Director of AI](https://www.youtube.com/watch?v=DIwyKwPzrjc) (2018) より)
 
 ### データサイエンティストの Job Description をどのように書けばいいですか ?
 
