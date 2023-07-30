@@ -21,6 +21,7 @@
 * 機械学習を使った機能を実装するステップは ?
 * プロダクトの種類によって、どのようにデータサイエンスの使い方が変わりますか ?
 * プロダクトのフェーズによって、どのようにデータサイエンスの使い方が変わりますか ?
+* プロダクトの何を計測すればいいですか ?
 * プロダクトマネージャーがデータを活用するときの注意点は ?
 * データ分析チームはプロダクトチームにどのように関わるべきですか ?
 * 顧客から信頼される AI 機能を作るために気を付けるべきことは ?
@@ -61,6 +62,14 @@
 
 
 ([Webinar: Actionable Advice for Integrating Quantitative and Qualitative Insights by Heap](https://youtu.be/ZYJij0RsQeg0) (2023) より引用)
+
+### プロダクトの何を計測すればいいですか ?
+
+**[Twillio Segment](https://segment.com/) の Head of the Startup Program [Anand Deshpande](https://twitter.com/itgoesanandon) の場合**
+
+プロダクトの成長はユーザーが 1) Acquire: どれだけ登録しているか、 2) Engage/Retain: どれだけ使ったか/どの程度の頻度で使うか、 3) どれだけ課金しているか、の 3 段階で計測できる。 Netflix でいえば、 1) Acquire: 会員登録、 2) Engage: 番組視聴 / 1 週間に何回視聴するか、 3) 有料プラン登録となる。とくに、ユーザーの利用頻度 (Retain) は Product Market Fit しているかどうかの重要な指標になる。 EC サイトであれば、ユーザーが週に何回買い物をするかなどである。頻度を計算する際の期間はプロダクトごとに異なり、 Airbnb のような旅行予約であれば年、 Facebook のような SNS であれば日次 / 月次となる。
+
+([Webinar: Analytics & Stack Building for Startups by Segment Head of Startup Program, Anand Deshpande](https://youtu.be/rJiaMDgVnjM) (2022) より引用)
 
 ### プロダクトマネージャーがデータを活用するときの注意点は ?
 
