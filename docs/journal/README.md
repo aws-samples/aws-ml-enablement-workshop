@@ -21,7 +21,8 @@
 * 機械学習を使った機能を実装するステップは ?
 * プロダクトの種類によって、どのようにデータサイエンスの使い方が変わりますか ?
 * プロダクトのフェーズによって、どのようにデータサイエンスの使い方が変わりますか ?
-* プロダクトの何を計測すればいいですか ?
+* プロダクトのどんなメトリクスを計測すればいいですか ?
+* 計測したメトリクスからプロダクトの改善策を検討するプロセスは ?
 * プロダクトマネージャーがデータを活用するときの注意点は ?
 * データ分析チームはプロダクトチームにどのように関わるべきですか ?
 * 顧客から信頼される AI 機能を作るために気を付けるべきことは ?
@@ -63,13 +64,26 @@
 
 ([Webinar: Actionable Advice for Integrating Quantitative and Qualitative Insights by Heap](https://youtu.be/ZYJij0RsQeg0) (2023) より引用)
 
-### プロダクトの何を計測すればいいですか ?
+### プロダクトのどんなメトリクスを計測すればいいですか ?
 
 **[Twillio Segment](https://segment.com/) の Head of the Startup Program [Anand Deshpande](https://twitter.com/itgoesanandon) の場合**
 
 プロダクトの成長はユーザーが 1) Acquire: どれだけ登録しているか、 2) Engage/Retain: どれだけ使ったか/どの程度の頻度で使うか、 3) どれだけ課金しているか、の 3 段階で計測できる。 Netflix でいえば、 1) Acquire: 会員登録、 2) Engage: 番組視聴 / 1 週間に何回視聴するか、 3) 有料プラン登録となる。とくに、ユーザーの利用頻度 (Retain) は Product Market Fit しているかどうかの重要な指標になる。 EC サイトであれば、ユーザーが週に何回買い物をするかなどである。頻度を計算する際の期間はプロダクトごとに異なり、 Airbnb のような旅行予約であれば年、 Facebook のような SNS であれば日次 / 月次となる。
 
 ([Webinar: Analytics & Stack Building for Startups by Segment Head of Startup Program, Anand Deshpande](https://youtu.be/rJiaMDgVnjM) (2022) より引用)
+
+### 計測したメトリクスからプロダクトの改善策を検討するプロセスは ?
+
+**[Glovo](https://glovoapp.com/) の Group Product Manager [Lokesh Mahajan](https://www.linkedin.com/in/lokesh-mahajan-6807543a/) の場合**
+
+基本的な手順は 1) 数値分解 2) ボトルネック特定 3) 定量・定性両面でのユーザー体験の計測、 4) 問題の定義、 5) 問題解決を計測する KPI の定義、5) 解決策の実行、となる。  
+提携したジムを月額固定額で利用できるサービスで、エリア拡大の原資を捻出するため利益を拡大する場合を題材にする。サービスの売上はユーザー数と課金額の積、コストはユーザー数・平均ジム利用回数・ 1 回あたりジムへ支払う手数料の積で計算できる。率直に課金額を増やすこと、またジムに通う回数や支払う額を減らそうとすることはユーザー体験の悪化に繋がってしまう。ただ、「ジムへ支払う手数料」について分析すると、 €6 を超える大手ジムの利用が 60% と高く ( 左図 ) 、サービスを利用するにつれ大手ジムの利用率は下がっていくことが分かったとする (右図) 。ここから、課題は初期ユーザーの獲得を手数料の高い大手のジムに依存していることと言える。アプリケーションに表示するジムのリストのうち大手事務の割合から定量的データ、ユーザーへのヒアリングから大手事務を利用する定性的データを取得できる。次に行うことは改善すべきメトリクスの定義だが、例えば N 回のジム利用で利用されたジムの数 ( 種類 )は良いメトリクスになりえる。アプリケーションのリストの表示の改善、ジムへの認証マーク付与といった施策により、大手ではなくとも信頼できる利便性の高いジムを提案することがこのメトリクスの改善につながる。
+
+| 手数料の分析   | 大手ジム利用率の遷移 |
+| ---- | ---- |
+|  ![lean_product_playbook_dan_olsen_001](./images/globo_group_pm_lokesh_mahajan_001.png)  |  ![lean_product_playbook_dan_olsen_002](./images/globo_group_pm_lokesh_mahajan_002.png)  |
+
+([Webinar: Product Discovery With Data & User Research by Glovo Group PM, Lokesh Mahajan](https://youtu.be/tuo3CCfCHao) (2022) より引用)
 
 ### プロダクトマネージャーがデータを活用するときの注意点は ?
 
