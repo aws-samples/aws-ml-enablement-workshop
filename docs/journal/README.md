@@ -12,7 +12,7 @@
 
 海外のプロダクトマネージャーがどんな職歴や経歴なのか、あまり知られていないと思うので判別可能な限り LinkedIn のプロフィールへのリンクを載せています。なお、肩書は当時のものです。
 
-**新着 Q&A を見逃したくない方は[トップページ](https://github.com/aws-samples/aws-ml-enablement-workshop)で Star すればお気に入りから参照できます！**。Watch をすることで GitHub 上で通知を受け取ることもできます。
+**新着 Q&A を見逃したくない方は[トップページ](https://github.com/aws-samples/aws-ml-enablement-workshop)で Star すればお気に入りから参照できます！**。Watch をすることで GitHub 上で通知を受け取ることもできます。特に有用な内容は [note のマガジン](https://note.com/piqcy/m/m045751fb954a) でもまとめています。
 
 ![star_and_watch.png](./images/star_and_watch.png)
 
@@ -82,6 +82,8 @@
 | 手数料の分析   | 大手ジム利用率の遷移 |
 | ---- | ---- |
 |  ![lean_product_playbook_dan_olsen_001](./images/globo_group_pm_lokesh_mahajan_001.png)  |  ![lean_product_playbook_dan_olsen_002](./images/globo_group_pm_lokesh_mahajan_002.png)  |
+
+詳細は [プロダクトの課題をデータ分析から解決するための Step by Step](https://note.com/piqcy/n/n2d5e5c71a08e) をご参照。
 
 ([Webinar: Product Discovery With Data & User Research by Glovo Group PM, Lokesh Mahajan](https://youtu.be/tuo3CCfCHao) (2022) より引用)
 
