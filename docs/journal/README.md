@@ -162,5 +162,6 @@ Associate PM はユーザーストーリーを課題や機能に落とし込む�
 ## Contribution
 
 * [Q&A の修正についてのご連絡はこちらから](https://github.com/aws-samples/aws-ml-enablement-workshop/issues)
-* [Q&A の追加を頂ける場合こちらから (Pull Request)](https://github.com/aws-samples/aws-ml-enablement-workshop/compare?template=journal.md)
+* [Q&A の追加を頂ける場合こちらから (Pull Request)](
+https://github.com/aws-samples/aws-ml-enablement-workshop/compare)
    * [Product School の動画](https://youtube.com/playlist?list=PLEXcbK4FvkxHhsqZGNfopt_jtTp10mXw3) を主にまとめています。未だ追加されていないものや、他に有用な動画や記事があればぜひ Pull Request を送って頂ければ幸いです。 Pull Request に不慣れなかたは [環境構築解説編](https://aws.amazon.com/jp/builders-flash/202207/git-introduction-for-data-schientist/?awsf.filter-name=*all)と [Pull Request 送付編](https://aws.amazon.com/jp/builders-flash/202209/git-introduction-for-data-schientist-2/?awsf.filter-name=*all) をご参照ください。

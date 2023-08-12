@@ -1,16 +1,4 @@
-[ML Enablement Workshop](https://github.com/aws-samples/aws-ml-enablement-workshop) のコンテンツを追加 / 更新します。
+実施する修正のリンクをクリックしテンプレートに沿い更新内容を記載してください。
 
-## コンテンツ
-
-* コンテンツのタイトル
-   * xxx
-* 更新内容
-   1. xxx
-   2. yyy
-   3. zzz
-
-## チェックリスト
-
-* [ ] : README.md の表記も更新済み。
-* [ ] : コンテンツ内に個別顧客に対する機微な情報が含まれないことを確認済み。
-* [ ] : Notebook の場合、全てのセルが正常に実行終了することを確認済み。
+* [ML Enablement Workshop のコンテンツの更新をする](&template=content.md)
+* [データサイエンスを活用するプロダクトマネージャーを訪ねて、に記事を追加する](&template=content.md)
