@@ -6,7 +6,7 @@
 </p>
 
 
-本記事では、機械学習やデータをプロダクトで活用するときの Q&A をまとめています。質問 (Q) の例としては、「機械学習を使った機能の発見から実装までどんな流れで進めればいいですか ? 」などです。回答 (A) は、 [Product School](https://www.youtube.com/@ProductSchoolSanFrancisco) で公開されている世界各国の著名なプロダクトマネージャーの方のプレゼンテーションやインタビューからまとめています。
+本記事では、機械学習やデータをプロダクトで活用するときの Q&A をまとめています。質問 (Q) の例としては、「機械学習を使った機能の発見から実装までどんな流れで進めればいいですか ? 」などです。回答 (A) は、 [Product School](https://www.youtube.com/@ProductSchoolSanFrancisco) で公開されている世界各国の著名なプロダクトマネージャーの方のプレゼンテーションやインタビューなどからまとめています。
 
 海外のプロダクトマネージャーがどんな職歴や経歴なのか、あまり知られていないと思うので判別可能な限り LinkedIn のプロフィールへのリンクを載せています。なお、肩書は当時のものであり発言は会社を代表しているとは限らない点にご注意ください。
 
@@ -162,5 +162,6 @@ Associate PM はユーザーストーリーを課題や機能に落とし込む�
 ## Contribution
 
 * [Q&A の修正についてのご連絡はこちらから](https://github.com/aws-samples/aws-ml-enablement-workshop/issues)
-* [Q&A の追加を頂ける場合こちらから (Pull Request)](https://github.com/aws-samples/aws-ml-enablement-workshop/compare?template=journal.md)
+* [Q&A の追加を頂ける場合こちらから (Pull Request)](
+https://github.com/aws-samples/aws-ml-enablement-workshop/compare)
    * [Product School の動画](https://youtube.com/playlist?list=PLEXcbK4FvkxHhsqZGNfopt_jtTp10mXw3) を主にまとめています。未だ追加されていないものや、他に有用な動画や記事があればぜひ Pull Request を送って頂ければ幸いです。 Pull Request に不慣れなかたは [環境構築解説編](https://aws.amazon.com/jp/builders-flash/202207/git-introduction-for-data-schientist/?awsf.filter-name=*all)と [Pull Request 送付編](https://aws.amazon.com/jp/builders-flash/202209/git-introduction-for-data-schientist-2/?awsf.filter-name=*all) をご参照ください。
