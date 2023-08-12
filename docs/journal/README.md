@@ -6,15 +6,15 @@
 </p>
 
 
-本記事では、機械学習やデータをプロダクトで活用するときの Q&A をまとめています。質問 (Q) の例としては、「機械学習を使った機能の発見から実装までどんな流れで進めればいいですか ? 」などです。回答 (A) は、 [Product School](https://www.youtube.com/@ProductSchoolSanFrancisco) で公開されている世界各国の著名なプロダクトマネージャーの方のプレゼンテーションやインタビューからまとめています。 Product School は、グローバルのプロダクトマネージャーコミュニティです。
+本記事では、機械学習やデータをプロダクトで活用するときの Q&A をまとめています。質問 (Q) の例としては、「機械学習を使った機能の発見から実装までどんな流れで進めればいいですか ? 」などです。回答 (A) は、 [Product School](https://www.youtube.com/@ProductSchoolSanFrancisco) で公開されている世界各国の著名なプロダクトマネージャーの方のプレゼンテーションやインタビューからまとめています。
 
-本記事に掲載しているプロダクトマネージャーの発言は、会社を代表しているとは限らない点にご注意ください。新しい質問の追加や誤字等の修正があれば [Issue](https://github.com/aws-samples/aws-ml-enablement-workshop/issues) にてご連絡ください。
-
-海外のプロダクトマネージャーがどんな職歴や経歴なのか、あまり知られていないと思うので判別可能な限り LinkedIn のプロフィールへのリンクを載せています。なお、肩書は当時のものです。
+海外のプロダクトマネージャーがどんな職歴や経歴なのか、あまり知られていないと思うので判別可能な限り LinkedIn のプロフィールへのリンクを載せています。なお、肩書は当時のものであり発言は会社を代表しているとは限らない点にご注意ください。
 
 **新着 Q&A を見逃したくない方は[トップページ](https://github.com/aws-samples/aws-ml-enablement-workshop)で Star すればお気に入りから参照できます！**。Watch をすることで GitHub 上で通知を受け取ることもできます。特に有用な内容は [note のマガジン](https://note.com/piqcy/m/m045751fb954a) でもまとめています。
 
 ![star_and_watch.png](./images/star_and_watch.png)
+
+Q&A に誤りを見つけた方や Q&A の追加に関心ある方は末尾の Contribution をご参照ください。
 
 ## Q&A 一覧
 
@@ -158,3 +158,9 @@ Yes 。期間で区切り、優先順位をつけて有望な手法にベット�
 Associate PM はユーザーストーリーを課題や機能に落とし込むこと、 PM は新しい機能のリリース、 Senior PM は新しいプロダクトのリリース、 Product Leader は複数プロダクトのポートフォリオの実現に責任を持つイメージ。
 
 ([Webinar: Will AI Make Human Product Managers Obsolete? by Amazon Sr PM, Siddharth Ilangovan](https://youtu.be/7RmHV-XYM48?t=354) (2023) より)
+
+## Contribution
+
+* [Q&A の修正についてのご連絡はこちらから](https://github.com/aws-samples/aws-ml-enablement-workshop/issues)
+* [Q&A の追加を頂ける場合こちらから (Pull Request)](https://github.com/aws-samples/aws-ml-enablement-workshop/compare?template=journal.md)
+   * [Product School の動画](https://youtube.com/playlist?list=PLEXcbK4FvkxHhsqZGNfopt_jtTp10mXw3) を主にまとめています。未だ追加されていないものや、他に有用な動画や記事があればぜひ Pull Request を送って頂ければ幸いです。 Pull Request に不慣れなかたは [環境構築解説編](https://aws.amazon.com/jp/builders-flash/202207/git-introduction-for-data-schientist/?awsf.filter-name=*all)と [Pull Request 送付編](https://aws.amazon.com/jp/builders-flash/202209/git-introduction-for-data-schientist-2/?awsf.filter-name=*all) をご参照ください。
