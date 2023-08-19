@@ -48,7 +48,7 @@ Amazon, Spotify, Uber など世界的なプロダクトのマネージャーが�
 
 * [プロダクトへの生成系 AI 活用方法をアイディエーションする会](https://speakerdeck.com/icoxfog417/purodakutohenosheng-cheng-xi-ai-huo-yong-fang-fa-wo-aideiesiyonsuruhui) ( 所要時間 1 時間半 ~ 2 時間 )
    * プロダクトで生成系 AI を活用するためのアイデアを発想、検証するためのワークショップです。1) 生成系 AI 活用のポイント、 2) アイディエーション、 3) ビジネスモデルキャンバスを利用したアイデアの効果検証、の 3 パートから成ります。
-* [サービスの解約率を改善シナリオ](./notebooks/scenario_churn/) ( 所要時間 2~3 時間 )
+* [サービスの解約率改善シナリオ](./notebooks/scenario_churn/) ( 所要時間 2~3 時間 )
    * 携帯電話会社での解約率改善を題材に、ビジネス理解からモデルのテストまで一気通貫で体験できるハンズオン。
 
 ## ⚡ ハンズオン資料
