@@ -1,18 +1,17 @@
 # ML Enablement Workshop
 
-プロダクトマネージャーが、機械学習の「勝ちパターン」を実現するチームとロードマップが作れるワークショップです。
+プロダクトマネージャーが、機械学習 / 生成系 AI によりプロダクトを継続的に成長させるロードマップが作れるワークショップです。
 
 ## :books: ワークショップ資料
 
 ワークショップは3部構成となっています。Titleのリンクから資料へ、Workから成果物用のテンプレートにアクセスできます。
 
-| Title |[理解編: ベストプラクティスの理解](docs/presentations/ml-enablement-01-architect.pdf)|[応用編: 顧客体験改善への応用](docs/presentations/ml-enablement-02-application.pdf)|[開始編: 顧客体験の改善を開始する](docs/presentations/ml-enablement-03-action.pdf)|
+| Title |[理解編: 成長サイクルの理解する](docs/organizer/day1.md)|[応用編: 顧客体験改善への応用](docs/presentations/ml-enablement-02-application.pdf)|[開始編: 顧客体験の改善を開始する](docs/presentations/ml-enablement-03-action.pdf)|
 |:--------|:---------|:------|:------|
 | Image |![Architect](docs/images/top/ml-enablement-01-architect.png)|![Application](docs/images/top/ml-enablement-02-application.png)|![Action](docs/images/top/ml-enablement-03-action.png)|
-| Work  | [ベストプラクティス一覧](https://docs.google.com/spreadsheets/d/1lJmDi1Fx50HzEWXq8YU--I1HOdFIEcN7YJVAsMlAtQI/edit?usp=sharing) | [Event Storming用ボード](https://miro.com/app/board/uXjVMSMR38c=/?share_link_id=286437223244) |Coming Soon|
-| Video | Coming Soon|Coming Soon|Coming Soon|
+| Work  | [ユースケースの発案と検証](https://miro.com/app/board/uXjVMskX3PY=/?moveToWidget=3458764561904198140&cot=14) | [Event Storming用ボード](https://miro.com/app/board/uXjVMSMR38c=/?share_link_id=286437223244) |Coming Soon|
 
-**理解編**で、機械学習の「勝ちパターン」と勝ちパターンを成立させたベストプラクティス事例を学びます。**応用編**で、事例を下地にプロダクトの顧客体験が改善するプロセスを可視化します。**開始編**で、勝ちパターン成立に向け効果を確認しながら投資とチームを拡大できるよう、段階的なステップを設計します。
+**理解編**で、プロダクトが機械学習で成長する仕組みを学び事例を参考に自社のビジネスモデルを設計します。**応用編**で、顧客のビジネスモデル体験を可視化し成立を確認するための必要最小限の検証スコープを特定します。**開始編**で、ビジネス価値を想像しながら検証を進めていくための段階的なステップを設計します。
 
 ML Enablement Workshopを利用いただくメリットは3つです。
 
