@@ -11,13 +11,13 @@
 
 ## ワークショップの概要
 
-![Workshop Agenda](./assets/ws_agenda.png)
+![Workshop Agenda](./assets/day0/ws_agenda.png)
 
 **ML Enablement Workshop のアウトプット**
 
 ビジネスモデルの作成から始まり、ユーザーストーリーによる詳細化、行動計画への詳細化、と進みます。
 
-![Workshop Outputs](./assets/output_image.png)
+![Workshop Outputs](./assets/day0/output_image.png)
 
 ## ワークショップで期待される役割について
 
@@ -65,7 +65,7 @@ MLEWは**ワークショップの場だけでなく今後も連携を続け機�
 - [ ] ビジネスモデルキャンバスによる成功要因の分析
 - [ ] 自社版のビジネスモデルキャンバスの作成
 
-![Business Model Canvas of Canva](./assets/canva_business_model_canvas.png)
+![Business Model Canvas of Canva](./assets/day0/canva_business_model_canvas.png)
 
 CanvaにおけるStability AIのStable Diffusion を使用したイラスト生成 AI 機能の実装、提供事例の分析例
 
@@ -79,7 +79,7 @@ CanvaにおけるStability AIのStable Diffusion を使用したイラスト生�
 - [ ] 機械学習による解決プロセスの主導
 
 
-![Event Storming Sample](./assets/event_storming_sample.png)
+![Event Storming Sample](./assets/day0/event_storming_sample.png)
 
 Event Stormingの例。ペルソナを黄色のポストイット、時系列のイベントをオレンジ、課題を赤、が基本で他のポストイットや矢印は必要に応じ。
 
@@ -113,7 +113,7 @@ Event Stormingの例。ペルソナを黄色のポストイット、時系列の
 - [ ] 自プロダクトドメインの事例の収集（背景を含めた説明ができることが望ましい）
 
 事例をまとめるフォーマットに指定はありませんが、以下に Problem、Solution、Impactでまとめた例を示します。
-![Intuit Case Sample](./assets/intuit_case.png)
+![Intuit Case Sample](./assets/day0/intuit_case.png)
 
 
 #### Day1 [理解]
