@@ -4,21 +4,28 @@
 
 ワークショップの実施により、次のような課題の解決ができます。
 
-* 機械学習や生成系 AI がどんなユーザー課題の解決に利用できるのか知見がなく、プロダクトへの応用が進められずにいる。
+* 機械学習や生成系 AI でどんなユーザー課題が解決できるか知見がなく活用案が生まれない。
 * プロダクト開発チームとデータサイエンスチームのつながりが弱く、連携して動けていない。
-* たびたび機械学習の活用、生成系 AI の活用が話題に登るもののアイデアや検討会はいつの間にか立ち消えになっている。
+* たびたび活用の機運が高まりアイデアが検討されるもののいつの間にか立ち消えになっている。
+
+統計的に、日本では上記の課題が顕著な傾向があります。関心ある方は以下の資料もご参照ください。
+
+* [日本のAI導入効果がアメリカの7分の1程度しかないのはなぜなのか](https://note.com/piqcy/n/na971fee54568)
+* [インフラだけではないMLOpsの話](https://speakerdeck.com/icoxfog417/inhuradakedehanaimlopsnohua)
 
 ## :books: ワークショップ資料
 
 ワークショップは3部構成となっています。Titleのリンクから資料へ、Workから成果物用のテンプレートにアクセスできます。
 
-| Title |[理解編: 成長サイクルの理解する](docs/organizer/day1.md)|[応用編: 顧客体験改善への応用](docs/presentations/ml-enablement-02-application.pdf)|[開始編: 顧客体験の改善を開始する](docs/presentations/ml-enablement-03-action.pdf)|
+| Title |[理解編: 成長サイクルの理解](docs/organizer/day1.md)|[応用編: 顧客体験改善への応用](docs/presentations/ml-enablement-02-application.pdf)|[開始編: 検証/実装を開始する](docs/presentations/ml-enablement-03-action.pdf)|
 |:--------|:---------|:------|:------|
 | Image |![Architect](docs/images/top/ml-enablement-01-architect.png)|![Application](docs/images/top/ml-enablement-02-application.png)|![Action](docs/images/top/ml-enablement-03-action.png)|
-| Work  | [ユースケースの発案と検証](https://miro.com/app/board/uXjVMskX3PY=/?moveToWidget=3458764561904198140&cot=14) | [顧客体験を可視化し焦点を定める](https://miro.com/app/board/uXjVMSMR38c=/?share_link_id=286437223244) | 1 ~3 カ月のマイルストン作成 |
+| Work  | [ユースケースの発案と検証](https://miro.com/app/board/uXjVMskX3PY=/?moveToWidget=3458764561904198140&cot=14) | [顧客体験を現し焦点を絞る](https://miro.com/app/board/uXjVMSMR38c=/?share_link_id=286437223244) | 1 ~3 カ月のマイルストン作成 |
 | Time(*) | 3 時間 | 4 時間 | 3 時間 |
 
-**理解編**で、プロダクトが機械学習で成長する仕組みを学び事例を参考に自社のビジネスモデルを設計します。**応用編**で、顧客のビジネスモデル体験を可視化し成立を確認するための必要最小限の検証スコープを特定します。**開始編**で、ビジネス価値を想像しながら検証を進めていくための段階的なステップを設計します。
+**理解編**で、プロダクトが機械学習で成長する仕組みを学び事例を参考に自社のビジネスモデルを設計します。
+**応用編**で、顧客のビジネスモデル体験を可視化し成立を確認するための必要最小限の検証スコープを特定します。
+**開始編**で、ビジネス価値を想像しながら検証を進めていくための段階的なステップを設計します。
 
 (*) 1 時間のバッファ込みの時間です。
 
@@ -31,28 +38,29 @@ ML Enablement Workshop の特徴は 3 つです。
 * :octocat: **公共的**
    * GitHub で オープンソースとして教材を公開しており、ライセンスの範囲で無料で利用頂くことができます。[ワークショップを開催するためのガイド](https://github.com/aws-samples/aws-ml-enablement-workshop#%E9%96%8B%E5%82%AC%E8%80%85%E5%90%91%E3%81%91%E3%82%AC%E3%82%A4%E3%83%89)を参照し、社内での機械学習やデータ活用推進などに活かしていただきます。
 
-## 🔍 関連資料
+「実践的」の証明として、ワークショップの改善の歩みを残しています。関心ある方は下記記事をご参照ください。
+
+* [機械学習プロジェクトの約80%が失敗するのは伊達ではないと実感したが、現実に負けないワークショップに挑戦する](https://note.com/piqcy/n/n9c9e97896596)
+   * ML Enablement Workshop 改善版について、改善前の課題と改善後のポイントをまとめた記事です。
+* [機械学習モデル開発プロジェクトの体験ハンズオンを公開しました](https://note.com/piqcy/n/n51ffb8e02293)
+   * 初版公開時の記事です。
+
+### 📌 スペシャルコンテンツ
+
+AWS だけでなく、 Amazon, Spotify, Uber など世界的なプロダクトのマネージャーがどのように機械学習を活用しているか調査し、その内容も反映しています。下記記事で、 Q&A 形式で機械学習を含むデータサイエンスの活用方法をまとめています。
+
+**[データサイエンスを活用するプロダクトマネージャーを訪ねて](docs/journal/README.md)**
+
+### 🤖 生成系 AI への適用
+
+生成系 AI の活用とそれを推進する ML Enablement Workshop について発表した資料です。
 
 * [大規模言語モデルを Fine Tuning すべきタイミングとその方法](https://speakerdeck.com/icoxfog417/da-gui-mo-yan-yu-moderuwo-fine-tuning-subekitaimingutosonofang-fa)
    * プロダクトを生成系 AI で成長させるのになぜ Fine Tuning が必要なのか、どのような手順で進めればよいのかを解説したスライドです。Biz 、Dev 、 ML の 3 ステップのプロセスを紹介し Biz フェーズの支援として ML Enablement Workshop を紹介しています。
-* [インフラだけではないMLOpsの話](https://speakerdeck.com/icoxfog417/inhuradakedehanaimlopsnohua)
-   * MLOpsの前提となる「ML」がプロダクトの成長に貢献している状態を実現するために、AWSが実施している ML Enablement Workshop の内容や提供の経緯をお話しした資料です。
 * [ゲーム業界における生成系AIの活用](https://speakerdeck.com/icoxfog417/gemuye-jie-niokerusheng-cheng-xi-ainohuo-yong)
    * ゲーム業界で生成系 AI を活用している事例と、活用のためのポイントをまとめた発表した記事です。
 * [プロダクトの成長をリードする生成系 AI の活用戦略](https://speakerdeck.com/icoxfog417/purodakutonocheng-chang-woridosurusheng-cheng-xi-ai-nohuo-yong-zhan-lue)
    * 短期的な生成系 AI のお試しから、長期的なプロダクトの差別化につなげる戦略の立て方を解説した資料です。Biz 、Dev 、 ML の 3 ステップについて、 生成系 AI の活用事例をベースにポイントを解説しています。
-* [機械学習プロジェクトの約80%が失敗するのは伊達ではないと実感したが、現実に負けないワークショップに挑戦する](https://note.com/piqcy/n/n9c9e97896596)
-   * ML Enablement Workshop 改善版について、改善前の課題と改善後のポイントをまとめた記事です。
-* [日本のAI導入効果がアメリカの7分の1程度しかないのはなぜなのか](https://note.com/piqcy/n/na971fee54568)
-   * AI白書2022を元にした調査記事
-* [機械学習モデル開発プロジェクトの体験ハンズオンを公開しました](https://note.com/piqcy/n/n51ffb8e02293)
-   * 初版公開時の記事
-
-#### 📌 スペシャルコンテンツ
-
-Amazon, Spotify, Uber など世界的なプロダクトのマネージャーがどのように機械学習を活用しているか Q&A 形式でまとめた記事。
-
-* [データサイエンスを活用するプロダクトマネージャーを訪ねて](docs/journal/README.md)
 
 ## :rocket: 短期集中型ワークショップ
 
