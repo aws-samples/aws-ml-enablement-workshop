@@ -17,7 +17,7 @@
 
 ワークショップは3部構成となっています。Titleのリンクから資料へ、Workから成果物用のテンプレートにアクセスできます。
 
-| Title |[理解編: 成長サイクルの理解](docs/organizer/day1.md)|[応用編: 顧客体験改善への応用](docs/presentations/ml-enablement-02-application.pdf)|[開始編: 検証/実装を開始する](docs/presentations/ml-enablement-03-action.pdf)|
+| Title |[理解編: 成長サイクルの理解](docs/organizer/day1.md)|[応用編: 顧客体験改善への応用](docs/organizer/day2.md)|[開始編: 検証/実装を開始する](docs/presentations/ml-enablement-03-action.pdf)|
 |:--------|:---------|:------|:------|
 | Image |![Architect](docs/images/top/ml-enablement-01-architect.png)|![Application](docs/images/top/ml-enablement-02-application.png)|![Action](docs/images/top/ml-enablement-03-action.png)|
 | Work  | [ユースケースの発案と検証](https://miro.com/app/board/uXjVMskX3PY=/?moveToWidget=3458764561904198140&cot=14) | [顧客体験を現し焦点を絞る](https://miro.com/app/board/uXjVMSMR38c=/?share_link_id=286437223244) | 1 ~3 カ月のマイルストン作成 |
