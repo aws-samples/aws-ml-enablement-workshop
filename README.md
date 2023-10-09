@@ -4,28 +4,30 @@
 
 ワークショップの実施により、次のような課題の解決ができます。
 
-* 機械学習や生成系 AI でどんなユーザー課題が解決できるか知見がなく活用案が生まれない。
-* プロダクト開発チームとデータサイエンスチームのつながりが弱く、連携して動けていない。
-* たびたび活用の機運が高まりアイデアが検討されるもののいつの間にか立ち消えになっている。
+* 機械学習や生成系 AI に可能性を感じるものの、技術に詳しくなく目の前の課題と結びつかない。
+* データサイエンス・分析チームとは散発的な依頼ベースのつながりしかなく、プロダクト全体への活用を議論する土壌がない。
+* 活用の機運が高まりアイデアが検討されるものの、いつの間にか立ち消えになっている。
 
-統計的に、日本では上記の課題が顕著な傾向があります。関心ある方は以下の資料もご参照ください。
+上記の課題は、日本ではよく見られる課題です。例えば、日本ではデータを活用した企画や業務改善を考えられる人材が 20% 程度と米国の約 1/3 に留まり、 スタートアップでも機械学習や生成系 AI といった技術革新を受けプロダクトのピボットを検討した企業は 1 割程度に留まります。この差が、 AI の導入効果が米国に比べ 1/7 程度、スタートアップの成長率は約 1/30 と非常に低い値となる一因になっています。関心ある方は以下の資料もご参照ください。
 
-* [日本のAI導入効果がアメリカの7分の1程度しかないのはなぜなのか](https://note.com/piqcy/n/na971fee54568)
-* [インフラだけではないMLOpsの話](https://speakerdeck.com/icoxfog417/inhuradakedehanaimlopsnohua)
+* [日本のAI導入効果がアメリカの7分の1程度しかないのはなぜなのか](https://note.com/piqcy/n/na971fee54568) : 📹[動画](https://www.youtube.com/watch?v=Uxip1ggPwtw)
+* [日本のスタートアップ企業の成長速度が米国に比べ30分の1以下という現状にデータサイエンティストは何ができるか](https://note.com/piqcy/n/n66c93427d8f0)
+
+本ワークショップではデータに基づく顧客体験の改善 (=成長サイクル) を 1~3 カ月で行う計画を作成します。ワークショップおよび計画の実行を通じて得られる共通体験により、機械学習や生成系 AI の活用、データサイエンスチームとの連携を持続的な活動とし米国同等の効果と成長率の実現につなげます。
 
 ## :books: ワークショップ資料
 
-ワークショップは3部構成となっています。Titleのリンクから資料へ、Workから成果物用のテンプレートにアクセスできます。
+ワークショップは 3 部構成となっています。Titleのリンクから資料へ、Workから成果物用のテンプレートにアクセスできます。
 
-| Title |[理解編: 成長サイクルの理解](docs/organizer/day1.md)|[応用編: 顧客体験改善への応用](docs/organizer/day2.md)|[開始編: 検証/実装を開始する](docs/presentations/ml-enablement-03-action.pdf)|
+| Title |[理解編: 成長サイクルの理解](docs/organizer/day1.md)|[応用編: 顧客体験改善への応用](docs/organizer/day2.md)|[開始編: 検証/実装を開始する](docs/organizer/day3.md)|
 |:--------|:---------|:------|:------|
 | Image |![Architect](docs/images/top/ml-enablement-01-architect.png)|![Application](docs/images/top/ml-enablement-02-application.png)|![Action](docs/images/top/ml-enablement-03-action.png)|
-| Work  | [ユースケースの発案と検証](https://miro.com/app/board/uXjVMskX3PY=/?moveToWidget=3458764561904198140&cot=14) | [顧客体験を現し焦点を絞る](https://miro.com/app/board/uXjVMSMR38c=/?share_link_id=286437223244) | 1 ~3 カ月のマイルストン作成 |
+| Work  | 事例に基づくビジネスモデル構築 | 顧客視点での課題の洗い出し | 1 ~3 カ月のマイルストン作成 |
 | Time(*) | 3 時間 | 4 時間 | 3 時間 |
 
 **理解編**で、プロダクトが機械学習で成長する仕組みを学び事例を参考に自社のビジネスモデルを設計します。  
 **応用編**で、顧客のビジネスモデル体験を可視化し成立を確認するための必要最小限の検証スコープを特定します。  
-**開始編**で、ビジネス価値を想像しながら検証を進めていくための段階的なステップを設計します。
+**開始編**で、ビジネス価値を着実に積みつつ検証を進めていくための段階的なステップを設計します。
 
 (*) 1 時間のバッファ込みの時間です。
 
@@ -34,9 +36,9 @@ ML Enablement Workshop の特徴は 3 つです。
 * 💪 **実践的**
    * AWS のノウハウが詰め込まれています。 AWS の事例、またワークショップの提供から得られた「活きた知見」が資料と提供者用ガイドに集約されています。
 * 🛠️ **協調的**
-   * AWSのサービスとプログラムでロードマップの実現を支援します。手軽に生成系 AI が使える [Amazon Bedrock](https://aws.amazon.com/jp/bedrock/) や無料で Jupyter Notebook が使える [Amazon SageMaker Studio Lab](https://studiolab.sagemaker.aws/) から、機械学習の継続的な学習に不可欠な MLOps を構築する [Amazon SageMaker](https://aws.amazon.com/jp/sagemaker/) まで、幅広なサービスと [生成系 AI イノベーションセンター](https://aws.amazon.com/jp/about-aws/whats-new/2023/06/aws-announces-generative-ai-innovation-center/) 等の実装支援プログラムでユースケースの実現まで伴走します。
+   * AWS のサービスとプログラムでロードマップの実現を支援します。手軽に生成系 AI が使える [Amazon Bedrock](https://aws.amazon.com/jp/bedrock/) や無料で Jupyter Notebook が使える [Amazon SageMaker Studio Lab](https://studiolab.sagemaker.aws/) から、機械学習の継続的な学習に不可欠な MLOps を構築する [Amazon SageMaker](https://aws.amazon.com/jp/sagemaker/) まで、幅広なサービスと [生成系 AI イノベーションセンター](https://aws.amazon.com/jp/about-aws/whats-new/2023/06/aws-announces-generative-ai-innovation-center/) 等の実装支援プログラムでユースケースの実現まで伴走します。
 * :octocat: **公共的**
-   * GitHub で オープンソースとして教材を公開しており、ライセンスの範囲で無料で利用頂くことができます。[ワークショップを開催するためのガイド](https://github.com/aws-samples/aws-ml-enablement-workshop#%E9%96%8B%E5%82%AC%E8%80%85%E5%90%91%E3%81%91%E3%82%AC%E3%82%A4%E3%83%89)を参照し、社内での機械学習やデータ活用推進などに活かしていただきます。
+   * GitHub で オープンソースとして教材を公開しており、ライセンスの範囲で無料で利用頂くことができます。[ワークショップを開催するためのガイド](docs/organizer/)を参照し、社内での機械学習やデータ活用推進などに活用いただけます。
 
 「実践的」の証明として、ワークショップの改善の歩みを残しています。関心ある方は下記記事をご参照ください。
 
