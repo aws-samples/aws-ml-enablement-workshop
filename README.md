@@ -1,46 +1,68 @@
 # ML Enablement Workshop
 
-プロダクトマネージャーが、機械学習の「勝ちパターン」を実現するチームとロードマップが作れるワークショップです。
+プロダクトマネージャーが、機械学習 / 生成系 AI によりプロダクトを継続的に成長させるロードマップが作れるワークショップです。
+
+ワークショップの実施により、次のような課題の解決ができます。
+
+* 機械学習や生成系 AI に可能性を感じるものの、技術に詳しくなく目の前の課題と結びつかない。
+* データサイエンス・分析チームとは散発的なつながりしかなく、プロダクト全体への活用を議論できてない。
+* 活用の機運が高まりアイデアが検討されるものの、いつの間にか立ち消えている。
+
+上記の課題は、日本ではよく見られる課題です。例えば、日本ではデータを活用した企画や業務改善を主導できる人材が 20% 程度と米国の約 1/3 に留まり、 スタートアップでも技術革新を受けプロダクトのピボットを検討した企業は 1 割程度に留まります。この差が、 AI の導入効果が米国に比べ約 1/7 、スタートアップの成長率は約 1/30 と大きく乖離する一因になっています。関心ある方は以下の資料もご参照ください。
+
+* [日本のAI導入効果がアメリカの7分の1程度しかないのはなぜなのか](https://note.com/piqcy/n/na971fee54568) : 📹[動画](https://www.youtube.com/watch?v=Uxip1ggPwtw)
+* [日本のスタートアップ企業の成長速度が米国に比べ30分の1以下という現状にデータサイエンティストは何ができるか](https://note.com/piqcy/n/n66c93427d8f0)
+
+本ワークショップではデータに基づく顧客体験の改善 (=成長サイクル) を 1~3 カ月で行う計画を作成します。ワークショップおよび計画の実行を通じて得られる共通体験から機械学習や生成系 AI の活用、データサイエンスチームとの連携を持続的にし米国同等の効果と成長率を実現します。
 
 ## :books: ワークショップ資料
 
-ワークショップは3部構成となっています。Titleのリンクから資料へ、Workから成果物用のテンプレートにアクセスできます。
+ワークショップは 3 部構成となっています。 Title のリンクから各パートの詳細にアクセスできます。
 
-| Title |[理解編: ベストプラクティスの理解](docs/presentations/ml-enablement-01-architect.pdf)|[応用編: 顧客体験改善への応用](docs/presentations/ml-enablement-02-application.pdf)|[開始編: 顧客体験の改善を開始する](docs/presentations/ml-enablement-03-action.pdf)|
+| Title |[理解編: 成長サイクルの理解](docs/organizer/day1.md)|[応用編: 顧客体験改善への応用](docs/organizer/day2.md)|[開始編: 検証/実装を開始する](docs/organizer/day3.md)|
 |:--------|:---------|:------|:------|
 | Image |![Architect](docs/images/top/ml-enablement-01-architect.png)|![Application](docs/images/top/ml-enablement-02-application.png)|![Action](docs/images/top/ml-enablement-03-action.png)|
-| Work  | [ベストプラクティス一覧](https://docs.google.com/spreadsheets/d/1lJmDi1Fx50HzEWXq8YU--I1HOdFIEcN7YJVAsMlAtQI/edit?usp=sharing) | [Event Storming用ボード](https://miro.com/app/board/uXjVMSMR38c=/?share_link_id=286437223244) |Coming Soon|
-| Video | Coming Soon|Coming Soon|Coming Soon|
+| Work  | 事例に基づくビジネスモデル構築 | 顧客視点での課題の洗い出し | 1 ~3 カ月のマイルストン作成 |
+| Time(*) | 3 時間 | 4 時間 | 3 時間 |
 
-**理解編**で、機械学習の「勝ちパターン」と勝ちパターンを成立させたベストプラクティス事例を学びます。**応用編**で、事例を下地にプロダクトの顧客体験が改善するプロセスを可視化します。**開始編**で、勝ちパターン成立に向け効果を確認しながら投資とチームを拡大できるよう、段階的なステップを設計します。
+**理解編**で、プロダクトが機械学習で成長する仕組みを学び事例を参考に自社のビジネスモデルを設計します。  
+**応用編**で、顧客のビジネスモデル体験を可視化し成立を確認するための必要最小限の検証スコープを特定します。  
+**開始編**で、ビジネス価値を着実に積みつつ検証を進めていくための段階的なステップを設計します。
 
-ML Enablement Workshopを利用いただくメリットは3つです。
+(*) 1 時間のバッファ込みの時間です。
+
+ML Enablement Workshop の特徴は 3 つです。
 
 * 💪 **実践的**
-   * AWSで機械学習の活用を支援したノウハウが詰め込まれています。ワークショップの提供から得られたつまづきや成功の知見、お客様からのフィードバックを随時反映し「活きた知見」を提供します。
-* 🛠️ **実現性**
-   * AWSのサービスとプログラムでロードマップの実現を支援します。無料で利用可能な[Amazon SageMaker Studio Lab](https://studiolab.sagemaker.aws/)や表計算ソフト間隔で使える[Amazon SageMaker Canvas](https://aws.amazon.com/jp/sagemaker/canvas)など、熟練したデータサイエンティストがいなくても機械学習が実装できるサービスを提供しています。AWSのエキスパートによるモデル構築支援を行う[ML Solutions Lab](https://aws.amazon.com/jp/ml-solutions-lab/)等も含め、サービスとプログラム両面で機械学習による勝ちパターンの実現を支援します。
-* :octocat: **無料**
-   * GitHubでOSSとして教材を公開しており、ライセンスの範囲で自由に利用頂くことができます。[ワークショップを開催するためのガイド](https://github.com/aws-samples/aws-ml-enablement-workshop#%E9%96%8B%E5%82%AC%E8%80%85%E5%90%91%E3%81%91%E3%82%AC%E3%82%A4%E3%83%89)も提供し、社内でのデータ活用推進などに活かしていただきます。
+   * AWS のノウハウが詰め込まれています。 AWS の事例、またワークショップの提供から得られた「活きた知見」が資料と提供者用ガイドに集約されています。
+* 🛠️ **協調的**
+   * AWS のサービスとプログラムでロードマップの実現を支援します。手軽に生成系 AI が使える [Amazon Bedrock](https://aws.amazon.com/jp/bedrock/) や無料で Jupyter Notebook が使える [Amazon SageMaker Studio Lab](https://studiolab.sagemaker.aws/) から、機械学習の継続的な学習に不可欠な MLOps を構築する [Amazon SageMaker](https://aws.amazon.com/jp/sagemaker/) まで、幅広なサービスと [生成系 AI イノベーションセンター](https://aws.amazon.com/jp/about-aws/whats-new/2023/06/aws-announces-generative-ai-innovation-center/) 等の実装支援プログラムでユースケースの実現まで伴走します。
+* :octocat: **公共的**
+   * GitHub で オープンソースとして教材を公開しており、ライセンスの範囲で無料で利用頂くことができます。[ワークショップを開催するためのガイド](docs/organizer/)を参照し、社内での機械学習やデータ活用推進などに活用いただけます。
 
-## 🔍 関連資料
+「実践的」の証明としてワークショップ改善の歩みを残しています。関心ある方はご参照ください。
 
+* [機械学習プロジェクトの約80%が失敗するのは伊達ではないと実感したが、現実に負けないワークショップに挑戦する](https://note.com/piqcy/n/n9c9e97896596)
+   * ML Enablement Workshop 改善版について、改善前の課題と改善後のポイントをまとめた記事です。
+* [機械学習モデル開発プロジェクトの体験ハンズオンを公開しました](https://note.com/piqcy/n/n51ffb8e02293)
+   * 初版公開時の記事です。
+
+### 📌 スペシャルコンテンツ
+
+AWS だけでなく、 Amazon, Spotify, Uber など世界的なプロダクトのマネージャーがどのように機械学習を活用しているか調査し、その内容も反映しています。下記記事で、 Q&A 形式で機械学習を含むデータサイエンスの活用方法をまとめています。
+
+**[データサイエンスを活用するプロダクトマネージャーを訪ねて](docs/journal/README.md)**
+
+### 🤖 生成系 AI への適用
+
+生成系 AI の活用とそれを推進する ML Enablement Workshop について発表した資料です。
+
+* [大規模言語モデルを Fine Tuning すべきタイミングとその方法](https://speakerdeck.com/icoxfog417/da-gui-mo-yan-yu-moderuwo-fine-tuning-subekitaimingutosonofang-fa)
+   * プロダクトを生成系 AI で成長させるのになぜ Fine Tuning が必要なのか、どのような手順で進めればよいのかを解説したスライドです。Biz 、Dev 、 ML の 3 ステップのプロセスを紹介し Biz フェーズの支援として ML Enablement Workshop を紹介しています。
 * [ゲーム業界における生成系AIの活用](https://speakerdeck.com/icoxfog417/gemuye-jie-niokerusheng-cheng-xi-ainohuo-yong)
    * ゲーム業界で生成系 AI を活用している事例と、活用のためのポイントをまとめた発表した記事です。
 * [プロダクトの成長をリードする生成系 AI の活用戦略](https://speakerdeck.com/icoxfog417/purodakutonocheng-chang-woridosurusheng-cheng-xi-ai-nohuo-yong-zhan-lue)
    * 短期的な生成系 AI のお試しから、長期的なプロダクトの差別化につなげる戦略の立て方を解説した資料です。Biz 、Dev 、 ML の 3 ステップについて、 生成系 AI の活用事例をベースにポイントを解説しています。
-* [機械学習プロジェクトの約80%が失敗するのは伊達ではないと実感したが、現実に負けないワークショップに挑戦する](https://note.com/piqcy/n/n9c9e97896596)
-   * ML Enablement Workshop 改善版について、改善前の課題と改善後のポイントをまとめた記事です。
-* [日本のAI導入効果がアメリカの7分の1程度しかないのはなぜなのか](https://note.com/piqcy/n/na971fee54568)
-   * AI白書2022を元にした調査記事
-* [機械学習モデル開発プロジェクトの体験ハンズオンを公開しました](https://note.com/piqcy/n/n51ffb8e02293)
-   * 初版公開時の記事
-
-#### 📌 スペシャルコンテンツ
-
-Amazon, Spotify, Uber など世界的なプロダクトのマネージャーがどのように機械学習を活用しているか Q&A 形式でまとめた記事。
-
-* [データサイエンスを活用するプロダクトマネージャーを訪ねて](docs/journal/README.md)
 
 ## :rocket: 短期集中型ワークショップ
 
