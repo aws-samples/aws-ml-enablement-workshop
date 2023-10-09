@@ -2,11 +2,12 @@
 
 ## ワークショップ資料
 
-PDF 資料 : [機械学習の成長サイクルを理解する](../presentations/ml-enablement-01-architect.pdf)
-
 | 成長サイクルの理解 | 事例の共有 | ビジネスモデル作成 |
 |:--------|:---------|:------|
 | ![day1-part1.png](./assets/day1/day1-part1.png) | ![day1-part2.png](./assets/day1/day1-part2.png) |![day1-part1.png](./assets/day1/day1-part3.png) |
+
+PDF 資料 : [機械学習の成長サイクルを理解する](../presentations/ml-enablement-01-architect.pdf)
+
 
 ## 資料の構成と提供のポイント
 

@@ -2,11 +2,11 @@
 
 ## ワークショップ資料
 
-PDF 資料 : [顧客体験改善への応用](../presentations/ml-enablement-02-application.pdf)
-
 | ストーリー可視化の意義 | 顧客体験シミュレーション | 顧客の確信を得る準備 |
 |:--------|:---------|:------|
 | ![day2-part1.png](./assets/day2/day2-part1.png) | ![day2-part2.png](./assets/day2/day2-part2.png) |![day2-part3.png](./assets/day2/day2-part3.png) |
+
+PDF 資料 : [顧客体験改善への応用](../presentations/ml-enablement-02-application.pdf)
 
 ## 資料の構成と提供のポイント
 
