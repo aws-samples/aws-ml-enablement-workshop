@@ -68,7 +68,7 @@ AWS だけでなく、 Amazon, Spotify, Uber など世界的なプロダクト�
 
 特定目的にフォーカスし ML Enablement Workshop 本体より短時間で学びを得るワークショップ / ハンズオンのコンテンツです。
 
-* [プロダクトへの生成系 AI 活用方法をアイディエーションする会](https://speakerdeck.com/icoxfog417/purodakutohenosheng-cheng-xi-ai-huo-yong-fang-fa-wo-aideiesiyonsuruhui) ( 所要時間 1 時間半 ~ 2 時間 )
+* [プロダクトを成長させる生成系 AI のユースケースを考えるワークショップ](https://speakerdeck.com/icoxfog417/purodakutowocheng-chang-saserusheng-cheng-xi-ai-noyusukesuwokao-eruwakusiyotupu) ( 所要時間 1 時間半 ~ 2 時間 )
    * プロダクトで生成系 AI を活用するためのアイデアを発想、検証するためのワークショップです。1) 生成系 AI 活用のポイント、 2) アイディエーション、 3) ビジネスモデルキャンバスを利用したアイデアの効果検証、の 3 パートから成ります。
 * [サービスの解約率改善シナリオ](./notebooks/scenario_churn/) ( 所要時間 2~3 時間 )
    * 携帯電話会社での解約率改善を題材に、ビジネス理解からモデルのテストまで一気通貫で体験できるハンズオン。
