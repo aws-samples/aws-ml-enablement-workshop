@@ -24,6 +24,7 @@ Q&A に誤りを見つけた方や Q&A の追加に関心ある方は末尾の C
 * プロダクトで計測すべきメトリクスにはどのようなものがありますか ?
 * プロダクトで計測すべきメトリクスをどのように決めるべきですか ?
 * 計測したメトリクスからプロダクトの改善策を検討するプロセスは ?
+* 問題の根本原因を探るためのプロセスは ?
 * 「データ」とはそもそも何を指しますか ?
 * プロダクトマネージャーがデータを活用するときの注意点は ?
 * データ分析チームはプロダクトチームにどのように関わるべきですか ?
@@ -97,6 +98,15 @@ Q&A に誤りを見つけた方や Q&A の追加に関心ある方は末尾の C
 詳細は [プロダクトの課題をデータ分析から解決するための Step by Step](https://note.com/piqcy/n/n2d5e5c71a08e) をご参照。
 
 ([Webinar: Product Discovery With Data & User Research by Glovo Group PM, Lokesh Mahajan](https://youtu.be/tuo3CCfCHao) (2022) より引用)
+
+### 問題の根本原因を探るプロセスは ?
+
+**[Glassbox](https://www.glassbox.com/) の Senior Product Manager [Isaac Mardan](https://www.linkedin.com/in/isaacmardan) の場合**
+
+基本的に、 1) 問題の特定、 2) データの収集と分析、 3) 原因の仮説の列挙、 4) 仮説の優先順位付け、 5) 深堀調査、の 5 ステップとなる。例えば、「アカウント作成に至る率が低い」という問題が特定出来たら、トップページからアカウント作成ページへの遷移数といったファネル分析やインタビューによる顧客体験分析、クリックログやセッションリプレイからデータを収集する。データをもとに申込エラーや誘導の不足、画面ロードの遅延など原因の候補を挙げ、インパクトと実現性などから優先順位をつける。特にエラーが発生したりそもそもアクセスされていない場合は優先度が高い。最後に、より詳細な調査を行い根本原因を特定する。
+
+([Workshop: Maximize Product Success Through Root Cause Analysis by Glassbox](https://youtu.be/0dokpjuw-uU?si=JFMFHJRHf9O0Pjdq) (2023) より引用)
+
 
 ### 「データ」とはそもそも何を指しますか ?
 
