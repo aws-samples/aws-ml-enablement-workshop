@@ -19,6 +19,7 @@ Q&A に誤りを見つけた方や Q&A の追加に関心ある方は末尾の C
 ## Q&A 一覧
 
 * 機械学習を使った機能を実装するステップは ?
+* プロダクトに AI を導入する際のチェックポイントは ?
 * プロダクトの「種類」によって、どのようにデータサイエンスの使い方が変わりますか ?
 * プロダクトの「フェーズ」によって、どのようにデータサイエンスの使い方が変わりますか ?
 * プロダクトで計測すべきメトリクスにはどのようなものがありますか ?
@@ -46,6 +47,18 @@ Q&A に誤りを見つけた方や Q&A の追加に関心ある方は末尾の C
 ![spotify_derya_Isler](./images/spotify_derya_Isler.png)
 
 ([Webinar: Managing Machine Learning Products by Spotify Product Leader, Derya Isler](https://youtu.be/EhlHKhQv0Qg?t=1343) (2020) より引用)
+
+### プロダクトに AI を導入する際のチェックポイントは ?
+
+**PayPal の Senior Product Manager [Riya Gayasen](https://riyagayasen-44835.medium.com/) の場合**
+
+プロダクトユーザーの課題を AI で解決できる必要がある。ユーザーの Pain Point を特定し、人間ならどう解決できるか考え、 AI でそれをスケールさせることができれば適切な方法といえる。レストラン開業に悩む店主に AI を用い Yelp のレビューに関連がある属性を分析しアドバイスを行うことは適切だが、多くのユーザーが不正確な歩数計算に不満を持っている健康アプリでエクササイズの提案を行うことは Pain Point を解決していない。 AI の導入を進める際は、 最初に 1) 問題の定義 2) 目的関数による表現 3) データの収集 4) アルゴリズムの選定を行う。そのフェーズが終わったら、 1) 専門チームの組成 2) データインフラの整備 3) アルゴリズム学習による実験 4) 倫理、法、セキュリティの問題のクリア 5) サービスへの統合とスケール、のステップで進める。
+
+| Starting Checklist   | Secondary Checklist |
+| ---- | ---- |
+|  ![paypal_riya_gayasen_001.png](./images/paypal_riya_gayasen_001.png)  |  ![paypal_riya_gayasen_002.png](./images/paypal_riya_gayasen_002.png)   |
+
+([Webinar 2: What AI Features to Add to Your Product by PayPal Senior PM, Riya Gayasen](https://www.youtube.com/watch?v=AXo9ntCZrT4) (2023) より引用)
 
 ### プロダクトの「種類」によって、どのようにデータサイエンスの使い方が変わりますか ?
 
