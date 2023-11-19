@@ -22,8 +22,8 @@ Q&A に誤りを見つけた方や Q&A の追加に関心ある方は末尾の C
 * プロダクトに AI を導入する際のチェックポイントは ?
 * 「データ」とはそもそも何を指しますか ?
 * プロダクトマネージャーがデータを活用するときの注意点は ?
-* プロダクトの「種類」によって、どのようにデータサイエンスの使い方が変わりますか ?
 * プロダクトの「フェーズ」によって、どのようにデータサイエンスの使い方が変わりますか ?
+* プロダクトの「種類」によって、どのようにデータサイエンスの使い方が変わりますか ?
 * プロダクトで計測すべきメトリクスにはどのようなものがありますか ?
 * プロダクトで計測すべきメトリクスをどのように決めるべきですか ?
 * 計測したメトリクスからプロダクトの改善策を検討するプロセスは ?
@@ -77,14 +77,6 @@ Q&A に誤りを見つけた方や Q&A の追加に関心ある方は末尾の C
 
 ([Webinar: Data Is an Integral Part of Product Management by Microsoft Sr PM, Ajanta Mahato](https://youtu.be/2_HikZPPtb0) (2022) より引用)
 
-### プロダクトの「種類」によって、どのようにデータサイエンスの使い方が変わりますか ?
-
-**Uber の Product Lead [Tanvi Surti](https://www.linkedin.com/in/tanvisurti/) の場合**
-
-プロダクトは Software 型のプロダクトと、 Marketplace 型のプロダクトに分けられる。 Uber は Marketplace のプロダクトであり、そこでは需要者と供給者のマッチングが肝になる。 Software 型ではクリック数やユーザー数などサービス上で計測可能な値を重視するが、 Marketplace では市場自体を成立させる需要者と供給者、それらを結び付けるアルゴリズムを重視する。だいたい 50% のデータサイエンス (ML) と、 50% の Ops (実行) で運営されている。
-
-([What is Marketplace Product Management by Uber Product Manager](https://youtu.be/t4cnrwu465Q?t=2131) (2019) より)
-
 ### プロダクトの「フェーズ」によって、どのようにデータサイエンスの使い方が変わりますか ?
 
 **[The Lean Product Playbook](https://leanproductplaybook.com/) の著者 [Dan Olsen](https://www.linkedin.com/in/danolsen98/) の場合**
@@ -97,6 +89,14 @@ Q&A に誤りを見つけた方や Q&A の追加に関心ある方は末尾の C
 
 
 ([Webinar: Actionable Advice for Integrating Quantitative and Qualitative Insights by Heap](https://youtu.be/ZYJij0RsQeg0) (2023) より引用)
+
+### プロダクトの「種類」によって、どのようにデータサイエンスの使い方が変わりますか ?
+
+**Uber の Product Lead [Tanvi Surti](https://www.linkedin.com/in/tanvisurti/) の場合**
+
+プロダクトは Software 型のプロダクトと、 Marketplace 型のプロダクトに分けられる。 Uber は Marketplace のプロダクトであり、そこでは需要者と供給者のマッチングが肝になる。 Software 型ではクリック数やユーザー数などサービス上で計測可能な値を重視するが、 Marketplace では市場自体を成立させる需要者と供給者、それらを結び付けるアルゴリズムを重視する。だいたい 50% のデータサイエンス (ML) と、 50% の Ops (実行) で運営されている。
+
+([What is Marketplace Product Management by Uber Product Manager](https://youtu.be/t4cnrwu465Q?t=2131) (2019) より)
 
 ### プロダクトで計測すべきメトリクスにはどのようなものがありますか ?
 
