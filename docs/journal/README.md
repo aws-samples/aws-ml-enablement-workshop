@@ -20,20 +20,21 @@ Q&A に誤りを見つけた方や Q&A の追加に関心ある方は末尾の C
 
 * 機械学習を使った機能を実装するステップは ?
 * プロダクトに AI を導入する際のチェックポイントは ?
-* プロダクトの「種類」によって、どのようにデータサイエンスの使い方が変わりますか ?
+* 「データ」とはそもそも何を指しますか ?
+* プロダクトマネージャーがデータを活用するときの注意点は ?
 * プロダクトの「フェーズ」によって、どのようにデータサイエンスの使い方が変わりますか ?
+* プロダクトの「種類」によって、どのようにデータサイエンスの使い方が変わりますか ?
 * プロダクトで計測すべきメトリクスにはどのようなものがありますか ?
 * プロダクトで計測すべきメトリクスをどのように決めるべきですか ?
 * 計測したメトリクスからプロダクトの改善策を検討するプロセスは ?
+* プロダクトを成長させるためにどうデータを使えばよいですか ?
 * 問題の根本原因を探るためのプロセスは ?
-* 「データ」とはそもそも何を指しますか ?
-* プロダクトマネージャーがデータを活用するときの注意点は ?
 * データ分析チームはプロダクトチームにどのように関わるべきですか ?
 * 顧客から信頼される AI 機能を作るために気を付けるべきことは ?
 * 顧客から信頼される対話型 UI を作るために気を付けるべきことは ? 
 * データサイエンティストの Job Description をどのように書けばいいですか ?
 * データサイエンスのプロジェクトでもスクラム開発を適用できますか ?
-* データを扱うプロダクトを開発したい時、何に気を付けるべきですか ?
+* データの活用を促すプロダクトを開発したい時、何に気を付けるべきですか
 * AI の登場で人間のプロダクトマネージャーは不要になりますか ?
 
 ## Q&A
@@ -60,13 +61,21 @@ Q&A に誤りを見つけた方や Q&A の追加に関心ある方は末尾の C
 
 ([Webinar 2: What AI Features to Add to Your Product by PayPal Senior PM, Riya Gayasen](https://www.youtube.com/watch?v=AXo9ntCZrT4) (2023) より引用)
 
-### プロダクトの「種類」によって、どのようにデータサイエンスの使い方が変わりますか ?
+### 「データ」とはそもそも何を指しますか ?
 
-**Uber の Product Lead [Tanvi Surti](https://www.linkedin.com/in/tanvisurti/) の場合**
+**American Express の Senior Product Manager [Nicole Munson](https://www.linkedin.com/in/nicole-munson-157013ba/) の場合**
 
-プロダクトは Software 型のプロダクトと、 Marketplace 型のプロダクトに分けられる。 Uber は Marketplace のプロダクトであり、そこでは需要者と供給者のマッチングが肝になる。 Software 型ではクリック数やユーザー数などサービス上で計測可能な値を重視するが、 Marketplace では市場自体を成立させる需要者と供給者、それらを結び付けるアルゴリズムを重視する。だいたい 50% のデータサイエンス (ML) と、 50% の Ops (実行) で運営されている。
+データは計測値や統計値に代表される事実情報であり、議論や計算、予測の根拠となる。データが事実と一致するよう、計測には常に誠実さが求められる。データから計算できる値はプロダクトの状態を表すメトリクスとなり、 MAU ( 月のアクティブユーザー数 / 総ユーザー数 ) はその代表例である。あるべきメトリクス値とのギャップや 5W1H を表すデータからプロダクトや顧客の状況を定量的に理解することで、ステークホルダーに対し説得力のある改善案や優先順位付けを行うことができる。コンピューターが理解できるデータの活用はプロセスの自動化に繋がり、人間より処理速度が速いコンピューターの力を活かすことができる。
 
-([What is Marketplace Product Management by Uber Product Manager](https://youtu.be/t4cnrwu465Q?t=2131) (2019) より)
+([Webinar: How to Create a Data-Driven Strategy by American Express Sr PM, Nicole Munson](https://youtu.be/xd_0Iueh58U) (2022))
+
+### プロダクトマネージャーがデータを活用するときの注意点は ?
+
+**Microsoft の Lead Product Manager [Ajanta Mahato](https://www.linkedin.com/in/ajanta-mahato-63b89b16/) の場合**
+
+4 つ注意点がある。 1) 成功に直結する正しい指標を選ぶ、 2) 「あったらいい」指標に惑わされない、 3) 正しくテストを設計する、 4) 定量・定性両方のデータを使用する。1 は、ストレージサービスなら追加容量が購入された数や新規登録者数、 2 はサービス説明ビデオを見ていた時間などが該当 ( 購入数や登録者数の方が重要かつ十分 ) 、 3 は A/B テスト実施時のサンプルサイズなど、 4 は感情面の好き嫌いやプロダクトへの熱意なども重要なデータであると述べている。 
+
+([Webinar: Data Is an Integral Part of Product Management by Microsoft Sr PM, Ajanta Mahato](https://youtu.be/2_HikZPPtb0) (2022) より引用)
 
 ### プロダクトの「フェーズ」によって、どのようにデータサイエンスの使い方が変わりますか ?
 
@@ -80,6 +89,14 @@ Q&A に誤りを見つけた方や Q&A の追加に関心ある方は末尾の C
 
 
 ([Webinar: Actionable Advice for Integrating Quantitative and Qualitative Insights by Heap](https://youtu.be/ZYJij0RsQeg0) (2023) より引用)
+
+### プロダクトの「種類」によって、どのようにデータサイエンスの使い方が変わりますか ?
+
+**Uber の Product Lead [Tanvi Surti](https://www.linkedin.com/in/tanvisurti/) の場合**
+
+プロダクトは Software 型のプロダクトと、 Marketplace 型のプロダクトに分けられる。 Uber は Marketplace のプロダクトであり、そこでは需要者と供給者のマッチングが肝になる。 Software 型ではクリック数やユーザー数などサービス上で計測可能な値を重視するが、 Marketplace では市場自体を成立させる需要者と供給者、それらを結び付けるアルゴリズムを重視する。だいたい 50% のデータサイエンス (ML) と、 50% の Ops (実行) で運営されている。
+
+([What is Marketplace Product Management by Uber Product Manager](https://youtu.be/t4cnrwu465Q?t=2131) (2019) より)
 
 ### プロダクトで計測すべきメトリクスにはどのようなものがありますか ?
 
@@ -112,6 +129,14 @@ Q&A に誤りを見つけた方や Q&A の追加に関心ある方は末尾の C
 
 ([Webinar: Product Discovery With Data & User Research by Glovo Group PM, Lokesh Mahajan](https://youtu.be/tuo3CCfCHao) (2022) より引用)
 
+### プロダクトを成長させるためにどうデータを使えばよいですか ?
+
+**[AWS](https://aws.amazon.com/) の Senior Product Manager [Debbie Motilewa](https://www.linkedin.com/in/debbiemotilewa/) の場合**
+
+AARRR のうち、 Retention が最も重要で一定期間の間に再度利用するユーザーの数を数えることで計測できる。 Retention を上げるには定性、定量 2 つのデータから顧客体験のボトルネックを特定し改善していく。プロダクトの成長は「持続可能」であるべきで、競合の機能をコピーするだけでは差別化が困難で容易に乗り換えが発生する。顧客に集中し、フィードバックを頻繁かつ多く収集する必要がある。
+
+([Webinar: Strategies for Data-Driven Product Growth by AWS Sr PM, Debbie Motilewa](https://youtu.be/mKfv0CfS9D8?si=xAbTwkje7Jm8BGeV) (2023) より引用 )
+
 ### 問題の根本原因を探るプロセスは ?
 
 **[Glassbox](https://www.glassbox.com/) の Senior Product Manager [Isaac Mardan](https://www.linkedin.com/in/isaacmardan) の場合**
@@ -119,24 +144,6 @@ Q&A に誤りを見つけた方や Q&A の追加に関心ある方は末尾の C
 基本的に、 1) 問題の特定、 2) データの収集と分析、 3) 原因の仮説の列挙、 4) 仮説の優先順位付け、 5) 深堀調査、の 5 ステップとなる。例えば、「アカウント作成に至る率が低い」という問題が特定出来たら、トップページからアカウント作成ページへの遷移数といったファネル分析やインタビューによる顧客体験分析、クリックログやセッションリプレイからデータを収集する。データをもとに申込エラーや誘導の不足、画面ロードの遅延など原因の候補を挙げ、インパクトと実現性などから優先順位をつける。特にエラーが発生したりそもそもアクセスされていない場合は優先度が高い。最後に、より詳細な調査を行い根本原因を特定する。
 
 ([Workshop: Maximize Product Success Through Root Cause Analysis by Glassbox](https://youtu.be/0dokpjuw-uU?si=JFMFHJRHf9O0Pjdq) (2023) より引用)
-
-
-### 「データ」とはそもそも何を指しますか ?
-
-**American Express の Senior Product Manager [Nicole Munson](https://www.linkedin.com/in/nicole-munson-157013ba/) の場合**
-
-データは計測値や統計値に代表される事実情報であり、議論や計算、予測の根拠となる。データが事実と一致するよう、計測には常に誠実さが求められる。データから計算できる値はプロダクトの状態を表すメトリクスとなり、 MAU ( 月のアクティブユーザー数 / 総ユーザー数 ) はその代表例である。あるべきメトリクス値とのギャップや 5W1H を表すデータからプロダクトや顧客の状況を定量的に理解することで、ステークホルダーに対し説得力のある改善案や優先順位付けを行うことができる。コンピューターが理解できるデータの活用はプロセスの自動化に繋がり、人間より処理速度が速いコンピューターの力を活かすことができる。
-
-([Webinar: How to Create a Data-Driven Strategy by American Express Sr PM, Nicole Munson](https://youtu.be/xd_0Iueh58U) (2022))
-
-### プロダクトマネージャーがデータを活用するときの注意点は ?
-
-**Microsoft の Lead Product Manager [Ajanta Mahato](https://www.linkedin.com/in/ajanta-mahato-63b89b16/) の場合**
-
-4 つ注意点がある。 1) 成功に直結する正しい指標を選ぶ、 2) 「あったらいい」指標に惑わされない、 3) 正しくテストを設計する、 4) 定量・定性両方のデータを使用する。1 は、ストレージサービスなら追加容量が購入された数や新規登録者数、 2 はサービス説明ビデオを見ていた時間などが該当 ( 購入数や登録者数の方が重要かつ十分 ) 、 3 は A/B テスト実施時のサンプルサイズなど、 4 は感情面の好き嫌いやプロダクトへの熱意なども重要なデータであると述べている。 
-
-([Webinar: Data Is an Integral Part of Product Management by Microsoft Sr PM, Ajanta Mahato](https://youtu.be/2_HikZPPtb0) (2022) より引用)
-
 
 ### データ分析チームはプロダクトチームにどのように関わるべきですか ?
 
@@ -187,7 +194,7 @@ Yes 。期間で区切り、優先順位をつけて有望な手法にベット�
 
 ([What I Love about Scrum for Data Science](https://eugeneyan.com/writing/what-i-love-about-scrum-for-data-science/) (2020) より)
 
-### データを扱うプロダクトを開発したい時、何に気を付けるべきですか
+### データの活用を促すプロダクトを開発したい時、何に気を付けるべきですか
 
 **Cascade の CEO [Jake Fuentes](https://www.linkedin.com/in/jakefuentes/) と CTO [Jon Brelig](https://www.linkedin.com/in/brelig/) の場合**
 
