@@ -133,7 +133,7 @@ Q&A に誤りを見つけた方や Q&A の追加に関心ある方は末尾の C
 
 **[AWS](https://aws.amazon.com/) の Senior Product Manager [Debbie Motilewa](https://www.linkedin.com/in/debbiemotilewa/) の場合**
 
-AARRR のうち、 Retention が最も重要で一定期間の間に再度利用するユーザーの数を数えることで計測できる。 Retention を上げるには定性、定量 2 つのデータから顧客体験のボトルネックを特定し改善していく。プロダクトの成長は「持続可能」であるべきで、競合の機能をコピーするだけでは差別化が困難で容易に乗り換えが発生する。顧客に集中し、フィードバックを頻繁かつ多く収集する必要がある。
+AARRR のうち、 Retention が最も重要で一定期間の間に再度利用するユーザーの数を数えることで計測できる。 Retention を上げるには定性、定量 2 つのデータから顧客体験のボトルネックを特定し改善していく。プロダクトの成長は「持続可能」であるべきで、競合の機能をコピーするだけでは差別化が困難で容易に乗り換えが発生する。顧客に集中し、フィードバックを頻繁かつ多く収集する必要がある。 Marketplace PdM の場合、買い手と売り手双方のフィードバックを得る必要があり、バランスを欠くと成長させる Marketplace の安定が揺らぐためより困難になる。
 
 ([Webinar: Strategies for Data-Driven Product Growth by AWS Sr PM, Debbie Motilewa](https://youtu.be/mKfv0CfS9D8?si=xAbTwkje7Jm8BGeV) (2023) より引用 )
 
