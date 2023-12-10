@@ -92,14 +92,19 @@ AWS だけでなく、 Amazon, Spotify, Uber など世界的なプロダクト�
 
 ## 活用事例
 
-### <a href="https://corp.moneyforward.com/" target="_blcnk"><img src="docs/images/cases/MoneyForwardLogoMain.svg" width=320></a>
+### [株式会社マネーフォワード](https://corp.moneyforward.com/)
+
+<a href="https://corp.moneyforward.com/" target="_blcnk"><img src="docs/images/cases/MoneyForwardLogoMain.svg" width=320></a>
 
 **[ユーザに最高の付加価値を提供するための AI 活用に向けて](https://pages.awscloud.com/APAC_FIELD_T2_jp-isv-saas-on-aws-2022-archives-reg.html)** (@ [SaaS on AWS 2022](https://pages.awscloud.com/APAC_FIELD_T2_jp-isv-saas-on-aws-2022-day1-inperson-reg.html))  
 マネーフォワードでは 「Money Forwardクラウド」 の中長期の重要テーマとしてバックオフィス業務の自動・自律化を目指す 「Autonomous Backoffice」 を標榜し、AI 活用の取組みを進めています。推進するうえでの課題や課題に対する取組み、今後の展望についてお伝えするとともに、AI ユースケース創出のための取組みとして、AWS 支援による PdM を対象としたワークショップについてもご紹介します。|
 
-### [Geniee 株式会社](https://geniee.co.jp/)
+### [株式会社ジーニー](https://geniee.co.jp/)
 
 ![Geniee Cases](docs/images/cases/Geniee_Case.png)
+
+競争の激しい広告プラットフォーム事業で、継続的にインパクトのあるユースケースを生み出せるチームを組成するために ML Enablement Workshop を活用。組織横断で企画立案から検証計画まで一気通貫で作成し、ワークショップ終了翌日から進捗確認の定例を開始する迅速な立ち上がりを実現。
+
 
 **様々なお客様のプロダクトチームで、ワークショップをご活用頂いています**
 <a href="https://jp.sansan.com/" target="_blcnk"><img src="docs/images/cases/Sansan_Logo.png" width=320></a>
