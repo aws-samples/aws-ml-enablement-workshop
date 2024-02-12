@@ -105,6 +105,15 @@ AWS だけでなく、 Amazon, Spotify, Uber など世界的なプロダクト�
 
 競争の激しい広告プラットフォーム事業で、継続的にインパクトのあるユースケースを生み出せるチームを組成するために ML Enablement Workshop を活用。組織横断で企画立案から検証計画まで一気通貫で作成し、ワークショップ終了翌日から進捗確認の定例を開始する迅速な立ち上がりを実現。
 
+### [株式会社ココペリ](https://www.kokopelli-inc.com/)
+
+![Kokopelli Case](docs/images/cases/Kokopelli_Case.png)
+
+中小企業 DX に不可欠なサービスを提供する Big Advance で、豊富な機能を限られた時間で活用できるようカスタマージャーニーを整理し、生成 AI を用いたユースケースの検証を終了後すぐに実施。お客様からの記事もご参照ください。
+
+* [AWSが開催する「ML Enablement Workshop」に参加します](https://www.kokopelli-inc.com/all/news/4323/)
+* [ビジネスマッチングでのClaudeによる文章生成](https://note.com/kokopelli_inc/n/nc2a18f4afe76)
+
 
 **様々なお客様のプロダクトチームで、ワークショップをご活用頂いています**
 <a href="https://jp.sansan.com/" target="_blcnk"><img src="docs/images/cases/Sansan_Logo.png" width=320></a>
