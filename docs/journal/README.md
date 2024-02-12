@@ -90,6 +90,13 @@ Q&A に誤りを見つけた方や Q&A の追加に関心ある方は末尾の C
 
 ([Webinar: Actionable Advice for Integrating Quantitative and Qualitative Insights by Heap](https://youtu.be/ZYJij0RsQeg0) (2023) より引用)
 
+**AWS の Senior Technical Product Manager [Natasha Harpalani](https://www.linkedin.com/in/natasha-harpalani/) の場合**
+
+プロダクトのフェーズを Ideation, Requirements, Design & Testing, Development, Commercialization, Maintain & Grow の 6 つに分け、すべてのフェーズで使うことができるとしている。リユース服市場への参入を題材に、 Ideation / Reqirements では Gartner の Magic Quadrant を書いてみる、ウェビナーやミートアップから参入する市場の成長率やペルソナの関心を特定したり、Design & Testing / Commercialization / Maintain & Grow では UX インタビューや UI のメトリクスを活用することを伝えている。動画では各フェーズでの文書例が紹介されていて伝え方のイメージがつけやすい。
+
+
+([Webinar: How to Use Data to Drive Customer Outcomes by AWS Sr Technical PM, Natasha Harpalani](https://www.youtube.com/watch?v=BjWaJI2xOlA) (2024) より引用)
+
 ### プロダクトの「種類」によって、どのようにデータサイエンスの使い方が変わりますか ?
 
 **Uber の Product Lead [Tanvi Surti](https://www.linkedin.com/in/tanvisurti/) の場合**
