@@ -1,6 +1,6 @@
 # ML Enablement Workshop
 
-プロダクトを機械学習 / 生成 AI により継続的に成長させるロードマップが作れるワークショップです。本ワークショップの特徴をお客様の声と共に紹介します。
+プロダクトを機械学習 / 生成 AI により継続的に成長させるロードマップが作れるワークショップです。本ワークショップの特徴をお客様の声と共に紹介します ( リンク先で事例を紹介しています ) 。
 
 🚀 : **1~3 カ月以内**で成果や学びが得られるマイルストンを設定し、終了後すぐに行動を開始できる。
 * [*ワークショップ内に開発チームの Todo リストまで落とし込み、翌日から進捗確認の定例を開始できた*](https://github.com/aws-samples/aws-ml-enablement-workshop/tree/main?tab=readme-ov-file#%E6%A0%AA%E5%BC%8F%E4%BC%9A%E7%A4%BE%E3%82%B8%E3%83%BC%E3%83%8B%E3%83%BC)
@@ -14,7 +14,7 @@
 
 ## :books: ワークショップ資料
 
-ワークショップは参加者に対しワークショップ中の役割を伝える [Day0](https://github.com/aws-samples/aws-ml-enablement-workshop/blob/main/docs/organizer/day0.md) を実施後、 3 部構成のプログラムを行います。各パートの解説と資料は、 Title のリンクからアクセスできます。
+ワークショップは参加者に対しワークショップでの役割を伝える [Day0](https://github.com/aws-samples/aws-ml-enablement-workshop/blob/main/docs/organizer/day0.md) を実施後、 3 部構成のプログラムを行います。各パートの解説と資料は、 Title のリンクからアクセスできます。
 
 | Title |[理解編: 成長サイクルの理解](docs/organizer/day1.md)|[応用編: 顧客体験改善への応用](docs/organizer/day2.md)|[開始編: 検証/実装を開始する](docs/organizer/day3.md)|
 |:--------|:---------|:------|:------|
@@ -30,7 +30,7 @@
 
 ML Enablement Workshop は特定プロダクトにおける AI/ML のユースケース発見と行動計画作成にフォーカスしています。フェーズとしてはプロトタイピングの段階での実施が適しており、前段の学習や検証、後段の実装のフェーズでは下表のとおり補完関係にあるコンテンツの利用をご検討ください。
 
-| Phase |[学習・検証](docs/organizer/day1.md)|[プロトタイピング](docs/organizer/day2.md)|[実装・展開](docs/organizer/day3.md)|
+| Phase |学習・検証|プロトタイピング|実装・展開|
 |:--------|:---------|:------|:------|
 | Image |![Learning](docs/images/top/phase-01.png)|![Prototyping](docs/images/top/ml-enablement-01-architect.png)|![Implementation](docs/images/top/phase-03.png)|
 | Purpose  | 組織全体の AI/ML 活用リテラシーの向上 | ユースケースの発見とロードマップ作成 | 実装の開始、本番展開 |
@@ -120,7 +120,7 @@ ML Enablement Workshop は特定プロダクトにおける AI/ML のユース�
    * いいえ。 ML Enablement Workshop はアクションプランを作るためのワークショップで、研修を目的としていません。実施に際しては、特定のプロダクト、プロダクト機能を選定して頂く必要があります。
    * [プロダクトを成長させる生成 AI のユースケースを考えるワークショップ](https://speakerdeck.com/icoxfog417/purodakutowocheng-chang-saserusheng-cheng-xi-ai-noyusukesuwokao-eruwakusiyotupu) は 2~3 時間でユースケースの発案、検証が行えるプログラムになっています。詳細は追加コンテンツを参照してください。
 
-## 活用事例
+## お客様事例
 
 ### [株式会社マネーフォワード](https://corp.moneyforward.com/)
 
@@ -152,6 +152,10 @@ ML Enablement Workshop は特定プロダクトにおける AI/ML のユース�
 
 ### 外部登壇資料
 
+* [溶け込むラジオ出演](https://open.spotify.com/show/2cM4nkI88ySjFBUfQK9U74)
+   * ML Enablement Workshop 開発の経緯や得られた知見についてポッドキャストでお話ししました。
+   * [価値ある機械学習プロダクトを生み出すチームの作り方 Part1](https://open.spotify.com/episode/3K6bvHv3534EuliGGlpceI)
+   * [価値ある機械学習プロダクトを生み出すチームの作り方 Part2](https://open.spotify.com/episode/0olbtEAxxhysO8Xe2jqSHA)
 * [大規模言語モデルを Fine Tuning すべきタイミングとその方法](https://speakerdeck.com/icoxfog417/da-gui-mo-yan-yu-moderuwo-fine-tuning-subekitaimingutosonofang-fa)
    * プロダクトを生成 AI で成長させるのになぜ Fine Tuning が必要なのか、どのような手順で進めればよいのかを解説したスライドです。Biz 、Dev 、 ML の 3 ステップのプロセスを紹介し Biz フェーズの支援として ML Enablement Workshop を紹介しています。
 * [ゲーム業界における生成AIの活用](https://speakerdeck.com/icoxfog417/gemuye-jie-niokerusheng-cheng-xi-ainohuo-yong)
