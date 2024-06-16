@@ -5,7 +5,7 @@ ML Enablement Workshop は、生成 AI を含めた AI/ML 技術をプロダク�
 | 組織横断でのチームの組成 | Amazon の開発プロセスの実践 | 1~3 カ月で最初の成果を獲得 |
 |:--------|:---------|:------|
 |![Team](docs/images/top/top_1.jpeg) | ![Measure](docs/images/top/top_2.jpeg) | ![Plan](docs/images/top/top_3.jpeg) |
-| 企画・ビジネス側と開発側が一体で取り組む | 顧客体験から逆算して考える Working Backwards を実践 | 必要十分な手法で迅速に顧客の反応を得る |
+| 企画・ビジネス側と開発側が一体で取り組む | 顧客体験から逆算して考える <br/> Working Backwards を実践 | 必要十分な手法で迅速に顧客の反応を得る |
 
 ## 🚴 ワークショップの流れ
 
@@ -33,7 +33,7 @@ ML Enablement Workshop は、生成 AI を含めた AI/ML 技術をプロダク�
 
 ## 🚶 ワークショップ実施前に
 
-ML Enablement Workshop は 1 つのプロダクトに注力して実施します。その前に、**組織全体の AI/ML 活用リテラシーの向上** を実施したい場合はコミュニティ版の資料のご活用を検討ください。
+ML Enablement Workshop 実施前に、**組織全体の AI/ML 活用リテラシーの向上** を行いたい場合はコミュニティ版の資料のご活用を検討ください。
 
 ### Community Workshop
 
