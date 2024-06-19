@@ -5,7 +5,7 @@ ML Enablement Workshop は、生成 AI を含めた AI/ML 技術をプロダク�
 | 組織横断でのチームの組成 | Amazon の開発プロセスの実践 | 1~3 カ月で最初の成果を獲得 |
 |:--------|:---------|:------|
 |![Team](docs/images/top/top_1.jpeg) | ![Measure](docs/images/top/top_2.jpeg) | ![Plan](docs/images/top/top_3.jpeg) |
-| 企画・ビジネス側と開発側が一体で取り組む | 顧客体験から逆算して考える <br/> Working Backwards を実践 | 必要十分な手法で迅速に顧客の反応を得る |
+| 企画・ビジネス側と開発側が一体で取り組む | 顧客体験から逆算して考える <br/> [Working Backwards](https://aws.amazon.com/jp/executive-insights/content/product-management-at-amazon/#Working_Backwards.3A_being_customer_obsessed) を実践 | 必要十分な手法で迅速に顧客の反応を得る |
 
 ## 🚴 ワークショップの流れ
 
@@ -14,7 +14,7 @@ ML Enablement Workshop は、生成 AI を含めた AI/ML 技術をプロダク�
 | Title |[Day0: 目的とロールの確認](docs/organizer/day0_v2.md)|[実践編: Amazon 流を実践](docs/organizer/day1_v2.md)|[改善編: 仮説検証の自走を開始](docs/organizer/day2_v2.md)|
 |:--------|:---------|:------|:------|
 | Image |![Day0](docs/images/top/ml-enablement-day0.png)|![Day1](docs/images/top/ml-enablement-day1.png)|![Day2](docs/images/top/ml-enablement-day2.png)|
-| Work  | 参加者各自の役割の確認 | [Working Backwards](https://aws.amazon.com/jp/executive-insights/content/product-management-at-amazon/#Working_Backwards.3A_being_customer_obsessed) の 5 つのプロセスで仮説立案 | 参加者自身によるプロセス改善と 1 ~3 カ月の計画作成 |
+| Work  | 参加者各自の役割の確認 | Working Backwards の 5 つのプロセスで仮説立案 | 参加者自身によるプロセス改善と 1 ~3 カ月の計画作成 |
 | Time | 1 時間 ( リモート可 ) | 3.5 時間 | 1~3 時間 |
 
 ワークショップをご活用いただいたお客様のフィードバックをまとめています

@@ -17,7 +17,7 @@
 
 ML Enablement Workshop は 3 部構成のプログラムです。
 
-![Workshop Agenda](./assets/day0/ws_agenda.png)
+![Workshop Agenda](../assets/day0/ws_agenda.png)
 
 理解編ではビジネスモデル、応用編では価値提案のストーリー、開始編では AI/ML 機能を価値検証するための 1~3 カ月の計画をアウトプットします。
 
@@ -91,7 +91,7 @@ MLEW で議論する機能の範囲や使う技術の範囲は、絞られてい
 
 ロールプレイを行う際、普段接している顧客の立場からユースケースについて批判的な反応を共有してください。ロールプレイの結果を受け、ユースケースの再選択を実施してください。
 
-![Proposal Simulation](./assets/day0/proposal_simulation.png)
+![Proposal Simulation](../assets/day0/proposal_simulation.png)
 
 #### Day3 開始編
 
@@ -108,7 +108,7 @@ MLEW で議論する機能の範囲や使う技術の範囲は、絞られてい
 #### ワークショップ開始前
 
 プロダクトに応用できる事例を 2 - 6 個あらかじめ収集いただき、 Day1 で共有いただきます。なぜ自社プロダクトで有効と判断したのか、どのような手法なのか、どの程度のインパクトが見込めるかなど、事例をピックアップした背景もご準備をお願い致します。もし自社のビジネスやプロダクトの課題、あるいは競合他社の動向に知見がない場合はプロダクトマネージャーに事前に相談いただくと当日スムーズに議論できます。事例をまとめるフォーマットに指定はありませんが、以下に Problem、Solution、Impactでまとめた例を示します。
-![Intuit Case Sample](./assets/day0/intuit_case.png)
+![Intuit Case Sample](../assets/day0/intuit_case.png)
 
 - [ ] 自プロダクトドメインの事例の収集（背景を含めた説明ができることが望ましい）
 - [ ] プロダクトマネージャーに、ビジネスやプロダクトの課題について事前にヒアリングし認識を合わせる
