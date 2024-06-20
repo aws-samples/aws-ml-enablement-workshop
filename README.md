@@ -11,11 +11,13 @@ ML Enablement Workshop は、生成 AI を含めた AI/ML 技術をプロダク�
 
 ワークショップは参加者に対しワークショップでの役割を伝える [Day0](https://github.com/aws-samples/aws-ml-enablement-workshop/blob/main/docs/organizer/day0.md) を実施後、 2 部構成のプログラムを行います。 1 部で Amazon の開発プロセスを一通り実践し、 2 部からは参加者自信が主導しより時間を取るべきプロセスの再考と 1~3 カ月で最初の成果を獲得する計画を立てます。それぞれのパートの解説と資料は、 Title のリンクからアクセスできます。
 
-| Title |[Day0: 目的とロールの確認](docs/organizer/day0_v2.md)|[実践編: Amazon 流を実践](docs/organizer/day1_v2.md)|[改善編: 仮説検証の自走を開始](docs/organizer/day2_v2.md)|
+| Title |[Day0: 目的とロールの確認](docs/organizer/day0_v2.md)|[実践編: Amazon 流を実践](docs/presentations/ml-enablement-v2-01-practice.pdf)|[改善編: 仮説検証の自走を開始](docs/presentations/ml-enablement-v2-02-improve.pdf)|
 |:--------|:---------|:------|:------|
 | Image |![Day0](docs/images/top/ml-enablement-day0.png)|![Day1](docs/images/top/ml-enablement-day1.png)|![Day2](docs/images/top/ml-enablement-day2.png)|
 | Work  | 参加者各自の役割の確認 | Working Backwards の 5 つのプロセスで仮説立案 | 参加者自身によるプロセス改善と 1 ~3 カ月の計画作成 |
 | Time | 1 時間 ( リモート可 ) | 3.5 時間 | 1~3 時間 |
+| Gide  | [Day0 実施ガイド](./docs/organizer/day0_v2.md) | [実施編 実施ガイド](./docs/organizer/day1_v2.md) | [改善編 実施ガイド](./docs/organizer/day2_v2.md) |
+
 
 ワークショップをご活用いただいたお客様のフィードバックをまとめています
 
