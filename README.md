@@ -41,16 +41,11 @@ ML Enablement Workshop 実施前に、**組織全体の AI/ML 活用リテラシ
 
 #### プロダクトを成長させる生成 AI のユースケースを考えるワークショップ
 
-プロダクトマネージャーを対象に、プロダクトで生成 AI を活用するためのアイデアを発想、検証するためのワークショップです。回によって構成は異なりますが、基本的に次のフォーマットです。
-
-1. 機械学習・生成 AI の基礎知識とプロダクト活用のポイント
-2. アイディエーション
-3. ビジネスモデルキャンバスを利用したアイデアの効果検証
-
-コミュニティでは複数社、個社では複数プロダクトのプロダクトマネージャーを集め意見交換を行うことで新しい視点で発案を促します。過去の開催レポート、発表資料は下記をご参照ください。
+プロダクトマネージャーを主な対象として、プロダクトで生成 AI を活用するためのアイデア発想、ビジネスモデル作成、また顧客起点でのプロダクト開発プロセスを学ぶためのワークショップを行っています。コミュニティでは複数社、個社では複数プロダクトのプロダクトマネージャーを集め意見交換を行うことで新しい視点で発案を促します。過去の開催レポート、発表資料は下記をご参照ください。
 
 | Index | Image | Presentation / Report |
 |:------| :-----|:----------------------|
+| vol.4 | ![vol4](docs/images/top/community_workshop_vol4.png) | イベントレポート : [生成AI時代のプロダクト開発プロセス改善 - Working Backwards と Value Discovery で実践](https://note.com/piqcy/n/n40dd1180cb4e) ( この回は、プロダクト開発プロセスの改善を生成 AI とともに行うテーマで実施 ) <br/>・[ワークショップ進行資料](https://drive.google.com/file/d/1qlpeYBfs8ZiYynqb8yMuQNZ10BbNZSiH/view) <br/>・[イベントページ](https://aws-startup-community.connpass.com/event/322096/)
 | vol.3 | ![vol3](docs/images/top/community_workshop_vol3.png) | イベントレポート : [生成AIが活きるプロダクト体験を発見する鍵 -24のバリューキャンバスの分析から見えたもの](https://note.com/piqcy/n/n3fe552b3e5b4) <br/>・[ワークショップ進行資料](https://speakerdeck.com/icoxfog417/purodakutowocheng-chang-saserusheng-cheng-ai-noyusukesufa-jian-wakusiyotupu-vol-dot-3) <br/>・[ワーク用バリューキャンバス台紙](docs/value_canvas_A3.pdf) <br/>・[バリューキャンバス作成後のアクションガイド](https://pmdao.notion.site/f5baa01855884eb7b6248b36cfe2ddbc)<br/>・[イベントページ](https://aws-startup-community.connpass.com/event/310075/)
 | vol.2 | ![vol2](docs/images/top/community_workshop_vol2.png) | イベントレポート : [コミュニティの力でAIをプロダクトに組み込むアイデアに磨きをかけよう](https://note.com/piqcy/n/nf840e424698c) <br/> AWS 大渕 麻莉: [生成系AI活用においてプロダクトマネージャーの重要性が増した説](https://speakerdeck.com/ohbuchim/sheng-cheng-xi-ai-huo-yong-nioitepurodakutomaneziyanozhong-yao-xing-gazeng-sitashuo) <br/> Notion 早川 和輝: [Notion AIから学ぶ生成AIプロダクトの仮説検証と実践方法](https://notion.notion.site/notion/Notion-AI-AI-c42a634df5b74b3cba2574a03d165d0b) <br/>  AWS 久保 隆宏: [生成系 AI 活用用途のアイディエーションと検証](https://speakerdeck.com/icoxfog417/purodakutowocheng-chang-saserusheng-cheng-xi-ai-noyusukesuwokao-eruwakusiyotupu) <br/> [イベントページ](https://productkintore.connpass.com/event/301832/)
 | vol.1 | ![vol1](docs/images/top/community_workshop_vol1.png) | イベントレポート : [「プロダクトを成長させる生成系 AI のユースケースを考えるワークショップ」を開催しました。](https://note.com/piqcy/n/n7097e8708185) <br/> Sansan 西田 貴紀: [Sansan LabsのLLM活⽤から考えるLLMプロジェクトの要点整理](https://speakerdeck.com/sansan_randd/llm-project-essentials-from-sansan-labs-llm-use) <br/> 株式会社Gaudiy 北川 和貴 : LLMエージェントをtoC提供して見えた可能性と難しさ (限定公開) <br/> AWS 久保 隆宏: [生成系 AI 活用用途のアイディエーションと検証](https://speakerdeck.com/icoxfog417/purodakutowocheng-chang-saserusheng-cheng-xi-ai-noyusukesuwokao-eruwakusiyotupu) <br/>  [イベントページ](https://productkintore.connpass.com/event/296335/) <br/>|
