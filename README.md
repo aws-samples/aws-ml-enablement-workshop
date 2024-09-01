@@ -16,7 +16,7 @@ ML Enablement Workshop は、生成 AI を含めた AI/ML 技術をプロダク�
 | Image |![Day0](docs/images/top/ml-enablement-day0.png)|![Day1](docs/images/top/ml-enablement-day1.png)|![Day2](docs/images/top/ml-enablement-day2.png)|
 | Work  | 参加者各自の役割の確認 | Working Backwards の 5 つのプロセスで仮説立案 | 参加者自身によるプロセス改善と 1 ~3 カ月の計画作成 |
 | Time | 1 時間 ( リモート可 ) | 3.5 時間 | 1~3 時間 |
-| Gide  | [Day0 実施ガイド](./docs/organizer/day0_v2.md) | [実施編 実施ガイド](./docs/organizer/day1_v2.md) | [改善編 実施ガイド](./docs/organizer/day2_v2.md) |
+| Guide  | [Day0 実施ガイド](./docs/organizer/day0_v2.md) | [実施編 実施ガイド](./docs/organizer/day1_v2.md) | [改善編 実施ガイド](./docs/organizer/day2_v2.md) |
 
 
 ワークショップをご活用いただいたお客様のフィードバックをまとめています
