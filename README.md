@@ -7,6 +7,13 @@ ML Enablement Workshop は、生成 AI を含めた AI/ML 技術をプロダク�
 |![Team](docs/images/top/top_1.jpeg) | ![Measure](docs/images/top/top_2.jpeg) | ![Plan](docs/images/top/top_3.jpeg) |
 | 企画・ビジネス側と開発側が一体で取り組む | 顧客体験から逆算して考える <br/> [Working Backwards](https://aws.amazon.com/jp/executive-insights/content/product-management-at-amazon/#Working_Backwards.3A_being_customer_obsessed) を実践 | 必要十分な手法で迅速に顧客の反応を得る |
 
+ワークショップの取り組みについて執筆させていただいた書籍が発売されました！
+
+| Book | 概要 |
+|:--------|:---------|
+| ![mlops book](docs/images/top/mlops_book.jpg)| **事例でわかるMLOps 機械学習の成果をスケールさせる処方箋** ([Amazon リンク](https://www.amazon.co.jp/dp/4065369568/)) <br/> 機械学習を導入、運用する MLOps 全体の営みについて、インフラの技術面だけでなく機械学習を活用するカルチャーにも踏み込み、理論面に加え各社の実践例も交え解説した書籍です。<br/> 9 章である「機械学習プロジェクトの失敗確率 80% を克服するプラクティス」に本ワークショップの取り組みを寄稿しています。<br/> ・リンク集 : [刊行記念イベント動画](https://www.youtube.com/watch?v=htFEtB33x7c&t=115s) / [登壇資料](https://mlops.connpass.com/event/328296/presentation/) / [執筆の背景と意図](https://note.com/piqcy/n/n00574e802d57) |
+
+
 ## 🚴 ワークショップの流れ
 
 ワークショップは参加者に対しワークショップでの役割を伝える [Day0](https://github.com/aws-samples/aws-ml-enablement-workshop/blob/main/docs/organizer/day0.md) を実施後、 2 部構成のプログラムを行います。 1 部で Amazon の開発プロセスを一通り実践し、 2 部からは参加者自信が主導しより時間を取るべきプロセスの再考と 1~3 カ月で最初の成果を獲得する計画を立てます。それぞれのパートの解説と資料は、 Title のリンクからアクセスできます。
@@ -104,7 +111,8 @@ ML Enablement Workshop 実施前に、**組織全体の AI/ML 活用リテラシ
 
 * ML Enablement Workshop は誰が開発し、メンテナンスしているのですか ?
    * AWS が開発し、メンテナンスしています。本資料には AWS でお客様の AI/ML を活用したノウハウが詰め込まれています。具体的な改善の過程については以下記事をご参照ください。
-   * [機械学習プロジェクトの約80%が失敗するのは伊達ではないと実感したが、現実に負けないワークショップに挑戦する](https://note.com/piqcy/n/n9c9e97896596) : ML Enablement Workshop 改善版について、改善前の課題と改善後のポイントをまとめた記事です。
+   * [AI/ML活用の勝ちパターンを学ぶ！AWS の人気ワークショップがAmazon流に生まれ変わり登場](https://note.com/piqcy/n/n3f45aefc9434) : ML Enablement Workshop の v2 へのメジャーバージョンアップの背景について記載した記事です。
+   * [機械学習プロジェクトの約80%が失敗するのは伊達ではないと実感したが、現実に負けないワークショップに挑戦する](https://note.com/piqcy/n/n9c9e97896596) : ML Enablement Workshop 改善版 (v1.1) について、改善前の課題と改善後のポイントをまとめた記事です。
    * [機械学習モデル開発プロジェクトの体験ハンズオンを公開しました](https://note.com/piqcy/n/n51ffb8e02293) : 初版公開時の記事です。
    * AWS だけでなく、 Amazon, Spotify, Uber など世界的なプロダクトのマネージャーがどのように機械学習を活用しているか調査し、その内容も反映しています。関心ある方は **[データサイエンスを活用するプロダクトマネージャーを訪ねて](docs/journal/README.md)** を参照ください。
 * ML Enablement Workshop はどのように実施すればよいのですか ?
