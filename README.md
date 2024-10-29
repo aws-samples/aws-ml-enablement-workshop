@@ -30,13 +30,18 @@ ML Enablement Workshop は、生成 AI を含めた AI/ML 技術をプロダク�
 
 ### お客様事例
 
+特に生成 AI の事例については、こちらのブログをぜひご参照ください : [生成 AI を活用する鍵は組織横断のチームにあり : ML Enablement Workshop を活用した 4 つの事例から学ぶ](https://aws.amazon.com/jp/blogs/news/ml-enablement-workshop-generative-ai-cases/)
+
 | Customer | Quote |
 |:--------|:---------|
-|<a href="https://corp.moneyforward.com/" target="_blank"><img src="docs/images/cases/MoneyForwardLogoMain.svg"></a> | [株式会社マネーフォワード](https://corp.moneyforward.com/) <br/> *ML Enablement Workshopによりプロダクトマネージャー、開発者、研究開発者共同でワークショップを行った結果、機械学習の推進に不可欠なロール間のコミュニケーションが生まれました* <br/> ・事例の詳細 : [ユーザに最高の付加価値を提供するための AI 活用に向けて](https://pages.awscloud.com/APAC_FIELD_T2_jp-isv-saas-on-aws-2022-archives-reg.html) (@ [SaaS on AWS 2022](https://pages.awscloud.com/APAC_FIELD_T2_jp-isv-saas-on-aws-2022-day1-inperson-reg.html)) |
-|<a href="https://geniee.co.jp/" target="_blank"><img src="docs/images/cases/geniee_logo.png"></a>| [株式会社ジーニー](https://geniee.co.jp/) <br/> *ML Enablement Workshop の刺激的な体験を通じ、明確なアクションだけでなく良質な検討フレームワークを持ち帰ることができました* <br/> ・[事例の詳細を見る](./docs/images/cases/Geniee_Case.png)|
-| <a href="https://www.kokopelli-inc.com/" target="_blank"><img src="docs/images/cases/kokopelli_logo.png"></a> | [株式会社ココペリ](https://www.kokopelli-inc.com/) <br/> *ML Enablement Workshop での顧客体験分析を通じ、 Big Advance の顧客にもっともインパクトがある生成 AI の用途を特定しタスクと効果測定 KPI を決められました*<br/> ・[事例の詳細を見る](./docs/images/cases/Kokopelli_Case.png)<br/> ・[AWSが開催する「ML Enablement Workshop」に参加します](https://www.kokopelli-inc.com/all/news/4323/) <br/> ・[ビジネスマッチングでのClaudeによる文章生成](https://note.com/kokopelli_inc/n/nc2a18f4afe76) <br/> ・[株式会社ココペリにおける AWS 生成 AI 事例: ML Enablement Workshop によるユースケース特定とその検証](https://aws.amazon.com/jp/blogs/news/gen-ai-usecase-kokopelli/)|
+|<a href="https://corp.moneyforward.com/" target="_blank"><img src="docs/images/cases/MoneyForwardLogoMain.svg"></a> | **株式会社マネーフォワード** <br/> *ML Enablement Workshopによりプロダクトマネージャー、開発者、研究開発者共同でワークショップを行った結果、機械学習の推進に不可欠なロール間のコミュニケーションが生まれました* <br/> ・事例の詳細 : [ユーザに最高の付加価値を提供するための AI 活用に向けて](https://pages.awscloud.com/APAC_FIELD_T2_jp-isv-saas-on-aws-2022-archives-reg.html) (@ [SaaS on AWS 2022](https://pages.awscloud.com/APAC_FIELD_T2_jp-isv-saas-on-aws-2022-day1-inperson-reg.html)) |
+|<a href="https://geniee.co.jp/" target="_blank"><img src="docs/images/cases/geniee_logo.png"></a>| **株式会社ジーニー** <br/> *ML Enablement Workshop の刺激的な体験を通じ、明確なアクションだけでなく良質な検討フレームワークを持ち帰ることができました* <br/> ・[事例の詳細を見る](./docs/images/cases/Geniee_Case.png)|
+| <a href="https://www.kokopelli-inc.com/" target="_blank"><img src="docs/images/cases/kokopelli_logo.png"></a> | **株式会社ココペリ** <br/> *ML Enablement Workshop での顧客体験分析を通じ、 Big Advance の顧客にもっともインパクトがある生成 AI の用途を特定しタスクと効果測定 KPI を決められました*<br/> ・[事例の詳細を見る](./docs/images/cases/Kokopelli_Case.png)<br/> ・[株式会社ココペリにおける AWS 生成 AI 事例: ML Enablement Workshop によるユースケース特定とその検証](https://aws.amazon.com/jp/blogs/news/gen-ai-usecase-kokopelli/)|
+| <a href="https://www.bk.mufg.jp/index.html" target="_blank"><img src="docs/images/cases/mufg_logo.png"></a> | **株式会社三菱 UFJ 銀行** <br/> *ML Enablement Workshop とプロトタイピングの支援により、目指すべき営業体験の創出から、検証、改善までの一連のサイクルを、迅速かつ円滑に回し始めることができました* <br/> ・[事例の詳細を見る](./docs/images/cases/mlew-cases-mufg.png) |
+| <a href="https://www.saison-technology.com/" target="_blank"><img src="docs/images/cases/saison_logo.png"></a>|  **株式会社セゾンテクノロジー** <br/> *ML Enablement Workshop を通じメンバーそれぞの考えを可視化・共有することで思い込みのバイアスを避け、自信を持ってコミットメントできる意思決定ができました* <br/> ・[事例の詳細を見る](./docs/images/cases/mlew-cases-saison.png) |
 
-**様々なお客様のプロダクトチームで、ワークショップをご活用頂いています**
+
+**このほか、様々なお客様のプロダクトチームで、ワークショップをご活用頂いています**
 
 活用頂いた事例を掲載頂ける場合は、[Issue](https://github.com/aws-samples/aws-ml-enablement-handson/issues/new?assignees=&labels=enhancement&template=case-study.md&title=)よりご連絡ください。
 
@@ -59,7 +64,12 @@ ML Enablement Workshop 実施前に、**組織全体の AI/ML 活用リテラシ
 
 個社開催も実績があります。
 
-* NTT DATA Intramart : [プロダクトを成長させる生成系 AI のユースケースを考えるワークショップ実施レポート](https://dev.intra-mart.jp/%e3%83%97%e3%83%ad%e3%83%80%e3%82%af%e3%83%88%e3%82%92%e6%88%90%e9%95%b7%e3%81%95%e3%81%9b%e3%82%8b%e7%94%9f%e6%88%90%e7%b3%bb-ai-%e3%81%ae%e3%83%a6%e3%83%bc%e3%82%b9%e3%82%b1%e3%83%bc%e3%82%b9/)
+| Index | Image | Customer Report |
+|:------| :-----|:----------------------|
+| 1     | ![recruit](docs/images/cases/mlew-cases-recruit.png)      | **株式会社リクルート** : [社内での生成AI活用推進を成功させる実践方法](https://blog.recruit-productdesign.jp/n/n561955e2a147) <br/> *AWS様にご協力いただき、生成AIのアイディア 出しからビジネスモデル作成まで行う社内向けワークショップが開催されました。趣旨としては、リクルートに所属する約50名のエンジニアやPdMが協働し、課題を基にした議論を重ねながら生成AIの具体的ユースケースを検討するというものです。* <br/> *実際に私自身も参加したのですが、新規ビジネスや既存業務の問題・課題に対して、様々な観点でブレインストーミングを行い、PSF（Problem Solution Fit）を整理する中で新たな知見を深めることができました。* |
+| 2     | ![ntt data intramart](docs/images/cases/mlew-cases-ntt-data-intra.png) | **株式会社NTTデータ イントラマート** : [プロダクトを成長させる生成系 AI のユースケースを考えるワークショップ実施レポート](https://dev.intra-mart.jp/%e3%83%97%e3%83%ad%e3%83%80%e3%82%af%e3%83%88%e3%82%92%e6%88%90%e9%95%b7%e3%81%95%e3%81%9b%e3%82%8b%e7%94%9f%e6%88%90%e7%b3%bb-ai-%e3%81%ae%e3%83%a6%e3%83%bc%e3%82%b9%e3%82%b1%e3%83%bc%e3%82%b9/) <br/> *生成AIを活用した様々な機能強化を進めていくべく、AWS様と共同で「プロダクトを成長させる生成系 AI のユースケースを考えるワークショップ」を実施しました* <br/> *製品開発やサービスの主要なメンバーと意見交換しながら多様なアイディアを出す事ができ、非常に良い経験となりました。* |
+
+
 
 ## 🏃‍♀️ ワークショップ実施後に
 
