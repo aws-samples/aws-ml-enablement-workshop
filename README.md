@@ -11,7 +11,13 @@ ML Enablement Workshop は、生成 AI を含めた AI/ML 技術をプロダク�
 
 | Book | 概要 |
 |:--------|:---------|
-| ![mlops book](docs/images/top/mlops_book.jpg)| **事例でわかるMLOps 機械学習の成果をスケールさせる処方箋** ([Amazon リンク](https://www.amazon.co.jp/dp/4065369568/)) <br/> 機械学習を導入、運用する MLOps 全体の営みについて、インフラの技術面だけでなく機械学習を活用するカルチャーにも踏み込み、理論面に加え各社の実践例も交え解説した書籍です。<br/> 9 章である「機械学習プロジェクトの失敗確率 80% を克服するプラクティス」に本ワークショップの取り組みを寄稿しています。<br/> ・リンク集 : [刊行記念イベント動画](https://www.youtube.com/watch?v=htFEtB33x7c&t=115s) / [登壇資料](https://mlops.connpass.com/event/328296/presentation/) / [執筆の背景と意図](https://note.com/piqcy/n/n00574e802d57) |
+| [![mlops book](docs/images/top/mlops_book.jpg)](https://www.amazon.co.jp/dp/4065369568/) | **事例でわかるMLOps 機械学習の成果をスケールさせる処方箋** ([Amazon リンク](https://www.amazon.co.jp/dp/4065369568/)) <br/> 機械学習を導入、運用する MLOps 全体の営みについて、インフラの技術面だけでなく機械学習を活用するカルチャーにも踏み込み、理論面に加え各社の実践例も交え解説した書籍です。<br/> 9 章である「機械学習プロジェクトの失敗確率 80% を克服するプラクティス」に本ワークショップの取り組みを寄稿しています。<br/> ・リンク集 : [刊行記念イベント動画](https://www.youtube.com/watch?v=htFEtB33x7c&t=115s) / [登壇資料](https://mlops.connpass.com/event/328296/presentation/) / [執筆の背景と意図](https://note.com/piqcy/n/n00574e802d57) |
+
+ワークショップを活用された MUFG 様が、日本の金融機関として初めて re:Invent に登壇されました！ (2024 年)
+
+| Video | 概要 |
+|:--------|:---------|
+| [![video](docs/images/top/re_invent_2024.png)](https://www.youtube.com/watch?v=G8b8LrfXSik&t=1496s)| [**How MUFG is using generative AI to transform corporate sales: Efficient, scalable, and adaptable**](https://www.youtube.com/watch?v=G8b8LrfXSik&t=1496s) <br/> 法人営業における金融商品提案の顧客体験について、営業チームと開発チームが合同でML Enablement Workshopを実施し、理想的な体験とその実現に向けたマイルストーンを定義。営業チームが提案の価値検証を進める一方、開発チームは生成AIを活用した提案作成の自動化を推進。AWSのプロトタイピングプログラムを活用してフロントエンド開発の支援を受け、その後も開発チームによる継続的な改善を実施。その結果、わずか3ヶ月以内にリード生成が10倍に増加し、30%の成約率向上を達成するという顕著なビジネス成果を達成。 |
 
 
 ## 🚴 ワークショップの流れ
@@ -37,7 +43,7 @@ ML Enablement Workshop は、生成 AI を含めた AI/ML 技術をプロダク�
 |<a href="https://corp.moneyforward.com/" target="_blank"><img src="docs/images/cases/MoneyForwardLogoMain.svg"></a> | **株式会社マネーフォワード** <br/> *ML Enablement Workshopによりプロダクトマネージャー、開発者、研究開発者共同でワークショップを行った結果、機械学習の推進に不可欠なロール間のコミュニケーションが生まれました* <br/> ・事例の詳細 : [ユーザに最高の付加価値を提供するための AI 活用に向けて](https://pages.awscloud.com/APAC_FIELD_T2_jp-isv-saas-on-aws-2022-archives-reg.html) (@ [SaaS on AWS 2022](https://pages.awscloud.com/APAC_FIELD_T2_jp-isv-saas-on-aws-2022-day1-inperson-reg.html)) |
 |<a href="https://geniee.co.jp/" target="_blank"><img src="docs/images/cases/geniee_logo.png"></a>| **株式会社ジーニー** <br/> *ML Enablement Workshop の刺激的な体験を通じ、明確なアクションだけでなく良質な検討フレームワークを持ち帰ることができました* <br/> ・[事例の詳細を見る](./docs/images/cases/Geniee_Case.png)|
 | <a href="https://www.kokopelli-inc.com/" target="_blank"><img src="docs/images/cases/kokopelli_logo.png"></a> | **株式会社ココペリ** <br/> *ML Enablement Workshop での顧客体験分析を通じ、 Big Advance の顧客にもっともインパクトがある生成 AI の用途を特定しタスクと効果測定 KPI を決められました*<br/> ・[事例の詳細を見る](./docs/images/cases/Kokopelli_Case.png)<br/> ・[株式会社ココペリにおける AWS 生成 AI 事例: ML Enablement Workshop によるユースケース特定とその検証](https://aws.amazon.com/jp/blogs/news/gen-ai-usecase-kokopelli/)|
-| <a href="https://www.bk.mufg.jp/index.html" target="_blank"><img src="docs/images/cases/mufg_logo.png"></a> | **株式会社三菱 UFJ 銀行** <br/> *ML Enablement Workshop とプロトタイピングの支援により、目指すべき営業体験の創出から、検証、改善までの一連のサイクルを、迅速かつ円滑に回し始めることができました* <br/> ・[事例の詳細を見る](./docs/images/cases/mlew-cases-mufg.png) |
+| <a href="https://www.bk.mufg.jp/index.html" target="_blank"><img src="docs/images/cases/mufg_logo.png"></a> | **株式会社三菱 UFJ 銀行** <br/> *ML Enablement Workshop とプロトタイピングの支援により、目指すべき営業体験の創出から、検証、改善までの一連のサイクルを、迅速かつ円滑に回し始めることができました* <br/> ・[事例の詳細を見る](./docs/images/cases/mlew-cases-mufg.png) <br/> ・[re:Invent 2024 での登壇動画](https://www.youtube.com/watch?v=G8b8LrfXSik&t=1496s) |
 | <a href="https://www.saison-technology.com/" target="_blank"><img src="docs/images/cases/saison_logo.png"></a>|  **株式会社セゾンテクノロジー** <br/> *ML Enablement Workshop を通じメンバーそれぞの考えを可視化・共有することで思い込みのバイアスを避け、自信を持ってコミットメントできる意思決定ができました* <br/> ・[事例の詳細を見る](./docs/images/cases/mlew-cases-saison.png) |
 
 
