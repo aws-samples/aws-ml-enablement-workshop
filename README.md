@@ -31,6 +31,13 @@ ML Enablement Workshop は、生成 AI を含めた AI/ML 技術をプロダク�
 | Time | 1 時間 ( リモート可 ) | 3.5 時間 | 1~3 時間 |
 | Guide  | [Day0 実施ガイド](./docs/organizer/day0_v2.md) | [実施編 実施ガイド](./docs/organizer/day1_v2.md) | [改善編 実施ガイド](./docs/organizer/day2_v2.md) |
 
+### テンプレート
+
+ワークショップの実施をサポートする、テンプレートを用意しております。
+
+| Image | Detail |
+|:------| :------|
+|![Miro_template_image](./docs/images/top/miro-template.png) | [オンラインホワイトボード Miro 向けのテンプレート](https://miro.com/miroverse/ml-enablement-workshop/) <br/> ワークショップを円滑に進めることができる Miro 向けのテンプレートです。各フェーズへ取組む際、必要となるフレームが最初からボード上に用意されているため、実施準備も手がかかりません。リアルタイムに作業内容が更新されていくため、結果の共有や振り返りも簡単に行えます。どなたでもご利用いただける Miroverse で公開しておりますので、ぜひご活用ください！ |
 
 ワークショップをご活用いただいたお客様のフィードバックをまとめています
 
