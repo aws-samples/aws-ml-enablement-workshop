@@ -29,6 +29,7 @@
 - **外部連携**: 外部サービスとの連携はすべてモックレスポンスで実装する
 - **UI優先**: ユーザーインターフェースの動作確認を最優先とする
 - **言語設定**: 特別な指定がない限り、すべてのコンテンツは日本語で作成する
+- **画像**: プレースホルダー等、LP やアプリケーションのコンテンツとして画像が必要な場合は awslabs.nova-canvas-mcp-server を利用して生成した画像を利用する。生成した画像はpublicフォルダに配置し、直接パスで参照してください。
 </implementation_constraints>
 
 <technical_requirements>
@@ -65,3 +66,14 @@
 6. Phase 1のCloudFormation完了を確認後、AWSにデプロイ
 </phase2_tasks>
 </execution_phases>
+
+<cleanup_commands>
+ユーザーから削除指示があった場合には、以下の<cleanup_tasks></cleanup_tasks>を実行すること
+    <cleanup_tasks>
+    1. CloudFormationスタックに含まれるS3バケットを特定
+    2. 各S3バケット内のすべてのオブジェクトを、削除マーカーを含めて削除
+    3. S3バケットが空になったことを確認
+    4. CloudFormationスタックを削除
+    5. 削除の完了を確認
+    </cleanup_tasks>
+</cleanup_commands>

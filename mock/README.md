@@ -8,6 +8,7 @@ Amazon Q Developer CLI を活用し、プロンプトベースでアプリケー
 ## プロジェクト構成
 
 ```
+├── .amazonq/                  # カスタムエージェント等、Q Developer CLI 用設定ファイルディレクトリ
 ├── prompt/                    # プロンプトファイルディレクトリ
 │   └── prompt.md             # アプリケーション仕様記述ファイル
 ├── template/                  # アプリケーションテンプレート
@@ -69,41 +70,44 @@ npm --version
 # 期待される出力例: 10.8.2
 ```
 
+### (Optional) 画像生成用
+
+こちらは Optional ですが、アプリケーションを自動生成する際に、モックアップ画像等を生成する際に画像生成モデルを利用することが可能です。
+利用する場合は、以下の blog を参考に、画像生成モデルである Amazon Nova Canvas のモデルアクセスを有効化してください。
+※ 有効化するリージョンは `us-east-1` です
+
+**参考ドキュメント**: [Amazon Nova Canvas を使用したテキストからの画像生成の基本](https://aws.amazon.com/jp/blogs/news/text-to-image-basics-with-amazon-nova-canvas/)
+
+
 ## 使用方法
 
-### 1. プロンプトファイルの準備
+### 1. ディレクトリの移動
 
-`./prompt/prompt.md` ファイルを編集し、以下の項目を記載します。
+以下のコマンドを実行し、`mock` ディレクトリに移動します。
 
-#### アプリケーション仕様の記載
-```markdown
-<application_requirements>
-{ここに作成したいアプリケーションの詳細を入力してください}
-</application_requirements>
 ```
-
-#### トラッカー情報の設定（効果測定用）
-```markdown
-<tracker_configuration>
-{以下にデプロイしたMLEWトラッカーのエンドポイント情報を入力してください}
-- **API Endpoint**: `https://xxxxxxxx.execute-api.us-west-2.amazonaws.com/dev/`
-- **API Key**: dummyapikey
-- **Dashboard URL**: `https://xxxxxxxx.cloudfront.net`
-- **Tracker SDK URL** : `https://xxxxxxxx.cloudfront.net/tracker-sdk.js`
-</tracker_configuration>
+cd ./aws-ml-enablement-workshop/mock
 ```
-
-**注意**: トラッカー情報は効果測定のために必要です。実際のエンドポイント情報に書き換えてから使用してください。
 
 ### 2. Amazon Q Developer CLI の起動
 
-Amazon Q Developer CLI を起動し、準備したプロンプトをコピーし、指示として入力します。
+以下のコマンドで Amazon Q Developer CLI のカスタムエージェントを起動します。
 
-### 3. アプリケーションの自動生成
+```
+q chat --agent mock-builder
+```
 
-AI がプロンプトの内容を解析し、指定された要件に基づいてアプリケーションを自動的に生成します。
+### 3. カスタムエージェントの実行
 
-## 注意事項
+`こんにちは` や `アプリケーションを作成したい` など適当な言葉を入力いただくと、カスタムエージェントが実行されます。
+カスタムエージェントは実装を開始する前に、以下の２つの質問を順番にユーザーに確認します。
 
-- プロンプトファイルの `<application_requirements>` タグ内に、具体的で明確なアプリケーション仕様を記載してください
-- 生成されるアプリケーションの品質は、プロンプトの詳細度と明確さに依存します
+・実装したいアプリケーションの詳細
+・（Option)トラッキング用エンドポイント等の情報
+
+上記の質問に順番に回答すると、アプリケーションが自動的に実装され、CloudFront + S3 でホスティングされます。
+
+### 4. ホスティングしたアプリケーションの削除
+
+AWS にデプロイしたアプリケーションを削除したい場合は、Q Developer CLI に、`/product/ ディレクトリを参照し、デプロイしたアプリケーションを削除したい` と伝えてください。
+各種リソースの削除が行われます。
