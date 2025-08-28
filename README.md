@@ -2,16 +2,38 @@
 
 ML Enablement Workshop は、生成 AI を含めた AI/ML 技術をプロダクトの成長に繋げられるチームを組成するためのワークショップです。
 
-| 組織横断でのチームの組成 | Amazon の開発プロセスの実践 | 1~3 カ月で最初の成果を獲得 |
+| 組織横断でのチームの組成 | Amazon の開発プロセスの実践 | ~6 カ月での本番リリース |
 |:--------|:---------|:------|
-|![Team](docs/images/top/top_1.jpeg) | ![Measure](docs/images/top/top_2.jpeg) | ![Plan](docs/images/top/top_3.jpeg) |
-| 企画・ビジネス側と開発側が一体で取り組む | 顧客体験から逆算して考える <br/> [Working Backwards](https://aws.amazon.com/jp/executive-insights/content/product-management-at-amazon/#Working_Backwards.3A_being_customer_obsessed) を実践 | 必要十分な手法で迅速に顧客の反応を得る |
+|![Team](docs/images/top/top_1.jpeg) | ![Measure](docs/images/top/top_2.jpeg) | ![Plan](docs/images/top/top_3.png) |
+| 企画・ビジネス側と開発側が一体で取り組む | 顧客体験から逆算して考える <br/> [Working Backwards](https://aws.amazon.com/jp/executive-insights/content/product-management-at-amazon/#Working_Backwards.3A_being_customer_obsessed) を実践 | 生成 AI を用いた広範・並列な価値検証で実現 |
 
-ワークショップの取り組みについて執筆させていただいた書籍が発売されました！
 
-| Book | 概要 |
-|:--------|:---------|
-| [![mlops book](docs/images/top/mlops_book.jpg)](https://www.amazon.co.jp/dp/4065369568/) | **事例でわかるMLOps 機械学習の成果をスケールさせる処方箋** ([Amazon リンク](https://www.amazon.co.jp/dp/4065369568/)) <br/> 機械学習を導入、運用する MLOps 全体の営みについて、インフラの技術面だけでなく機械学習を活用するカルチャーにも踏み込み、理論面に加え各社の実践例も交え解説した書籍です。<br/> 9 章である「機械学習プロジェクトの失敗確率 80% を克服するプラクティス」に本ワークショップの取り組みを寄稿しています。<br/> ・リンク集 : [刊行記念イベント動画](https://www.youtube.com/watch?v=htFEtB33x7c&t=115s) / [登壇資料](https://mlops.connpass.com/event/328296/presentation/) / [執筆の背景と意図](https://note.com/piqcy/n/n00574e802d57) |
+## 🚴 ワークショップの流れ
+
+ワークショップは参加者に対しワークショップでの役割を伝える [Day0](https://github.com/aws-samples/aws-ml-enablement-workshop/blob/main/docs/organizer/day0.md) を実施後、 2 部構成のプログラムを行います。 
+
+* [**Day0**](./docs/organizer/day0.md) で、開始条件の確認と開始前の準備事項を確認します
+* [**実践編**](./docs/organizer/day1.md) で Amazon のプロダクト開発プロセスを実践し新規プロダクト / 機能のプレスリリースを複数作成します。同時に、それらを生成 AI に与え仮説検証を行うためのモックを構築します
+* [**改善編**](./docs/organizer/day2.md) でモックを通じて得られた知見を統合し、参加者自信で Amazon のプロセスを実践しプレスリリースを更新します。その後、今後 3~6 カ月でリリースするための最初のステップを計画します
+
+| Title |Day0: 目的とロールの確認|実践編: Amazon 流を実践|改善編: 仮説検証の自走を開始|
+|:--------|:---------|:------|:------|
+| Image |![Day0](docs/images/top/ml-enablement-day0.png)|![Day1](docs/images/top/ml-enablement-day1.png)|![Day2](docs/images/top/ml-enablement-day2.png)|
+| Work  | 参加者各自の役割の確認 | Working Backwards の 5 つのプロセスで仮説立案・並行検証開始 | 参加者自身によるプロセス改善、リリースに向けた初期計画作成 |
+| Time | 1 時間 ( リモート可 ) | 3.5 時間 | 3 時間 |
+
+実践編で開発するモックのイメージ : 生成 AI による商品ページの自動作成機能の例。だいたい 10~20 分程度で完成します。モックは、トップページ、アプリケーション機能 (レスポンスはダミーを使用)、クリックやページ計測のメトリクス集計機能の 3 つから成ります。
+
+| トップページ | 機能ページ 1 | 機能ページ 2 |
+|:--------|:---------|:------|
+| ![LP](docs/images/top/mock-image-1.png) | ![FT1](docs/images/top/mock-image-2.png) | ![FT2](docs/images/top/mock-image-3.png) |
+
+
+ワークショップをご活用いただいたお客様のフィードバックをまとめています
+
+### お客様事例
+
+特に生成 AI の事例については、こちらのブログをぜひご参照ください : [生成 AI を活用する鍵は組織横断のチームにあり : ML Enablement Workshop を活用した 4 つの事例から学ぶ](https://aws.amazon.com/jp/blogs/news/ml-enablement-workshop-generative-ai-cases/)
 
 ワークショップを活用された MUFG 様が、日本の金融機関として初めて re:Invent に登壇されました！ (2024 年)
 
@@ -19,31 +41,13 @@ ML Enablement Workshop は、生成 AI を含めた AI/ML 技術をプロダク�
 |:--------|:---------|
 | [![video](docs/images/top/re_invent_2024.png)](https://www.youtube.com/watch?v=G8b8LrfXSik&t=1496s)| [**How MUFG is using generative AI to transform corporate sales: Efficient, scalable, and adaptable**](https://www.youtube.com/watch?v=G8b8LrfXSik&t=1496s) <br/> 法人営業における金融商品提案の顧客体験について、営業チームと開発チームが合同でML Enablement Workshopを実施し、理想的な体験とその実現に向けたマイルストーンを定義。営業チームが提案の価値検証を進める一方、開発チームは生成AIを活用した提案作成の自動化を推進。AWSのプロトタイピングプログラムを活用してフロントエンド開発の支援を受け、その後も開発チームによる継続的な改善を実施。その結果、わずか3ヶ月以内にリード生成が10倍に増加し、30%の成約率向上を達成するという顕著なビジネス成果を達成。 |
 
+ワークショップの取り組みについて執筆させていただいた書籍が刊行されました (2024)
 
-## 🚴 ワークショップの流れ
+| Book | 概要 |
+|:--------|:---------|
+| [![mlops book](docs/images/top/mlops_book.jpg)](https://www.amazon.co.jp/dp/4065369568/) | **事例でわかるMLOps 機械学習の成果をスケールさせる処方箋** ([Amazon リンク](https://www.amazon.co.jp/dp/4065369568/)) <br/> 機械学習を導入、運用する MLOps 全体の営みについて、インフラの技術面だけでなく機械学習を活用するカルチャーにも踏み込み、理論面に加え各社の実践例も交え解説した書籍です。<br/> 9 章である「機械学習プロジェクトの失敗確率 80% を克服するプラクティス」に本ワークショップの取り組みを寄稿しています。<br/> ・リンク集 : [刊行記念イベント動画](https://www.youtube.com/watch?v=htFEtB33x7c&t=115s) / [登壇資料](https://mlops.connpass.com/event/328296/presentation/) / [執筆の背景と意図](https://note.com/piqcy/n/n00574e802d57) |
 
-ワークショップは参加者に対しワークショップでの役割を伝える [Day0](https://github.com/aws-samples/aws-ml-enablement-workshop/blob/main/docs/organizer/day0.md) を実施後、 2 部構成のプログラムを行います。 1 部で Amazon の開発プロセスを一通り実践し、 2 部からは参加者自信が主導しより時間を取るべきプロセスの再考と 1~3 カ月で最初の成果を獲得する計画を立てます。それぞれのパートの解説と資料は、 Title のリンクからアクセスできます。
-
-| Title |[Day0: 目的とロールの確認](docs/organizer/day0_v2.md)|[実践編: Amazon 流を実践](docs/presentations/ml-enablement-v2-01-practice.pdf)|[改善編: 仮説検証の自走を開始](docs/presentations/ml-enablement-v2-02-improve.pdf)|
-|:--------|:---------|:------|:------|
-| Image |![Day0](docs/images/top/ml-enablement-day0.png)|![Day1](docs/images/top/ml-enablement-day1.png)|![Day2](docs/images/top/ml-enablement-day2.png)|
-| Work  | 参加者各自の役割の確認 | Working Backwards の 5 つのプロセスで仮説立案 | 参加者自身によるプロセス改善と 1 ~3 カ月の計画作成 |
-| Time | 1 時間 ( リモート可 ) | 3.5 時間 | 1~3 時間 |
-| Guide  | [Day0 実施ガイド](./docs/organizer/day0_v2.md) | [実施編 実施ガイド](./docs/organizer/day1_v2.md) | [改善編 実施ガイド](./docs/organizer/day2_v2.md) |
-
-### テンプレート
-
-ワークショップの実施をサポートする、テンプレートを用意しております。
-
-| Image | Detail |
-|:------| :------|
-|![Miro_template_image](./docs/images/top/miro-template.png) | [オンラインホワイトボード Miro 向けのテンプレート](https://miro.com/miroverse/ml-enablement-workshop/) <br/> ワークショップを円滑に進めることができる Miro 向けのテンプレートです。各フェーズへ取組む際、必要となるフレームが最初からボード上に用意されているため、実施準備も手がかかりません。リアルタイムに作業内容が更新されていくため、結果の共有や振り返りも簡単に行えます。どなたでもご利用いただける Miroverse で公開しておりますので、ぜひご活用ください！ |
-
-ワークショップをご活用いただいたお客様のフィードバックをまとめています
-
-### お客様事例
-
-特に生成 AI の事例については、こちらのブログをぜひご参照ください : [生成 AI を活用する鍵は組織横断のチームにあり : ML Enablement Workshop を活用した 4 つの事例から学ぶ](https://aws.amazon.com/jp/blogs/news/ml-enablement-workshop-generative-ai-cases/)
+他ご活用いただいたお客様の声
 
 | Customer | Quote |
 |:--------|:---------|
@@ -90,25 +94,25 @@ ML Enablement Workshop 実施前に、**組織全体の AI/ML 活用リテラシ
 
 ワークショップ実施後の素早いプロトタイプ構築のために AWS として様々なアセットを公開しています。
 
-### AWS Smaples
+### 生成 AI の AWS 実装集
 
-開発者、データサイエンティストを対象に、実装のフェーズで役立つサンプルを提供しています。
+[AWS Generative AI Solution Box](https://aws-samples.github.io/sample-one-click-generative-ai-solutions/) から、下記ソリューションを含め AWS アカウントがあればワンクリック・十分程度でデプロイが出来ます。
 
-#### 生成 AI の AWS 実装集
+[生成 AI 事例集](https://aws.amazon.com/jp/local/genai-4-jp/) により、様々な企業の事例を参照できます。
 
 | Image | Detail |
 |:------| :------|
 |![generative_ai_use_cases](./docs/images/top/aws_sample_generative_ai_use_cases.png) | [generative-ai-use-cases](https://github.com/aws-samples/generative-ai-use-cases-jp) <br/> 生成 AI の様々なユースケースをワンストップで試せるアプリケーションです。チャットはもちろん、要約、画像生成、検索拡張生成、文書校正、翻訳、 Web コンテンツの抽出といった機能をすぐに試し効果を体感できます。 |
 | ![bedrock_claude_chat](./docs/images/top/aws_sample_bedrock_claude_chat.png) | [bedrock-claude-chat](https://github.com/aws-samples/bedrock-claude-chat) <br/> 生成 AI のチャット機能をすばやくかつセキュアにデプロイできるアプリケーションです。検索拡張生成、またシステムプロンプトを埋め込んだカスタムボットの共有などチャットに特化した機能を提供しています。 |
 
-#### AI/ML の AWS 実装集
+### AI/ML の AWS 実装集
 
 | Image | Detail |
 |:------| :------|
 |![aws_ml_jp](./docs/images/top/aws_sample_aws_ml_jp.png) | [aws-ml-jp](https://github.com/aws-samples/aws-ml-jp) <br/> AWS の AI/ML サービスのサンプルコード、また学習コンテンツを提供するリポジトリです。 Amazon SageMaker を利用したモデルの学習はもちろん、基盤モデルの Fine Tuning のサンプル実装なども提供しています。 |
 |![studio_lab_community](./docs/images/top/aws_sample_studio_lab_community.png) | [awesome-studio-lab-jp](https://github.com/aws-sagemaker-jp/awesome-studio-lab-jp) <br/> AWS アカウント不要かつ無料で利用できる Amazon SageMaker Studio Lab で学べる機械学習のコンテンツを集めたリポジトリです。 |
 
-#### 機械学習プロジェクト体験ハンズオン
+### 機械学習プロジェクト体験ハンズオン
 
 開発者向けの機械学習ハンズオン資料です。
 目次のNo.1から順に進めていくことで各開発プロセスでなにを行うのか、なぜ行うのか、どう行うのかを学ぶことができます。ハンズオンは Amazon SageMaker Studio Lab を使用し進めます。アカウントの作成方法や使い方は[Amazon SageMaker Studio Lab の使い方](https://github.com/aws-sagemaker-jp/awesome-studio-lab-jp/blob/main/README_usage.md)を参照してください。
@@ -145,14 +149,12 @@ ML Enablement Workshop 実施前に、**組織全体の AI/ML 活用リテラシ
 * ML Enablement Workshop を利用するのに料金や許可は必要ですか ?
    * いいえ。 GitHub で オープンソースとして公開しているので、 [ライセンスの範囲](LICENSE)で無料で利用頂くことができます。ただ、 AWS 以外の個人や法人が「 ML Enablement Workshop 」の名称もしくは同一とみなされる名称でワークショップを開催することを禁止します。お客様の混乱を防ぐための措置で、ご理解をお願い致します。
 * AWS のサービスはワークショップに関わらないのですか ?
-   * ワークショップ以後、特定したユースケースを実装する際に AWS のサービスを活用いただけます。手軽に生成 AI が使える [Amazon Bedrock](https://aws.amazon.com/jp/bedrock/) や無料で Jupyter Notebook が使える [Amazon SageMaker Studio Lab](https://studiolab.sagemaker.aws/) から、機械学習の継続的な学習に不可欠な MLOps を構築する [Amazon SageMaker](https://aws.amazon.com/jp/sagemaker/) まで、幅広なサービスと [生成 AI イノベーションセンター](https://aws.amazon.com/jp/about-aws/whats-new/2023/06/aws-announces-generative-ai-innovation-center/) 等の実装支援プログラムでユースケースの実現まで伴走します。
+   * 最新のワークショップでは AI Coding Agent の活用が必須であり、AWS は [Amazon Q Developer CLI](https://docs.aws.amazon.com/ja_jp/amazonq/latest/qdeveloper-ug/command-line.html) の使用を推奨しています。
 * AWS はなぜ ML Enablement Workshop の開発・改善をしているのですか ? 
    * AI/ML の本番環境での利用を拡大するためです。これはお客様の利益にもなり、 AWS にとっても本番で AWS の AI/ML のサービスが利用さることはビジネスの拡大に不可欠です。
    * 特に日本ではデータを活用した企画や業務改善を主導できる人材が 20% 程度と米国の約 1/3 に留まり、 スタートアップでも技術革新を受けプロダクトのピボットを検討した企業は 1 割程度に留まります。この差が、 AI の導入効果が米国に比べ約 1/7 、スタートアップの成長率は約 1/30 と大きく乖離する一因になっています。関心ある方は以下の資料もご参照ください。
    * [日本のAI導入効果がアメリカの7分の1程度しかないのはなぜなのか](https://note.com/piqcy/n/na971fee54568) : 📹[動画](https://www.youtube.com/watch?v=Uxip1ggPwtw)
    * [日本のスタートアップ企業の成長速度が米国に比べ30分の1以下という現状にデータサイエンティストは何ができるか](https://note.com/piqcy/n/n66c93427d8f0)
-* ML Enablement Workshop は生成 AI の活用にも適用できますか ?
-   * はい。実際、ココペリ様では生成 AI のユースケースについて検討頂き本番導入に向けた検証まで進んでいただいています( [事例](https://github.com/aws-samples/aws-ml-enablement-workshop?tab=readme-ov-file#%E6%A0%AA%E5%BC%8F%E4%BC%9A%E7%A4%BE%E3%82%B3%E3%82%B3%E3%83%9A%E3%83%AA)、[技術検証記事](https://note.com/kokopelli_inc/n/nc2a18f4afe76) )。
 * ML Enablement Workshop を AI/ML の活用を推進するための社内勉強会として実施することはできますか ? 
    * いいえ。 ML Enablement Workshop はアクションプランを作るためのワークショップで、研修を目的としていません。実施に際しては、特定のプロダクト、プロダクト機能を選定して頂く必要があります。
    * [プロダクトを成長させる生成 AI のユースケースを考えるワークショップ](https://speakerdeck.com/icoxfog417/purodakutowocheng-chang-saserusheng-cheng-xi-ai-noyusukesuwokao-eruwakusiyotupu) は 2~3 時間でユースケースの発案、検証が行えるプログラムになっています。詳細は追加コンテンツを参照してください。
