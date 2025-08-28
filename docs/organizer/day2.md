@@ -3,8 +3,8 @@
 ## ワークショップ資料
 
 改善編 : Continuous improvement
-* [PDF](../presentations/ml-enablement-v2-02-improve.pdf)
-* [PPT](../presentations/ml-enablement-v2-02-improve.pptx)
+* [PDF](../presentations/ml-enablement-v3-02-improve.pdf)
+* [PPT](../presentations/ml-enablement-v3-02-improve.pptx)
 
 ## ワークショップの進め方
 
