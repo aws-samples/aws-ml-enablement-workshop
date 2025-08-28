@@ -1,6 +1,6 @@
 # ML Enablement Workshop 生成 AI 環境事前準備
 
-ML Enablement Workshop で開発者 / データサイエンティスト担当の方は、**チーム全員が先生 AI を扱えるように**下記の環境セットアップをワークショップ開始前に完了してください。環境セットアップは、[Amazon Q Developer CLI](https://docs.aws.amazon.com/ja_jp/amazonq/latest/qdeveloper-ug/command-line.html) を想定しています。
+ML Enablement Workshop で開発者 / データサイエンティスト担当の方は、**チーム全員が生成 AI を扱えるように**下記の環境セットアップをワークショップ開始前に完了してください。環境セットアップは、[Amazon Q Developer CLI](https://docs.aws.amazon.com/ja_jp/amazonq/latest/qdeveloper-ug/command-line.html) を想定しています。
 
 ## AWS 環境の事前準備
 
