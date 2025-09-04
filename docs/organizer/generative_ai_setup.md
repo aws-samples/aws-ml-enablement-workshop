@@ -78,8 +78,8 @@ q chat
 # 1. zip ファイルを解凍
 git clone https://github.com/aws-samples/aws-ml-enablement-workshop.git
 
-# 2. mock ディレクトリへ移動
-cd aws-ml-enablement-workshop/mock
+# 2. mock を作成するディレクトリへ移動
+cd aws-ml-enablement-workshop/yourwork
 
 # 3. Q Developer CLI のカスタムエージェントを起動
 q chat --agent mock-builder

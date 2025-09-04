@@ -1,4 +1,40 @@
-# AI アプリケーション自動生成フレームワーク
+# ML Enablement Workshop 当日のガイド
+
+本文書は ML Enablement Workshop 当日に使用します。本文章に沿って進める前に Day0 を終えていること、Day0 で案内された事前準備を完了していることの 2 点を確認してください。
+
+* [Day0 のガイド](/docs/organizer/day0.md)
+
+ML Enablement Workshop の主催者は、Day1 実践編・Day2 改善編を始める前に参加者が本文章を開いていることを確認してください。Day1 と Day2 で進行の流れは大きく変わらないため、このページを両日で使う形で構いません。主催者向けの注意点・留意事項は主催者向けガイドを参照ください。
+
+* 主催者向け
+   * [Day1 実践編のガイド](/docs/organizer/day1.md)
+   * [Day2 改善編のガイド](/docs/organizer/day2.md)
+
+ワークを進める際に、`yourwork` のディレクトリに移っているか確認ください。
+
+```
+cd aws-ml-enablement-workshop/yourwork
+pwd
+# /your/working/directory/aws-ml-enablement-workshop/yourwork
+```
+
+## Listen
+
+ワークでは次のプロンプトを使用してください。Amazon Q Developer CLI などの生成 AI ツールに次のプロンプトを与えます。
+
+> [!IMPORTANT]
+> 事前に、今回検討する顧客についてまとめたスライドが `customer.png` として `yourwork/discovery` ディレクトリに保存されているか確認ください。
+
+> あなたはユーザーリサーチの専門家で、新規企画のための顧客調査を担当しています。`discovery/customer.png` に定義された顧客が目的を達成するために取った行動、行動に要したリソース(金額や時間など)、その時の感情を詳細に書き出し表にまとめ `discovery/README.md` の Listen セクションに記載してください。
+
+途中で、ツールの利用などについて許可を求められた際はツールの案内に従い許可してください (Amazon Q Developer なら `y` を実行します)。
+
+## Define
+
+## Invent
+
+## Refine
+
 
 ## 概要
 
@@ -8,7 +44,7 @@ Amazon Q Developer CLI を活用し、プロンプトベースでアプリケー
 ## プロジェクト構成
 
 ```
-mock
+yourwork
 ├── .amazonq/                  # カスタムエージェント等、Q Developer CLI 用設定ファイルディレクトリ
 ├── prompt/                    # プロンプトファイルディレクトリ
 │   └── prompt.md             # アプリケーション仕様記述ファイル
@@ -113,3 +149,5 @@ q chat --agent mock-builder
 
 AWS にデプロイしたアプリケーションを削除したい場合は、Q Developer CLI に、`/product/ ディレクトリを参照し、デプロイしたアプリケーションを削除したい` と伝えてください。
 各種リソースの削除が行われます。
+
+## Test/Iterate
