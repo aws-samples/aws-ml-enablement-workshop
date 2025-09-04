@@ -18,6 +18,7 @@ pwd
 # /your/working/directory/aws-ml-enablement-workshop/yourwork
 ```
 
+移っていることを確認ののち、Amazon Q Developer 等のツールを起動します。
 
 ## Listen
 
