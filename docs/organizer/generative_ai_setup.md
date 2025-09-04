@@ -72,6 +72,15 @@ q login
 q chat
 ```
 
+### (Optional) 画像生成用
+
+こちらは Optional ですが、アプリケーションを自動生成する際に、モックアップ画像等を生成する際に画像生成モデルを利用することが可能です。
+利用する場合は、以下の blog を参考に、画像生成モデルである Amazon Nova Canvas のモデルアクセスを有効化してください。
+※ 有効化するリージョンは `us-east-1` です
+
+**参考ドキュメント**: [Amazon Nova Canvas を使用したテキストからの画像生成の基本](https://aws.amazon.com/jp/blogs/news/text-to-image-basics-with-amazon-nova-canvas/)
+
+
 ### 5. モックアプリケーションの動作確認
 
 ```bash
