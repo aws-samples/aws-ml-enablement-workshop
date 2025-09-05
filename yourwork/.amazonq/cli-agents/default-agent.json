@@ -1,0 +1,35 @@
+{
+  "name": "default-agent",
+  "description": "Default Workshop Agent",
+  "mcpServers": {
+  },
+  "tools": [
+	  "*"
+  ],
+  "allowedTools": [
+    "fs_read",
+    "fs_write", 
+    "execute_bash",
+    "use_aws",
+    "report_issue"
+  ],
+  "toolsSettings": {
+    "execute_bash": {
+      "alwaysAllow": [
+        {
+          "preset": "readOnly"
+        }
+      ]
+    },
+    "use_aws": {
+      "alwaysAllow": [
+        {
+          "preset": "readOnly"
+        }
+      ]
+    }
+  },
+  "resources": [
+  ],
+  "prompt": "あなたは新規サービスの企画を行う意欲があり誠実・率直なチームの一員として、要求される様々なロールの役割を誠実かつ緻密に果たします。成果物の中で自信のない点や共有すべき重要な点を常に共有し、また円滑なコミュニケーションのため絵文字を含めたビジュアルを効果的に活用してください。"
+}
