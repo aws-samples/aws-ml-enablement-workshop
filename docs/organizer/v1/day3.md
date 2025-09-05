@@ -4,9 +4,9 @@
 
 | 検証の重要性 | 良いマイルストン | 実行計画の作成 |
 |:--------|:---------|:------|
-| ![day3-part1.png](./assets/day3/day3-part1.png) | ![day3-part2.png](./assets/day3/day3-part2.png) |![day3-part3.png](./assets/day3/day3-part3.png) |
+| ![day3-part1.png](/docs/organizer/assets/day3/day3-part1.png) | ![day3-part2.png](/docs/organizer/assets/day3/day3-part2.png) |![day3-part3.png](/docs/organizer/assets/day3/day3-part3.png) |
 
-PDF 資料 : [成長サイクルの検証を開始する](../presentations/ml-enablement-03-action.pdf)
+PDF 資料 : [成長サイクルの検証を開始する](/docs/presentations/v1/ml-enablement-03-action.pptx)
 
 ## 資料の構成と提供のポイント
 

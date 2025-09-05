@@ -3,8 +3,7 @@
 ## ワークショップ資料
 
 実践編 : Working Backwards Walk Through
-* [PDF](../presentations/ml-enablement-v2-01-practice.pdf)
-* [PPT](../presentations/ml-enablement-v2-01-practice.pptx)
+* [PPT](/docs/presentations/v2/ml-enablement-v2-01-practice.pptx)
 
 ## ワークショップの進め方
 
