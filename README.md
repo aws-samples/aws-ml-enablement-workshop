@@ -22,11 +22,13 @@ ML Enablement Workshop は、生成 AI を含めた AI/ML 技術をプロダク�
 | Work  | 参加者各自の役割の確認 | Working Backwards による仮説立案と並行検証の開始 | 参加者自身によるプロセス改善、リリースに向けた初期計画作成 |
 | Time | 1 時間 ( リモート可 ) | 3.5 時間 | 3 時間 |
 
-ワークショップのポイントは次の通りです。
+ML Enablement Workshop のメリットは次の通りです。
 
-* Amazon のプロダクトづくりのプロセス Working Backwards の学習と実践を短時間で行える
-* 生成 AI を企画からモック作成の全工程に適用する経験を積むことで、プロダクト開発プロセスを洗練できる
-* ワークショップ内でモックを使ったフィードバック取得を行うことで、机上の空論に留まらない企画を作成できる
+* ⚡ **Amazon のプロダクトづくりのプロセス Working Backwards の学習と実践を短時間で行える**
+* 🤖 **生成 AI を企画からモック作成の全工程に適用する経験を積むことで、プロダクト開発プロセスを洗練できる**
+* 🛠 **モックを使ったフィードバック取得を実践することで、机上の空論に留まらない企画を作成できる**
+
+### 成果物例
 
 企画の一例として、「英語会議を開催するための英会話能力向上」をテーマにワークショップのガイドに従い生成 AI で Working Backwards を進めた例を示します。この例はすべて生成 AI で作成し人の手は入っていません。生成 AI により、人間の時間を細部の確認やよりインパクトの大きい問いの作成などに割り当てられることを示すための例です。
 
@@ -36,7 +38,7 @@ ML Enablement Workshop は、生成 AI を含めた AI/ML 技術をプロダク�
 
 | トップページ | 機能ページ | メトリクス |
 |:--------|:---------|:------|
-| ![LP](docs/images/top/mock-image-1.png) | ![FT1](docs/images/top/mock-image-2.png) | ![FT2](docs/images/top/mock-image-3.png) |
+| ![LP](docs/images/top/mock-image-1.png) | ![FT](docs/images/top/mock-image-2.png) | ![MT](docs/images/top/mock-image-3.png) |
 
 ### お客様事例
 
