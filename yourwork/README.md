@@ -10,15 +10,38 @@ ML Enablement Workshop の主催者は、Day1 実践編・Day2 改善編を始�
    * [Day1 実践編のガイド](/docs/organizer/day1.md)
    * [Day2 改善編のガイド](/docs/organizer/day2.md)
 
-ワークを進める際に、`yourwork` のディレクトリに移っているか確認ください。
+ワークを進めるに際しては、Day0 のガイドにある次の宿題が完了していることが必須になります。
+
+**✍ : 事前準備の確認**
+- [ ] : ワークショップで扱うプロダクトと対象顧客を決めてスライドにまとめ、`customer.png`として保存して全員に共有する : [スライドのテンプレート](/yourwork/discovery/customer.pptx)
+- [ ] : 生成 AI のツールが参加者全員にセットアップされ、利用できることを確認した : [準備ガイド参照](/docs/organizer/generative_ai_setup.md)
+- [ ] : 最低限開発者とデータサイエンティストの環境で、モックの構築が正常に完了しアクセスできることを確認した : [準備ガイド参照](/docs/organizer/generative_ai_setup.md)
+- [ ] : 対象顧客の課題解決に関わる自社・先行事例のソリューションを Markdown 形式のファイルにまとめ、`solutions.md` として保存し全員に共有する : [ソリューションまとめのテンプレート](/yourwork/discovery/solutions.md)
+   * 事例集をぜひ参照ください : [AWS 生成 AI 事例集](https://aws.amazon.com/jp/local/genai-4-jp/)
+- [ ] : 参加者は、`aws-ml-enablement-workshop` のコンテンツを自身の PC にダウンロードしており、共有された `customer.png` と `solutions.md` を `yourwork/discovery` に保存している
+   * Git か Zip Download で行ってください
+
+ワークを進める際に、VS Code 等 Markdown のプレビューが可能なエディタを立ち上げ、エディタ内の Terminal から `yourwork` のディレクトリに移っているか確認ください。
 
 ```
+# まだダウンロードしていない場合
+git clone https://github.com/aws-samples/aws-ml-enablement-workshop.git
+
+# ディレクトリに移動
 cd aws-ml-enablement-workshop/yourwork
+
+# 現在の位置を確認 : /your/working/directory/aws-ml-enablement-workshop/yourwork を期待
 pwd
-# /your/working/directory/aws-ml-enablement-workshop/yourwork
 ```
 
-移っていることを確認ののち、Amazon Q Developer 等のツールを起動します。以下、プロンプトについては "**🤖[Prompt]**" と明示しているので、そちらをコピー、編集して生成 AI のツールに入力してワークを進めてください。
+移っていることを確認ののち、Amazon Q Developer 等のツールを起動します。
+
+```
+q
+# q chat でも構いません
+```
+
+以下、プロンプトについては "**🤖[Prompt]**" と明示しているので、そちらをコピー、編集して生成 AI のツールに入力してワークを進めてください。
 
 ## Listen
 
