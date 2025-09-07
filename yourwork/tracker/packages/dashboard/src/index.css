@@ -1,0 +1,58 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  margin: 0;
+  background-color: #f9fafb;
+}
+
+/* カスタムコンポーネント */
+@layer components {
+  .btn {
+    @apply inline-flex items-center justify-center px-4 py-2 text-sm font-medium rounded-md transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2;
+  }
+  
+  .btn-primary {
+    @apply btn bg-primary-600 text-white hover:bg-primary-700 focus:ring-primary-500;
+  }
+  
+  .btn-secondary {
+    @apply btn bg-gray-200 text-gray-900 hover:bg-gray-300 focus:ring-gray-500;
+  }
+  
+  .card {
+    @apply bg-white rounded-lg shadow-sm border border-gray-200 p-6;
+  }
+  
+  .metric-card {
+    @apply card;
+  }
+  
+  .metric-value {
+    @apply text-3xl font-bold text-gray-900;
+  }
+  
+  .metric-label {
+    @apply text-sm font-medium text-gray-600;
+  }
+  
+  .metric-change {
+    @apply text-sm font-medium;
+  }
+  
+  .metric-change.positive {
+    @apply text-green-600;
+  }
+  
+  .metric-change.negative {
+    @apply text-red-600;
+  }
+  
+  .metric-change.neutral {
+    @apply text-gray-600;
+  }
+}
