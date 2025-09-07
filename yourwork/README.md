@@ -215,7 +215,37 @@ pwd
 cd /your/working/directory/aws-ml-enablement-workshop/yourwork 
 ```
 
-#### 2. Amazon Q Developer CLI の起動
+#### 2. Tracker システムのデプロイ（オプション）
+
+> [!NOTE]
+> この手順はオプションです
+
+ワークショップで使用するモックアプリケーションの分析トラッカーシステムをデプロイします。このシステムはユーザーの操作を記録し、ダッシュボードで可視化します。
+
+```bash
+# Tracker ディレクトリに移動
+cd /your/working/directory/aws-ml-enablement-workshop/yourwork/tracker
+
+# 依存関係をインストール
+npm install
+
+# AWS 環境に Tracker をデプロイ
+npm run deploy:with-config
+
+# 元の yourwork ディレクトリに戻る
+cd ..
+```
+
+デプロイが完了すると、以下の情報が出力されます。
+これらの情報は `4. カスタムエージェントの実行` で利用するため控えておいてください。
+
+```
+- **API Endpoint**: APIゲートウェイのURL
+- **API Key**: API認証用のキー
+- **Dashboard URL**: ダッシュボードのCloudFront URL
+```
+
+#### 3. Amazon Q Developer CLI の起動
 
 以下のコマンドで Amazon Q Developer CLI のモデル構築用エージェントを起動します。
 
@@ -223,7 +253,7 @@ cd /your/working/directory/aws-ml-enablement-workshop/yourwork
 q chat --agent mock-builder
 ```
 
-#### 3. カスタムエージェントの実行
+#### 4. カスタムエージェントの実行
 
 `こんにちは` や `アプリケーションを作成したい` など適当な言葉を入力いただくと、カスタムエージェントが実行されます。
 カスタムエージェントは実装を開始する前に、以下の２つの質問を順番にユーザーに確認します。
