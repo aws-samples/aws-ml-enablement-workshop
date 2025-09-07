@@ -23,7 +23,7 @@ ML Enablement Workshop で作成したモックアプリケーションの反応
 git clone https://github.com/aws-samples/aws-ml-enablement-workshop
 cd aws-ml-enablement-workshop/yourwork/tracker
 
-# 依存関係のインストール
+# 依存関係のインストール（Lambda関数の依存関係も自動でインストールされます）
 npm install
 
 # AWSインフラをデプロイ（フルセットアップ）
@@ -59,43 +59,6 @@ npm run deploy:with-config
 
 デプロイ後に表示されるDashboard URLにアクセスしてデータを確認。
 設定は自動的に更新されているため、すぐに使用開始できます。
-
-## 📚 ドキュメント
-
-- [開発ガイド](docs/DEVELOPMENT.md) - 開発環境のセットアップと詳細
-- [統合ガイド](docs/INTEGRATION.md) - Webサイトへの統合方法
-- [AWSインフラ](aws-infrastructure/README.md) - デプロイと運用
-
-## 🛠️ 開発
-
-### 開発環境のセットアップ
-
-```bash
-# 依存関係のインストール
-npm install
-
-# 開発サーバーの起動
-npm run dev
-
-# ビルド
-npm run build
-
-# テスト
-npm run test
-```
-
-### デプロイオプション
-
-```bash
-# 基本デプロイ（推奨）- 自動設定更新付き
-npm run deploy:with-config
-
-# 通常のデプロイのみ（設定更新は手動）
-npm run deploy
-
-# 設定のみ更新（デプロイ済み環境用）
-npm run cdk -- post-deploy
-```
 
 > **⚡ 重要**: 初回デプロイ及び通常の運用では `npm run deploy:with-config` を使用してください。これにより、デプロイ、設定更新、ダッシュボードのビルド・アップロードが一括実行されます。
 

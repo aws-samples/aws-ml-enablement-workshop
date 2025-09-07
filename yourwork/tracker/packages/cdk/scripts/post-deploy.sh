@@ -6,7 +6,7 @@
 set -e
 
 STACK_NAME="MLEWTrackerStack-dev"
-DASHBOARD_DIR="../packages/dashboard"
+DASHBOARD_DIR="../dashboard"
 
 echo "📦 Extracting stack outputs..."
 

@@ -3,6 +3,7 @@
     "target": "ES2020",
     "module": "commonjs",
     "lib": ["ES2020"],
+    "types": ["node"],
     "declaration": true,
     "strict": true,
     "noImplicitAny": true,
@@ -17,7 +18,7 @@
     "inlineSources": true,
     "experimentalDecorators": true,
     "strictPropertyInitialization": false,
-    "typeRoots": ["./node_modules/@types"],
+    "typeRoots": ["./node_modules/@types", "../../node_modules/@types"],
     "outDir": "./dist",
     "rootDir": "./",
     "esModuleInterop": true,
@@ -29,6 +30,7 @@
     "cdk.out",
     "dist",
     "**/*.test.ts",
-    "**/*.spec.ts"
+    "**/*.spec.ts",
+    "lambda/**/*"
   ]
 }
