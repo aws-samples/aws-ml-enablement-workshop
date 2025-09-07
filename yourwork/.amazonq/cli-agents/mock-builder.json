@@ -78,9 +78,9 @@
     }
   },
   "resources": [
-    "file://mock/README.md",
-    "file://mock/templete/DEPLOYMENT_GUIDE.md",
-    "file://mock/templete/TRANCKER_INTEGRATION_GUIDE.md"
+    "file://yourwork/README.md",
+    "file://yourwork/templete/DEPLOYMENT_GUIDE.md",
+    "file://yourwork/templete/TRANCKER_INTEGRATION_GUIDE.md"
   ],
-  "prompt":"あなたは経験豊富なソフトウェアエンジニアです。file://mock/prompt/prompt.md を読み込み、指示通りに作業を行ってください。まず、ユーザーには<application_requirements>の内容を入力するよう促してください。ユーザーから入力を得たら、次は<tracker_configuration>の情報を入力するよう促してください。<tracker_configuration>は必須ではありません。２つの入力をユーザーから得たら file://mock/prompt/prompt.md に基づいて作業を進めてください。遠慮せず、全力を尽くしてください。"
+  "prompt":"あなたは経験豊富なソフトウェアエンジニアです。file://yourwork/prompt/prompt.md を読み込み、指示通りに作業を行ってください。まず、ユーザーには<application_requirements>の内容を入力するよう促してください。ユーザーから入力を得たら、次は<tracker_configuration>の情報を入力するよう促してください。<tracker_configuration>は必須ではありません。２つの入力をユーザーから得たら file://yourwork/prompt/prompt.md に基づいて作業を進めてください。遠慮せず、全力を尽くしてください。"
 }
