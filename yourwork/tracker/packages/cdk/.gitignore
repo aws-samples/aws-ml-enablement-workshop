@@ -1,0 +1,36 @@
+# Dependencies
+node_modules/
+*.log
+
+# Build outputs
+dist/
+cdk.out/
+*.js
+*.d.ts
+!jest.config.js
+!cdk.json
+
+# Environment files
+.env
+.env.*
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# AWS CDK
+*.cdk.staging
+cdk.context.json
+
+# Test
+coverage/
+*.snap
+
+# Temporary files
+*.tmp
+*.bak
+*.cache

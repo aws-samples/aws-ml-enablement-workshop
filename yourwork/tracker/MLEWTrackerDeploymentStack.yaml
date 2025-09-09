@@ -1,0 +1,451 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: 'MLEW Tracker one-click deployment with automatic build and deploy from GitHub'
+
+Metadata:
+  AWS::CloudFormation::Interface:
+    ParameterGroups:
+      - Label:
+          default: "MLEW Tracker Deployment Parameters"
+        Parameters:
+          - Environment
+          - NotificationEmailAddress
+          - EventTtlDays
+          - ApiThrottleBurstLimit
+          - ApiThrottleRateLimit
+          - ErrorAlarmThreshold
+          - DurationAlarmThreshold
+
+Parameters:
+  Environment:
+    Type: String
+    Default: dev
+    AllowedValues: [dev, staging, prod]
+    Description: Environment name to use for deployment
+  
+  NotificationEmailAddress:
+    Type: String
+    Description: 'Email address to receive deployment notifications (Example: test@example.co.jp)'
+    AllowedPattern: "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$"
+    ConstraintDescription: Must be a valid email address
+  
+  EventTtlDays:
+    Type: Number
+    Default: 30
+    MinValue: 1
+    MaxValue: 400
+    Description: 'TTL for events in DynamoDB (days)'
+  
+  ApiThrottleBurstLimit:
+    Type: Number
+    Default: 5000
+    MinValue: 0
+    Description: 'API throttling burst limit'
+  
+  ApiThrottleRateLimit:
+    Type: Number
+    Default: 10000
+    MinValue: 0
+    Description: 'API throttling rate limit'
+  
+  ErrorAlarmThreshold:
+    Type: Number
+    Default: 100
+    MinValue: 1
+    Description: 'Error threshold for CloudWatch alarms'
+  
+  DurationAlarmThreshold:
+    Type: Number
+    Default: 10000
+    MinValue: 1000
+    Description: 'Duration threshold for CloudWatch alarms (milliseconds)'
+
+Resources:
+
+  # SNS Topic for deployment notifications
+  DeploymentNotificationTopic:
+    Type: AWS::SNS::Topic
+    Properties:
+      DisplayName: MLEW Tracker Deployment Notifications
+      TopicName: !Sub 'MLEWTracker-Notification-${AWS::StackName}'
+      KmsMasterKeyId: 'alias/aws/sns'
+
+  # SNS Subscription for email notifications
+  DeploymentNotificationSubscription:
+    Type: AWS::SNS::Subscription
+    Properties:
+      Protocol: email
+      TopicArn: !Ref DeploymentNotificationTopic
+      Endpoint: !Ref NotificationEmailAddress
+
+  # S3 Bucket for Lambda code
+  LambdaCodeBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: !Sub 'mlew-tracker-lambda-code-${AWS::AccountId}-${AWS::Region}'
+      VersioningConfiguration:
+        Status: Enabled
+      BucketEncryption:
+        ServerSideEncryptionConfiguration:
+          - ServerSideEncryptionByDefault:
+              SSEAlgorithm: AES256
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls: true
+        BlockPublicPolicy: true
+        IgnorePublicAcls: true
+        RestrictPublicBuckets: true
+
+  # IAM Role for CodeBuild
+  CodeBuildServiceRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: codebuild.amazonaws.com
+            Action: sts:AssumeRole
+      ManagedPolicyArns:
+        - !Sub "arn:${AWS::Partition}:iam::aws:policy/AdministratorAccess"
+
+  # IAM Policy for CodeBuild
+  CodeBuildServiceRolePolicy:
+    Type: AWS::IAM::Policy
+    Properties:
+      PolicyName: CodeBuildServiceRolePolicy
+      PolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Action:
+              - logs:CreateLogGroup
+              - logs:CreateLogStream
+              - logs:PutLogEvents
+            Effect: Allow
+            Resource:
+              - !Sub "arn:${AWS::Partition}:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/codebuild/${MLEWTrackerDeploymentProject}:*"
+              - !Sub "arn:${AWS::Partition}:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/codebuild/${MLEWTrackerDeploymentProject}"
+          - Action:
+              - sns:Publish
+            Effect: Allow
+            Resource: !Ref DeploymentNotificationTopic
+          - Action:
+              - s3:GetObject
+              - s3:PutObject
+              - s3:PutObjectAcl
+            Effect: Allow
+            Resource: !Sub '${LambdaCodeBucket.Arn}/*'
+          - Action:
+              - s3:ListBucket
+            Effect: Allow
+            Resource: !GetAtt LambdaCodeBucket.Arn
+      Roles:
+        - !Ref CodeBuildServiceRole
+
+  # CodeBuild Project
+  MLEWTrackerDeploymentProject:
+    Type: AWS::CodeBuild::Project
+    Properties:
+      Name: !Sub 'MLEWTracker-CodeBuild-${AWS::StackName}'
+      Description: 'Builds and deploys MLEW Tracker application from GitHub'
+      ServiceRole: !GetAtt CodeBuildServiceRole.Arn
+      Artifacts:
+        Type: NO_ARTIFACTS
+      LogsConfig:
+        CloudWatchLogs:
+          Status: ENABLED
+      Environment:
+        Type: ARM_CONTAINER
+        ComputeType: BUILD_GENERAL1_SMALL
+        Image: aws/codebuild/amazonlinux-aarch64-standard:3.0
+        PrivilegedMode: false
+        EnvironmentVariables:
+          - Name: Environment
+            Value: !Ref Environment
+          - Name: EventTtlDays
+            Value: !Ref EventTtlDays
+          - Name: ApiThrottleBurstLimit
+            Value: !Ref ApiThrottleBurstLimit
+          - Name: ApiThrottleRateLimit
+            Value: !Ref ApiThrottleRateLimit
+          - Name: ErrorAlarmThreshold
+            Value: !Ref ErrorAlarmThreshold
+          - Name: DurationAlarmThreshold
+            Value: !Ref DurationAlarmThreshold
+          - Name: SNSTopicArn
+            Value: !Ref DeploymentNotificationTopic
+          - Name: DEPLOYMENT_STACK_NAME
+            Value: !Ref AWS::StackName
+          - Name: LAMBDA_CODE_BUCKET
+            Value: !Ref LambdaCodeBucket
+          - Name: NOTIFICATION_EMAIL
+            Value: !Ref NotificationEmailAddress
+      Source:
+        Type: NO_SOURCE
+        BuildSpec: |
+          version: 0.2
+          phases:
+            install:
+              runtime-versions:
+                nodejs: 20
+              commands:
+                - echo "Starting MLEW Tracker deployment"
+                - aws sns publish --topic-arn ${SNSTopicArn} --subject "MLEW Tracker Deployment Started" --message "Deployment of MLEW Tracker has started. You will receive another notification when deployment is complete."
+                - echo "Cloning repository from GitHub..."
+                - git clone https://github.com/aws-samples/aws-ml-enablement-workshop.git
+                - echo "Repository cloned successfully"
+            pre_build:
+              commands:
+                - echo "Current directory is $(pwd)"
+                - echo "Installing dependencies in tracker directory..."
+                - cd aws-ml-enablement-workshop/yourwork/tracker && npm ci
+                - cd ${CODEBUILD_SRC_DIR}
+                - echo "Verifying tracker directory structure..."
+                - ls -la aws-ml-enablement-workshop/yourwork/tracker/
+                - echo "Verifying Lambda function directories..."
+                - ls -la aws-ml-enablement-workshop/yourwork/tracker/packages/cdk/lambda/ || echo "Lambda directories not found"
+            build:
+              commands:
+                - echo "Starting build phase..."
+                - export TRACKER_DIR="${CODEBUILD_SRC_DIR}/aws-ml-enablement-workshop/yourwork/tracker"
+                - echo "Tracker directory is $TRACKER_DIR"
+                - cd $TRACKER_DIR
+                - |
+                  echo "Building Lambda functions..."
+                  for func in event-ingestion query stream-aggregation; do
+                    echo "Building Lambda function: $func"
+                    LAMBDA_DIR="packages/cdk/lambda/$func"
+                    if [ -d "$LAMBDA_DIR" ]; then
+                      cd $LAMBDA_DIR
+                      if [ ! -f "package.json" ]; then
+                        echo "Creating package.json for $func"
+                        case $func in
+                          event-ingestion)
+                            echo '{"name":"event-ingestion","version":"1.0.0","main":"index.js","dependencies":{"@aws-sdk/client-dynamodb":"^3.0.0","@aws-sdk/lib-dynamodb":"^3.0.0","@aws-sdk/client-cloudwatch":"^3.0.0","@aws-sdk/client-s3":"^3.0.0","nanoid":"^3.3.0"}}' > package.json
+                            ;;
+                          query)
+                            echo '{"name":"query","version":"1.0.0","main":"index.js","dependencies":{"@aws-sdk/client-dynamodb":"^3.0.0","@aws-sdk/lib-dynamodb":"^3.0.0"}}' > package.json
+                            ;;
+                          stream-aggregation)
+                            echo '{"name":"stream-aggregation","version":"1.0.0","main":"index.js","dependencies":{"@aws-sdk/client-dynamodb":"^3.0.0","@aws-sdk/lib-dynamodb":"^3.0.0"}}' > package.json
+                            ;;
+                        esac
+                      fi
+                      if [ -f "src/index.ts" ]; then
+                        echo "Found TypeScript source, installing TypeScript and compiling..."
+                        npm install --save-dev typescript @types/node @types/aws-lambda
+                        npx tsc src/index.ts --outDir . --module commonjs --target es2020
+                      elif [ -f "src/index.js" ]; then
+                        echo "Found JavaScript source, copying to root..."
+                        cp src/index.js ./index.js
+                      elif [ ! -f "index.js" ]; then
+                        echo "ERROR: No index.js or src/index.ts found for $func"
+                        cd $TRACKER_DIR
+                        continue
+                      fi
+                      echo "Installing dependencies for $func..."
+                      npm install --production
+                      echo "Creating zip file for $func..."
+                      zip -r $func.zip .
+                      echo "Uploading $func.zip to S3..."
+                      aws s3 cp $func.zip s3://${LAMBDA_CODE_BUCKET}/lambda-packages/$func.zip
+                      cd $TRACKER_DIR
+                    else
+                      echo "WARNING: Lambda function directory $LAMBDA_DIR not found"
+                    fi
+                  done
+                - |
+                  echo "Building Dashboard application..."
+                  cd $TRACKER_DIR/packages/dashboard
+                  if [ -f "package.json" ]; then
+                    echo "Installing dashboard dependencies..."
+                    npm install
+                    echo "Building dashboard for production..."
+                    npm run build
+                    echo "Dashboard build completed, waiting for stack to deploy first..."
+                  else
+                    echo "Warning: Dashboard package.json not found"
+                  fi
+                  cd $TRACKER_DIR
+                - |
+                  echo "Deploying CloudFormation stack..."
+                  cd $TRACKER_DIR
+                  if [ -f "MLEWTrackerStack.yaml" ]; then
+                    echo "Found MLEWTrackerStack.yaml, deploying..."
+                    aws cloudformation deploy \
+                      --template-file MLEWTrackerStack.yaml \
+                      --stack-name MLEWTrackerStack-${Environment} \
+                      --parameter-overrides \
+                        Environment=${Environment} \
+                        EventTtlDays=${EventTtlDays} \
+                        ApiThrottleBurstLimit=${ApiThrottleBurstLimit} \
+                        ApiThrottleRateLimit=${ApiThrottleRateLimit} \
+                        ErrorAlarmThreshold=${ErrorAlarmThreshold} \
+                        DurationAlarmThreshold=${DurationAlarmThreshold} \
+                        LambdaCodeBucket=${LAMBDA_CODE_BUCKET} \
+                        NotificationEmail=${NOTIFICATION_EMAIL} \
+                      --capabilities CAPABILITY_IAM \
+                      --no-fail-on-empty-changeset
+                  else
+                    echo "ERROR: MLEWTrackerStack.yaml not found in the repository"
+                    echo "Current directory:"
+                    pwd
+                    echo "Directory contents:"
+                    ls -la
+                    exit 1
+                  fi
+            post_build:
+              commands:
+                - |
+                  echo "Post-build phase started..."
+                  STACK_NAME="MLEWTrackerStack-${Environment}"
+                  echo "Waiting for stack deployment to complete..."
+                  aws cloudformation wait stack-create-complete --stack-name $STACK_NAME 2>/dev/null || aws cloudformation wait stack-update-complete --stack-name $STACK_NAME 2>/dev/null || true
+                  echo "Getting stack outputs..."
+                  API_ENDPOINT=$(aws cloudformation describe-stacks --stack-name $STACK_NAME --query "Stacks[0].Outputs[?OutputKey=='ApiEndpoint'].OutputValue" --output text 2>/dev/null || echo "N/A")
+                  API_KEY_ID=$(aws cloudformation describe-stacks --stack-name $STACK_NAME --query "Stacks[0].Outputs[?OutputKey=='ApiKeyId'].OutputValue" --output text 2>/dev/null || echo "N/A")
+                  DASHBOARD_URL=$(aws cloudformation describe-stacks --stack-name $STACK_NAME --query "Stacks[0].Outputs[?OutputKey=='DashboardURL'].OutputValue" --output text 2>/dev/null || echo "N/A")
+                  if [ "$API_KEY_ID" != "N/A" ] && [ ! -z "$API_KEY_ID" ]; then
+                    echo "Getting API Key value..."
+                    API_KEY_VALUE=$(aws apigateway get-api-key --api-key $API_KEY_ID --include-value --query 'value' --output text 2>/dev/null || echo "N/A")
+                  else
+                    API_KEY_VALUE="N/A"
+                  fi
+                  echo "Uploading Dashboard to S3..."
+                  DASHBOARD_BUCKET=$(aws cloudformation describe-stacks --stack-name $STACK_NAME --query "Stacks[0].Outputs[?OutputKey=='DashboardBucketName'].OutputValue" --output text 2>/dev/null || echo "")
+                  if [ ! -z "$DASHBOARD_BUCKET" ] && [ -d "$TRACKER_DIR/packages/dashboard/dist" ]; then
+                    aws s3 sync $TRACKER_DIR/packages/dashboard/dist/ s3://$DASHBOARD_BUCKET/ --delete
+                    echo "Dashboard uploaded successfully to $DASHBOARD_BUCKET"
+                    DASHBOARD_DISTRIBUTION_ID=$(aws cloudformation describe-stack-resources --stack-name $STACK_NAME --query "StackResources[?ResourceType=='AWS::CloudFront::Distribution' && LogicalResourceId=='DashboardDistribution'].PhysicalResourceId" --output text 2>/dev/null || echo "")
+                    if [ ! -z "$DASHBOARD_DISTRIBUTION_ID" ]; then
+                      echo "Creating CloudFront invalidation..."
+                      aws cloudfront create-invalidation --distribution-id $DASHBOARD_DISTRIBUTION_ID --paths "/*"
+                    fi
+                  else
+                    echo "Warning: Dashboard bucket or dist folder not found"
+                  fi
+                  cat > deployment-info.txt << EOFMSG
+                  MLEW Tracker Deployment Completed Successfully!
+                  ================================================
+                  Deployment Time: $(date '+%Y-%m-%d %H:%M:%S')
+                  
+                  Access Information:
+                  ----------------------
+                  API Endpoint: ${API_ENDPOINT}
+                  API Key: ${API_KEY_VALUE}
+                  Dashboard URL: https://${DASHBOARD_URL}
+                  
+                  Stack Details:
+                  -----------------
+                  Stack Name: ${STACK_NAME}
+                  Region: ${AWS_DEFAULT_REGION}
+                  
+                  Next Steps:
+                  --------------
+                  1. Save the API Key shown above - you'll need it to access the API
+                  2. Access the Dashboard URL to view analytics
+                  3. Configure your applications to send events to the API Endpoint using the API Key
+                  
+                  For CloudWatch Logs:
+                  https://console.aws.amazon.com/cloudwatch/home?region=${AWS_DEFAULT_REGION}#logsV2:log-groups
+                  
+                  For CloudFormation Stack:
+                  https://console.aws.amazon.com/cloudformation/home?region=${AWS_DEFAULT_REGION}#/stacks/stackinfo?stackId=${STACK_NAME}
+                  EOFMSG
+                  echo "Sending completion notification..."
+                  aws sns publish --topic-arn "${SNSTopicArn}" --subject "MLEW Tracker Deployment Complete" --message file://deployment-info.txt
+                  echo "Deployment completed successfully!"
+          artifacts:
+            files:
+              - deployment-info.txt
+      TimeoutInMinutes: 60
+
+  # Custom Resource to trigger CodeBuild
+  DeploymentTrigger:
+    Type: AWS::CloudFormation::CustomResource
+    Properties:
+      ServiceToken: !GetAtt TriggerFunction.Arn
+      ProjectName: !Ref MLEWTrackerDeploymentProject
+      ServiceTimeout: 600
+
+  # Lambda function for the Custom Resource
+  TriggerFunction:
+    Type: AWS::Lambda::Function
+    Properties:
+      Handler: index.handler
+      Role: !GetAtt TriggerFunctionRole.Arn
+      Runtime: nodejs20.x
+      Timeout: 30
+      Code:
+        ZipFile: |
+          const { CodeBuildClient, StartBuildCommand } = require('@aws-sdk/client-codebuild');
+          const response = require('cfn-response');
+
+          exports.handler = async (event, context) => {
+            console.log('Event:', JSON.stringify(event, null, 2));
+            
+            const physicalResourceId = `CodeBuildTrigger-${event.ResourceProperties.ProjectName}`;
+            const responseData = {};
+            
+            try {
+              const codebuild = new CodeBuildClient({ 
+                region: process.env.AWS_REGION,
+                maxAttempts: 3
+              });
+
+              if (event.RequestType === 'Create' || event.RequestType === 'Update') {
+                const command = new StartBuildCommand({ 
+                  projectName: event.ResourceProperties.ProjectName 
+                });
+                const result = await codebuild.send(command);
+                responseData.BuildId = result.build.id;
+              }
+              
+              await response.send(event, context, response.SUCCESS, responseData, physicalResourceId);
+            } catch (error) {
+              console.error('Error:', error);
+              await response.send(event, context, response.FAILED, { Error: error.message }, physicalResourceId);
+            }
+          };
+
+  # IAM Role for Lambda Trigger Function
+  TriggerFunctionRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: lambda.amazonaws.com
+            Action: sts:AssumeRole
+      ManagedPolicyArns:
+        - !Sub "arn:${AWS::Partition}:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+      Policies:
+        - PolicyName: CodeBuildStartPolicy
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Action: codebuild:StartBuild
+                Resource: !GetAtt MLEWTrackerDeploymentProject.Arn
+
+Outputs:
+  LambdaCodeBucketName:
+    Description: S3 bucket for Lambda code
+    Value: !Ref LambdaCodeBucket
+  
+  NotificationTopicArn:
+    Description: ARN of the SNS topic for deployment notifications
+    Value: !Ref DeploymentNotificationTopic
+  
+  CodeBuildProjectName:
+    Description: Name of the CodeBuild project
+    Value: !Ref MLEWTrackerDeploymentProject
+  
+  CodeBuildLogGroup:
+    Description: CloudWatch Logs group for CodeBuild logs
+    Value: !Sub '/aws/codebuild/${MLEWTrackerDeploymentProject}'
+  
+  DeploymentStatus:
+    Description: Deployment status information
+    Value: !Sub "Deployment has been initiated. You will receive an email notification at ${NotificationEmailAddress} when the deployment is complete."
