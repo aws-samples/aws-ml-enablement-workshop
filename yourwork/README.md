@@ -245,7 +245,7 @@ aws cloudformation deploy \
 ```
 Access Information:
 ----------------------
-API Endpoint: https://xxxxxxxxxx.execute-api.us-west-2.amazonaws.com/dev
+API Endpoint: https://xxxxxxxxxx.execute-api.ap-northeast-1.amazonaws.com/dev
 API Key: XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 Dashboard URL: https://dxxxxxxxxxx.cloudfront.net
 ```
