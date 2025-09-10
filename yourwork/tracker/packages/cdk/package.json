@@ -1,0 +1,42 @@
+{
+  "name": "mlew-tracker-cdk",
+  "version": "1.0.0",
+  "description": "MLEW Tracker CDK Infrastructure with TDD Testing",
+  "scripts": {
+    "build": "tsc",
+    "watch": "tsc -w",
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "cdk": "cdk",
+    "deploy": "npm run build && cdk deploy",
+    "deploy:with-config": "npm run build && cdk deploy --require-approval never && bash scripts/post-deploy.sh",
+    "post-deploy": "bash scripts/post-deploy.sh",
+    "diff": "npm run build && cdk diff",
+    "synth": "npm run build && cdk synth"
+  },
+  "devDependencies": {
+    "@types/jest": "^29.5.5",
+    "@types/node": "^20.6.0",
+    "aws-cdk": "^2.95.1",
+    "esbuild": "^0.25.9",
+    "jest": "^29.7.0",
+    "ts-jest": "^29.1.1",
+    "typescript": "^5.2.2"
+  },
+  "dependencies": {
+    "aws-cdk-lib": "^2.95.1",
+    "constructs": "^10.3.0"
+  },
+  "jest": {
+    "preset": "ts-jest",
+    "testEnvironment": "node",
+    "testMatch": [
+      "**/__tests__/**/*.ts",
+      "**/?(*.)+(spec|test).ts"
+    ],
+    "collectCoverageFrom": [
+      "lib/**/*.ts",
+      "!lib/**/*.d.ts"
+    ]
+  }
+}

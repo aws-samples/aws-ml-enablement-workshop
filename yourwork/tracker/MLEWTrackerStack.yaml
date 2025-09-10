@@ -1,0 +1,806 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: 'MLEW Tracker Infrastructure Stack - DynamoDB, S3, API Gateway, Lambda, and CloudWatch'
+
+Parameters:
+  Environment:
+    Type: String
+    Default: dev
+    AllowedValues: [dev, staging, prod]
+    Description: Environment name
+  
+  EventTtlDays:
+    Type: Number
+    Default: 30
+    MinValue: 1
+    MaxValue: 400
+    Description: TTL for events in DynamoDB (days)
+  
+  ApiThrottleBurstLimit:
+    Type: Number
+    Default: 5000
+    MinValue: 0
+    Description: API throttling burst limit
+  
+  ApiThrottleRateLimit:
+    Type: Number
+    Default: 10000
+    MinValue: 0
+    Description: API throttling rate limit
+  
+  ErrorAlarmThreshold:
+    Type: Number
+    Default: 100
+    MinValue: 1
+    Description: Error threshold for CloudWatch alarms
+  
+  DurationAlarmThreshold:
+    Type: Number
+    Default: 10000
+    MinValue: 1000
+    Description: Duration threshold for CloudWatch alarms (milliseconds)
+  
+  LambdaCodeBucket:
+    Type: String
+    Description: S3 bucket containing Lambda function code
+  
+  NotificationEmail:
+    Type: String
+    Description: Email address for alarm notifications
+
+Resources:
+
+  # =====================================
+  # DynamoDB Tables
+  # =====================================
+  
+  EventsTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: !Sub 'mlew-events-${Environment}'
+      AttributeDefinitions:
+        - AttributeName: applicationId
+          AttributeType: S
+        - AttributeName: timestampEventId
+          AttributeType: S
+        - AttributeName: userId
+          AttributeType: S
+        - AttributeName: date
+          AttributeType: S
+      KeySchema:
+        - AttributeName: applicationId
+          KeyType: HASH
+        - AttributeName: timestampEventId
+          KeyType: RANGE
+      GlobalSecondaryIndexes:
+        - IndexName: UserIndex
+          KeySchema:
+            - AttributeName: userId
+              KeyType: HASH
+            - AttributeName: timestampEventId
+              KeyType: RANGE
+          Projection:
+            ProjectionType: ALL
+        - IndexName: DateIndex
+          KeySchema:
+            - AttributeName: applicationId
+              KeyType: HASH
+            - AttributeName: date
+              KeyType: RANGE
+          Projection:
+            ProjectionType: ALL
+      BillingMode: PAY_PER_REQUEST
+      StreamSpecification:
+        StreamViewType: NEW_AND_OLD_IMAGES
+      PointInTimeRecoverySpecification:
+        PointInTimeRecoveryEnabled: true
+      SSESpecification:
+        SSEEnabled: true
+      TimeToLiveSpecification:
+        AttributeName: ttl
+        Enabled: true
+      Tags:
+        - Key: Environment
+          Value: !Ref Environment
+        - Key: Project
+          Value: MLEWTracker
+        - Key: Component
+          Value: Database
+
+  AggregationsTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: !Sub 'mlew-aggregations-${Environment}'
+      AttributeDefinitions:
+        - AttributeName: applicationIdPeriod
+          AttributeType: S
+        - AttributeName: timestamp
+          AttributeType: N
+      KeySchema:
+        - AttributeName: applicationIdPeriod
+          KeyType: HASH
+        - AttributeName: timestamp
+          KeyType: RANGE
+      BillingMode: PAY_PER_REQUEST
+      SSESpecification:
+        SSEEnabled: true
+      Tags:
+        - Key: Environment
+          Value: !Ref Environment
+        - Key: Project
+          Value: MLEWTracker
+        - Key: Component
+          Value: Database
+
+  ApplicationsTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: !Sub 'mlew-applications-${Environment}'
+      AttributeDefinitions:
+        - AttributeName: applicationId
+          AttributeType: S
+      KeySchema:
+        - AttributeName: applicationId
+          KeyType: HASH
+      BillingMode: PAY_PER_REQUEST
+      SSESpecification:
+        SSEEnabled: true
+      Tags:
+        - Key: Environment
+          Value: !Ref Environment
+        - Key: Project
+          Value: MLEWTracker
+        - Key: Component
+          Value: Database
+
+  # =====================================
+  # S3 Buckets
+  # =====================================
+  
+  DashboardBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: !Sub 'mlew-dashboard-${AWS::AccountId}'
+      VersioningConfiguration:
+        Status: Enabled
+      BucketEncryption:
+        ServerSideEncryptionConfiguration:
+          - ServerSideEncryptionByDefault:
+              SSEAlgorithm: AES256
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls: false
+        BlockPublicPolicy: false
+        IgnorePublicAcls: false
+        RestrictPublicBuckets: false
+      WebsiteConfiguration:
+        IndexDocument: index.html
+        ErrorDocument: error.html
+      CorsConfiguration:
+        CorsRules:
+          - AllowedOrigins: ['*']
+            AllowedMethods: [GET]
+            AllowedHeaders: ['*']
+            MaxAge: 3600
+      Tags:
+        - Key: Environment
+          Value: !Ref Environment
+        - Key: Project
+          Value: MLEWTracker
+        - Key: Component
+          Value: Storage
+
+  DashboardBucketPolicy:
+    Type: AWS::S3::BucketPolicy
+    Properties:
+      Bucket: !Ref DashboardBucket
+      PolicyDocument:
+        Statement:
+          - Sid: PublicReadForGetBucketObjects
+            Effect: Allow
+            Principal: '*'
+            Action: 's3:GetObject'
+            Resource: !Sub '${DashboardBucket.Arn}/*'
+
+  SDKBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: !Sub 'mlew-sdk-${AWS::AccountId}'
+      VersioningConfiguration:
+        Status: Enabled
+      BucketEncryption:
+        ServerSideEncryptionConfiguration:
+          - ServerSideEncryptionByDefault:
+              SSEAlgorithm: AES256
+      Tags:
+        - Key: Environment
+          Value: !Ref Environment
+        - Key: Project
+          Value: MLEWTracker
+        - Key: Component
+          Value: Storage
+
+  ArchiveBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: !Sub 'mlew-archive-${AWS::AccountId}'
+      VersioningConfiguration:
+        Status: Enabled
+      BucketEncryption:
+        ServerSideEncryptionConfiguration:
+          - ServerSideEncryptionByDefault:
+              SSEAlgorithm: AES256
+      LifecycleConfiguration:
+        Rules:
+          - Id: archive-lifecycle
+            Status: Enabled
+            Transitions:
+              - TransitionInDays: 90
+                StorageClass: GLACIER
+      Tags:
+        - Key: Environment
+          Value: !Ref Environment
+        - Key: Project
+          Value: MLEWTracker
+        - Key: Component
+          Value: Storage
+
+  # =====================================
+  # CloudFront Distributions
+  # =====================================
+  
+  DashboardDistribution:
+    Type: AWS::CloudFront::Distribution
+    Properties:
+      DistributionConfig:
+        Origins:
+          - Id: DashboardS3Origin
+            DomainName: !GetAtt DashboardBucket.RegionalDomainName
+            S3OriginConfig:
+              OriginAccessIdentity: ''
+        Enabled: true
+        DefaultRootObject: index.html
+        DefaultCacheBehavior:
+          TargetOriginId: DashboardS3Origin
+          ViewerProtocolPolicy: redirect-to-https
+          AllowedMethods:
+            - GET
+            - HEAD
+            - OPTIONS
+          CachedMethods:
+            - GET
+            - HEAD
+            - OPTIONS
+          ForwardedValues:
+            QueryString: false
+            Cookies:
+              Forward: none
+          Compress: true
+        CustomErrorResponses:
+          - ErrorCode: 404
+            ResponseCode: 200
+            ResponsePagePath: /index.html
+            ErrorCachingMinTTL: 300
+        PriceClass: PriceClass_100
+      Tags:
+        - Key: Environment
+          Value: !Ref Environment
+        - Key: Project
+          Value: MLEWTracker
+
+  SDKDistribution:
+    Type: AWS::CloudFront::Distribution
+    Properties:
+      DistributionConfig:
+        Origins:
+          - Id: SDKS3Origin
+            DomainName: !GetAtt SDKBucket.RegionalDomainName
+            S3OriginConfig:
+              OriginAccessIdentity: ''
+        Enabled: true
+        DefaultCacheBehavior:
+          TargetOriginId: SDKS3Origin
+          ViewerProtocolPolicy: redirect-to-https
+          AllowedMethods:
+            - GET
+            - HEAD
+          CachedMethods:
+            - GET
+            - HEAD
+          ForwardedValues:
+            QueryString: false
+            Cookies:
+              Forward: none
+          Compress: true
+        PriceClass: PriceClass_100
+      Tags:
+        - Key: Environment
+          Value: !Ref Environment
+        - Key: Project
+          Value: MLEWTracker
+
+  # =====================================
+  # Lambda Functions
+  # =====================================
+  
+  # IAM Role for Lambda Functions
+  LambdaExecutionRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: lambda.amazonaws.com
+            Action: sts:AssumeRole
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
+      Policies:
+        - PolicyName: DynamoDBAccess
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Action:
+                  - dynamodb:PutItem
+                  - dynamodb:GetItem
+                  - dynamodb:UpdateItem
+                  - dynamodb:Query
+                  - dynamodb:Scan
+                  - dynamodb:BatchWriteItem
+                  - dynamodb:DescribeStream
+                  - dynamodb:GetRecords
+                  - dynamodb:GetShardIterator
+                  - dynamodb:ListStreams
+                Resource:
+                  - !GetAtt EventsTable.Arn
+                  - !GetAtt AggregationsTable.Arn
+                  - !GetAtt ApplicationsTable.Arn
+                  - !Sub '${EventsTable.Arn}/index/*'
+                  - !Sub '${EventsTable.Arn}/stream/*'
+        - PolicyName: S3Access
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Action:
+                  - s3:PutObject
+                  - s3:GetObject
+                Resource:
+                  - !Sub '${ArchiveBucket.Arn}/*'
+        - PolicyName: CloudWatchMetrics
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Action:
+                  - cloudwatch:PutMetricData
+                Resource: '*'
+
+  EventIngestionFunction:
+    Type: AWS::Lambda::Function
+    Properties:
+      FunctionName: !Sub 'mleww3-event-ingestion-${Environment}'
+      Runtime: nodejs18.x
+      Handler: index.handler
+      Code:
+        S3Bucket: !Ref LambdaCodeBucket
+        S3Key: lambda-packages/event-ingestion.zip
+      MemorySize: 256
+      Timeout: 30
+      Environment:
+        Variables:
+          ENVIRONMENT: !Ref Environment
+          EVENTS_TABLE: !Ref EventsTable
+          APPLICATIONS_TABLE: !Ref ApplicationsTable
+          ARCHIVE_BUCKET: !Ref ArchiveBucket
+      Role: !GetAtt LambdaExecutionRole.Arn
+      Tags:
+        - Key: Environment
+          Value: !Ref Environment
+        - Key: Project
+          Value: MLEWTracker
+
+  QueryFunction:
+    Type: AWS::Lambda::Function
+    Properties:
+      FunctionName: !Sub 'mleww3-query-${Environment}'
+      Runtime: nodejs18.x
+      Handler: index.handler
+      Code:
+        S3Bucket: !Ref LambdaCodeBucket
+        S3Key: lambda-packages/query.zip
+      MemorySize: 512
+      Timeout: 30
+      Environment:
+        Variables:
+          ENVIRONMENT: !Ref Environment
+          EVENTS_TABLE: !Ref EventsTable
+          AGGREGATIONS_TABLE: !Ref AggregationsTable
+          APPLICATIONS_TABLE: !Ref ApplicationsTable
+      Role: !GetAtt LambdaExecutionRole.Arn
+      Tags:
+        - Key: Environment
+          Value: !Ref Environment
+        - Key: Project
+          Value: MLEWTracker
+
+  StreamAggregationFunction:
+    Type: AWS::Lambda::Function
+    Properties:
+      FunctionName: !Sub 'mleww3-stream-aggregation-${Environment}'
+      Runtime: nodejs18.x
+      Handler: index.handler
+      Code:
+        S3Bucket: !Ref LambdaCodeBucket
+        S3Key: lambda-packages/stream-aggregation.zip
+      MemorySize: 128
+      Timeout: 60
+      Environment:
+        Variables:
+          ENVIRONMENT: !Ref Environment
+          AGGREGATIONS_TABLE: !Ref AggregationsTable
+      Role: !GetAtt LambdaExecutionRole.Arn
+      Tags:
+        - Key: Environment
+          Value: !Ref Environment
+        - Key: Project
+          Value: MLEWTracker
+
+  # DynamoDB Stream Event Source Mapping
+  StreamEventSourceMapping:
+    Type: AWS::Lambda::EventSourceMapping
+    Properties:
+      EventSourceArn: !GetAtt EventsTable.StreamArn
+      FunctionName: !Ref StreamAggregationFunction
+      StartingPosition: LATEST
+      BatchSize: 25
+      MaximumBatchingWindowInSeconds: 5
+      MaximumRetryAttempts: 3
+
+  # =====================================
+  # API Gateway
+  # =====================================
+  
+  AnalyticsApi:
+    Type: AWS::ApiGateway::RestApi
+    Properties:
+      Name: !Sub 'mleww3-analytics-api-${Environment}'
+      Description: MLEWW3 Tracker Analytics API
+      EndpointConfiguration:
+        Types:
+          - REGIONAL
+
+  # API Resources
+  V1Resource:
+    Type: AWS::ApiGateway::Resource
+    Properties:
+      RestApiId: !Ref AnalyticsApi
+      ParentId: !GetAtt AnalyticsApi.RootResourceId
+      PathPart: v1
+
+  EventsResource:
+    Type: AWS::ApiGateway::Resource
+    Properties:
+      RestApiId: !Ref AnalyticsApi
+      ParentId: !Ref V1Resource
+      PathPart: events
+
+  AnalyticsResource:
+    Type: AWS::ApiGateway::Resource
+    Properties:
+      RestApiId: !Ref AnalyticsApi
+      ParentId: !Ref V1Resource
+      PathPart: analytics
+
+  ApplicationsResource:
+    Type: AWS::ApiGateway::Resource
+    Properties:
+      RestApiId: !Ref AnalyticsApi
+      ParentId: !Ref AnalyticsResource
+      PathPart: applications
+
+  AppResource:
+    Type: AWS::ApiGateway::Resource
+    Properties:
+      RestApiId: !Ref AnalyticsApi
+      ParentId: !Ref AnalyticsResource
+      PathPart: '{appId}'
+
+  SummaryResource:
+    Type: AWS::ApiGateway::Resource
+    Properties:
+      RestApiId: !Ref AnalyticsApi
+      ParentId: !Ref AppResource
+      PathPart: summary
+
+  AppEventsResource:
+    Type: AWS::ApiGateway::Resource
+    Properties:
+      RestApiId: !Ref AnalyticsApi
+      ParentId: !Ref AppResource
+      PathPart: events
+
+  # Lambda Permissions for API Gateway
+  EventIngestionPermission:
+    Type: AWS::Lambda::Permission
+    Properties:
+      FunctionName: !Ref EventIngestionFunction
+      Action: lambda:InvokeFunction
+      Principal: apigateway.amazonaws.com
+      SourceArn: !Sub 'arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${AnalyticsApi}/*/*'
+
+  QueryPermission:
+    Type: AWS::Lambda::Permission
+    Properties:
+      FunctionName: !Ref QueryFunction
+      Action: lambda:InvokeFunction
+      Principal: apigateway.amazonaws.com
+      SourceArn: !Sub 'arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${AnalyticsApi}/*/*'
+
+  # API Methods
+  EventsPostMethod:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      RestApiId: !Ref AnalyticsApi
+      ResourceId: !Ref EventsResource
+      HttpMethod: POST
+      AuthorizationType: NONE
+      ApiKeyRequired: true
+      Integration:
+        Type: AWS_PROXY
+        IntegrationHttpMethod: POST
+        Uri: !Sub 'arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${EventIngestionFunction.Arn}/invocations'
+
+  EventsOptionsMethod:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      RestApiId: !Ref AnalyticsApi
+      ResourceId: !Ref EventsResource
+      HttpMethod: OPTIONS
+      AuthorizationType: NONE
+      ApiKeyRequired: false
+      Integration:
+        Type: AWS_PROXY
+        IntegrationHttpMethod: POST
+        Uri: !Sub 'arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${EventIngestionFunction.Arn}/invocations'
+
+  ApplicationsGetMethod:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      RestApiId: !Ref AnalyticsApi
+      ResourceId: !Ref ApplicationsResource
+      HttpMethod: GET
+      AuthorizationType: NONE
+      ApiKeyRequired: true
+      Integration:
+        Type: AWS_PROXY
+        IntegrationHttpMethod: POST
+        Uri: !Sub 'arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${QueryFunction.Arn}/invocations'
+
+  SummaryGetMethod:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      RestApiId: !Ref AnalyticsApi
+      ResourceId: !Ref SummaryResource
+      HttpMethod: GET
+      AuthorizationType: NONE
+      ApiKeyRequired: true
+      Integration:
+        Type: AWS_PROXY
+        IntegrationHttpMethod: POST
+        Uri: !Sub 'arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${QueryFunction.Arn}/invocations'
+
+  AppEventsGetMethod:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      RestApiId: !Ref AnalyticsApi
+      ResourceId: !Ref AppEventsResource
+      HttpMethod: GET
+      AuthorizationType: NONE
+      ApiKeyRequired: true
+      Integration:
+        Type: AWS_PROXY
+        IntegrationHttpMethod: POST
+        Uri: !Sub 'arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${QueryFunction.Arn}/invocations'
+
+  # API Deployment
+  ApiDeployment:
+    Type: AWS::ApiGateway::Deployment
+    DependsOn:
+      - EventsPostMethod
+      - EventsOptionsMethod
+      - ApplicationsGetMethod
+      - SummaryGetMethod
+      - AppEventsGetMethod
+    Properties:
+      RestApiId: !Ref AnalyticsApi
+      StageName: !Ref Environment
+
+  # API Key
+  ApiKey:
+    Type: AWS::ApiGateway::ApiKey
+    Properties:
+      Name: !Sub 'mleww3-api-key-${Environment}'
+      Description: API Key for MLEWW3 Tracker
+      Enabled: true
+
+  # Usage Plan
+  UsagePlan:
+    Type: AWS::ApiGateway::UsagePlan
+    DependsOn: ApiDeployment
+    Properties:
+      UsagePlanName: !Sub 'mleww3-usage-plan-${Environment}'
+      Description: Usage plan for MLEWW3 Tracker API
+      Throttle:
+        BurstLimit: !Ref ApiThrottleBurstLimit
+        RateLimit: !Ref ApiThrottleRateLimit
+      Quota:
+        Limit: 1000000
+        Period: MONTH
+      ApiStages:
+        - ApiId: !Ref AnalyticsApi
+          Stage: !Ref Environment
+
+  # Usage Plan Key
+  UsagePlanKey:
+    Type: AWS::ApiGateway::UsagePlanKey
+    Properties:
+      KeyId: !Ref ApiKey
+      KeyType: API_KEY
+      UsagePlanId: !Ref UsagePlan
+
+  # =====================================
+  # CloudWatch Dashboard and Alarms
+  # =====================================
+  
+  MonitoringDashboard:
+    Type: AWS::CloudWatch::Dashboard
+    Properties:
+      DashboardName: !Sub 'MLEWTracker-${Environment}'
+      DashboardBody: !Sub |
+        {
+          "widgets": [
+            {
+              "type": "metric",
+              "properties": {
+                "metrics": [
+                  [ "AWS/ApiGateway", "Count", { "stat": "Sum", "label": "API Requests" } ],
+                  [ ".", "4XXError", { "stat": "Sum", "label": "4XX Errors" } ],
+                  [ ".", "5XXError", { "stat": "Sum", "label": "5XX Errors" } ]
+                ],
+                "period": 300,
+                "stat": "Average",
+                "region": "${AWS::Region}",
+                "title": "API Gateway Metrics",
+                "dimensions": {
+                  "ApiName": "${AnalyticsApi}"
+                }
+              }
+            },
+            {
+              "type": "metric",
+              "properties": {
+                "metrics": [
+                  [ "AWS/Lambda", "Invocations", { "stat": "Sum" } ],
+                  [ ".", "Errors", { "stat": "Sum" } ],
+                  [ ".", "Duration", { "stat": "Average" } ]
+                ],
+                "period": 300,
+                "stat": "Average",
+                "region": "${AWS::Region}",
+                "title": "Lambda Functions",
+                "dimensions": {
+                  "FunctionName": "${EventIngestionFunction}"
+                }
+              }
+            },
+            {
+              "type": "metric",
+              "properties": {
+                "metrics": [
+                  [ "AWS/DynamoDB", "ConsumedReadCapacityUnits", { "stat": "Sum" } ],
+                  [ ".", "ConsumedWriteCapacityUnits", { "stat": "Sum" } ],
+                  [ ".", "SystemErrors", { "stat": "Sum" } ]
+                ],
+                "period": 300,
+                "stat": "Sum",
+                "region": "${AWS::Region}",
+                "title": "DynamoDB Tables",
+                "dimensions": {
+                  "TableName": "${EventsTable}"
+                }
+              }
+            }
+          ]
+        }
+
+  # SNS Topic for Alarms (Production only)
+  AlarmTopic:
+    Type: AWS::SNS::Topic
+    Condition: IsProduction
+    Properties:
+      TopicName: !Sub 'mleww3-alarms-${Environment}'
+      DisplayName: MLEWW3 Tracker Alarms
+      Subscription:
+        - Endpoint: !Ref NotificationEmail
+          Protocol: email
+
+  # Error Rate Alarm
+  HighErrorRateAlarm:
+    Type: AWS::CloudWatch::Alarm
+    Properties:
+      AlarmName: !Sub 'MLEWW3-HighErrorRate-${Environment}'
+      AlarmDescription: !Sub 'High error rate detected in ${Environment} environment'
+      MetricName: 5XXError
+      Namespace: AWS/ApiGateway
+      Dimensions:
+        - Name: ApiName
+          Value: !Ref AnalyticsApi
+      Statistic: Sum
+      Period: 300
+      EvaluationPeriods: 2
+      Threshold: !Ref ErrorAlarmThreshold
+      ComparisonOperator: GreaterThanThreshold
+      TreatMissingData: notBreaching
+      AlarmActions:
+        - !If [IsProduction, !Ref AlarmTopic, !Ref 'AWS::NoValue']
+
+  # High Duration Alarm
+  HighDurationAlarm:
+    Type: AWS::CloudWatch::Alarm
+    Properties:
+      AlarmName: !Sub 'MLEWW3-HighDuration-${Environment}'
+      AlarmDescription: !Sub 'High average duration detected in ${Environment} environment'
+      MetricName: Duration
+      Namespace: AWS/Lambda
+      Dimensions:
+        - Name: FunctionName
+          Value: !Ref EventIngestionFunction
+      Statistic: Average
+      Period: 300
+      EvaluationPeriods: 3
+      Threshold: !Ref DurationAlarmThreshold
+      ComparisonOperator: GreaterThanThreshold
+      TreatMissingData: notBreaching
+      AlarmActions:
+        - !If [IsProduction, !Ref AlarmTopic, !Ref 'AWS::NoValue']
+
+Conditions:
+  IsProduction: !Equals [!Ref Environment, 'prod']
+
+Outputs:
+  ApiEndpoint:
+    Description: Analytics API Endpoint
+    Value: !Sub 'https://${AnalyticsApi}.execute-api.${AWS::Region}.amazonaws.com/${Environment}'
+    Export:
+      Name: !Sub '${AWS::StackName}-ApiEndpoint'
+  
+  ApiKeyId:
+    Description: API Key ID
+    Value: !Ref ApiKey
+    Export:
+      Name: !Sub '${AWS::StackName}-ApiKeyId'
+  
+  DashboardURL:
+    Description: Dashboard CloudFront URL
+    Value: !GetAtt DashboardDistribution.DomainName
+    Export:
+      Name: !Sub '${AWS::StackName}-DashboardURL'
+  
+  DashboardBucketName:
+    Description: Dashboard S3 Bucket Name
+    Value: !Ref DashboardBucket
+    Export:
+      Name: !Sub '${AWS::StackName}-DashboardBucket'
+  
+  EventsTableName:
+    Description: Events DynamoDB Table Name
+    Value: !Ref EventsTable
+    Export:
+      Name: !Sub '${AWS::StackName}-EventsTable'
+  
+  ArchiveBucketName:
+    Description: Archive S3 Bucket Name
+    Value: !Ref ArchiveBucket
+    Export:
+      Name: !Sub '${AWS::StackName}-ArchiveBucket'
