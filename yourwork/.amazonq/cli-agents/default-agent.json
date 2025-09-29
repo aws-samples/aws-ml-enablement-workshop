@@ -8,8 +8,6 @@
   ],
   "allowedTools": [
     "fs_read",
-    "fs_write", 
-    "execute_bash",
     "use_aws",
     "report_issue"
   ],

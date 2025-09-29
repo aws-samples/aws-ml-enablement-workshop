@@ -35,10 +35,10 @@ template/
 
 ## 技術スタック
 
-- **フロントエンド**: React 18 + TypeScript
+- **フロントエンド**: React + TypeScript
 - **ビルドツール**: Vite
-- **スタイリング**: Tailwind CSS + Framer Motion
-- **ルーティング**: React Router v6
+- **スタイリング**: Tailwind CSS v4+ (CSS-first configuration) + Framer Motion
+- **ルーティング**: React Router
 - **テスト**: Vitest + Playwright
 - **ホスティング**: AWS S3 + CloudFront
 - **インフラ**: AWS CloudFormation
@@ -107,13 +107,27 @@ VITE_ENVIRONMENT=development  # 環境名
 
 ### 5. スタイリング/ブランディング
 
-#### **tailwind.config.js**
-- カラーパレットをブランドカラーに変更
-- フォントファミリーの設定
+#### **Tailwind CSS v4 設定** (`src/styles/globals.css`)
+Tailwind CSS v4では設定ファイル不要のCSS-first approach を採用：
 
-#### **src/styles/globals.css**
-- カスタムCSS変数の追加
-- ブランド固有のスタイル定義
+```css
+@import "tailwindcss";
+
+@theme {
+  /* カスタムカラーパレット */
+  --color-primary-500: #0ea5e9;  /* ブランドカラーに変更 */
+  --color-primary-600: #0284c7;
+  
+  /* カスタムアニメーション */
+  --animate-fade-in: fadeIn 0.5s ease-in-out;
+}
+```
+
+**重要**: 
+- ❌ `tailwind.config.js` は不要（削除済み）
+- ❌ `postcss.config.js` は不要（削除済み）  
+- ❌ `@tailwindcss/*` プラグインは不要（v4で内蔵）
+- ✅ CSS内で `@theme {}` ブロックで設定
 
 ### 6. ランディングページのカスタマイズ
 
@@ -127,8 +141,8 @@ VITE_ENVIRONMENT=development  # 環境名
 ## 前提条件
 
 ### 必要なツール
-- Node.js 18.x 以上
-- npm 8.x 以上
+- Node.js 20.x 以上
+- npm 10.x 以上
 - AWS CLI v2
 - AWS アカウントと適切な権限
 
