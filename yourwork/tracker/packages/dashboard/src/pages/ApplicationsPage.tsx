@@ -61,24 +61,6 @@ export const ApplicationsPage = () => {
             トラッキングSDKを使用してイベントを送信すると、<br />
             アプリケーションがここに表示されます。
           </p>
-          <div className="bg-white border border-gray-200 rounded-lg p-6 text-left max-w-2xl mx-auto">
-            <p className="text-sm text-gray-700 font-semibold mb-3">🚀 クイックスタート</p>
-            <div className="space-y-4">
-              <div>
-                <p className="text-xs text-gray-500 mb-1">1. SDKをインストール</p>
-                <code className="text-xs bg-gray-100 p-2 rounded block">
-                  npm install @mleww3/tracker
-                </code>
-              </div>
-              <div>
-                <p className="text-xs text-gray-500 mb-1">2. イベントを送信</p>
-                <code className="text-xs bg-gray-100 p-2 rounded block">
-                  const tracker = new Tracker({'{'}applicationId: 'your-app'{'}'})<br/>
-                  tracker.trackClick('button-name')
-                </code>
-              </div>
-            </div>
-          </div>
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
