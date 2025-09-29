@@ -46,7 +46,7 @@ Resources:
     Type: AWS::CloudFront::OriginAccessControl
     Properties:
       OriginAccessControlConfig:
-        Name: !Sub '${ProjectName}-${Environment}-oac'
+        Name: !Sub '${ProjectName}-${Environment}-oac-${AWS::AccountId}'
         OriginAccessControlOriginType: s3
         SigningBehavior: always
         SigningProtocol: sigv4
@@ -139,7 +139,7 @@ Resources:
     Type: AWS::CloudFront::ResponseHeadersPolicy
     Properties:
       ResponseHeadersPolicyConfig:
-        Name: !Sub '${ProjectName}-${Environment}-security-headers'
+        Name: !Sub '${ProjectName}-${Environment}-security-headers-${AWS::AccountId}'
         SecurityHeadersConfig:
           StrictTransportSecurity:
             AccessControlMaxAgeSec: 31536000
@@ -176,28 +176,28 @@ Outputs:
     Description: 'S3 Bucket name for uploading files'
     Value: !Ref S3Bucket
     Export:
-      Name: !Sub '${ProjectName}-${Environment}-bucket-name'
+      Name: !Sub '${ProjectName}-${Environment}-bucket-name-${AWS::AccountId}'
 
   CloudFrontDistributionId:
     Description: 'CloudFront Distribution ID'
     Value: !Ref CloudFrontDistribution
     Export:
-      Name: !Sub '${ProjectName}-${Environment}-distribution-id'
+      Name: !Sub '${ProjectName}-${Environment}-distribution-id-${AWS::AccountId}'
 
   CloudFrontDomainName:
     Description: 'CloudFront Distribution Domain Name'
     Value: !GetAtt CloudFrontDistribution.DomainName
     Export:
-      Name: !Sub '${ProjectName}-${Environment}-domain-name'
+      Name: !Sub '${ProjectName}-${Environment}-domain-name-${AWS::AccountId}'
 
   WebsiteURL:
     Description: 'Website URL'
     Value: !Sub 'https://${CloudFrontDistribution.DomainName}'
     Export:
-      Name: !Sub '${ProjectName}-${Environment}-website-url'
+      Name: !Sub '${ProjectName}-${Environment}-website-url-${AWS::AccountId}'
 
   S3BucketRegion:
     Description: 'S3 Bucket Region'
     Value: !Ref 'AWS::Region'
     Export:
-      Name: !Sub '${ProjectName}-${Environment}-bucket-region'
+      Name: !Sub '${ProjectName}-${Environment}-bucket-region-${AWS::AccountId}'
