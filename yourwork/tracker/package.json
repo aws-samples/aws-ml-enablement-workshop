@@ -4,7 +4,9 @@
   "description": "Analytics tracking system",
   "private": true,
   "workspaces": [
-    "packages/*"
+    "packages/dashboard",
+    "packages/tracker-sdk",
+    "packages/lambdas/*"
   ],
   "scripts": {
     "dev": "npm-run-all --parallel dev:*",
@@ -12,12 +14,9 @@
     "build": "npm run build --workspaces",
     "build:sdk": "npm run build --workspace=packages/tracker-sdk",
     "build:dashboard": "npm run build --workspace=packages/dashboard",
-    "build:cdk": "npm run build --workspace=packages/cdk",
     "test": "npm run test --workspaces",
     "clean": "npm run clean --workspaces",
-    "deploy": "npm run deploy --workspace=packages/cdk",
-    "deploy:with-config": "npm run deploy:with-config --workspace=packages/cdk",
-    "cdk": "npm run cdk --workspace=packages/cdk"
+    "cdk": "npm --prefix cdk-app run cdk"
   },
   "devDependencies": {
     "@types/node": "^20.6.0",

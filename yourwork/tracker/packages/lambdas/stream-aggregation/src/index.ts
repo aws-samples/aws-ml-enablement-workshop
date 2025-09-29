@@ -1,17 +1,14 @@
 import { DynamoDBStreamEvent, DynamoDBRecord } from 'aws-lambda';
 import { DynamoDBClient } from '@aws-sdk/client-dynamodb';
 import { DynamoDBDocumentClient, UpdateCommand } from '@aws-sdk/lib-dynamodb';
-import { CloudWatchClient, PutMetricDataCommand } from '@aws-sdk/client-cloudwatch';
 import { unmarshall } from '@aws-sdk/util-dynamodb';
 
 // Initialize AWS clients
 const dynamoClient = new DynamoDBClient({});
 const docClient = DynamoDBDocumentClient.from(dynamoClient);
-const cloudwatchClient = new CloudWatchClient({});
 
 // Environment variables
 const AGGREGATIONS_TABLE = process.env.AGGREGATIONS_TABLE!;
-const ENVIRONMENT = process.env.ENVIRONMENT || 'dev';
 
 interface AggregationUpdate {
   applicationId: string;
@@ -48,9 +45,6 @@ export const handler = async (event: DynamoDBStreamEvent): Promise<void> => {
   }
 
   await Promise.all(updatePromises);
-
-  // Send metrics
-  await sendMetrics(aggregations.size, event.Records.length);
 };
 
 function processRecord(record: DynamoDBRecord): AggregationUpdate | null {
@@ -159,36 +153,6 @@ async function updateAggregations(key: string, updates: AggregationUpdate[]): Pr
   } catch (error) {
     console.error('Error updating aggregations:', error);
     throw error;
-  }
-}
-
-async function sendMetrics(aggregationCount: number, recordCount: number): Promise<void> {
-  try {
-    await cloudwatchClient.send(new PutMetricDataCommand({
-      Namespace: 'MLEWW3/Analytics',
-      MetricData: [
-        {
-          MetricName: 'StreamRecordsProcessed',
-          Value: recordCount,
-          Unit: 'Count',
-          Timestamp: new Date(),
-          Dimensions: [
-            { Name: 'Environment', Value: ENVIRONMENT }
-          ]
-        },
-        {
-          MetricName: 'AggregationsUpdated',
-          Value: aggregationCount,
-          Unit: 'Count',
-          Timestamp: new Date(),
-          Dimensions: [
-            { Name: 'Environment', Value: ENVIRONMENT }
-          ]
-        }
-      ]
-    }));
-  } catch (error) {
-    console.error('Error sending metrics:', error);
   }
 }
 

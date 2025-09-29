@@ -1,0 +1,24 @@
+{
+  "name": "mlew-tracker-cdk",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "build": "tsc --project tsconfig.json",
+    "watch": "tsc --watch --project tsconfig.json",
+    "cdk": "cdk",
+    "synth": "cdk synth",
+    "deploy": "cdk deploy"
+  },
+  "dependencies": {
+    "aws-cdk-lib": "^2.138.0",
+    "constructs": "^10.3.0",
+    "source-map-support": "^0.5.21"
+  },
+  "devDependencies": {
+    "aws-cdk": "^2.138.0",
+    "esbuild": "^0.25.9",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.3.3",
+    "@types/node": "^20.10.0"
+  }
+}

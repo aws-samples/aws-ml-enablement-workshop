@@ -1,18 +1,18 @@
 {
-  "name": "mlew-event-ingestion",
+  "name": "mlew-stream-aggregation",
   "version": "1.0.0",
-  "description": "Event ingestion Lambda function",
+  "description": "DynamoDB Streams aggregation Lambda function",
   "main": "index.js",
   "scripts": {
     "build": "tsc",
-    "package": "npm run build && zip -r function.zip ."
+    "clean": "rm -rf node_modules *.zip index.js dist"
   },
   "dependencies": {
-    "@aws-sdk/client-cloudwatch": "^3.864.0",
     "@aws-sdk/client-dynamodb": "^3.868.0",
-    "@aws-sdk/client-s3": "^3.864.0",
     "@aws-sdk/lib-dynamodb": "^3.868.0",
-    "aws-lambda": "^1.0.7"
+    "@aws-sdk/util-dynamodb": "^3.868.0",
+    "aws-lambda": "^1.0.7",
+    "nanoid": "^5.1.5"
   },
   "devDependencies": {
     "@types/aws-lambda": "^8.10.152",

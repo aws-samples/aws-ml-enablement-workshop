@@ -13,7 +13,7 @@ export default defineConfig({
       entry: resolve(__dirname, 'src/index.ts'),
       name: 'MLEWTracker',
       formats: ['es', 'umd'],
-      fileName: (format) => `index.${format}.js`,
+      fileName: (format) => (format === 'umd' ? 'tracker-sdk.js' : 'tracker-sdk.es.js'),
     },
     rollupOptions: {
       external: [],

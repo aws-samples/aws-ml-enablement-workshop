@@ -6,17 +6,15 @@ ML Enablement Workshop で作成したモックアプリケーションの反応
 
 - **tracker-sdk**: Webサイトに埋め込むJavaScript SDK
 - **dashboard**: アナリティクスダッシュボード（React）
-- **cdk**: AWS CDKによるインフラストラクチャコード
+- **lambdas**: Lambda 関数のソースコード（ワークスペース単位で管理）
+- **cdk-app**: AWS CDK によるインフラ定義（バックエンド・配信基盤）
 
 ## 🚀 デプロイ方法
 
-MLEW Trackerは2つのデプロイ方法を提供しています：
-
-### 方法1: CloudFormation（推奨・簡易）
-最も簡単なワンクリックデプロイ。GitHubからの自動ビルド・デプロイ機能付き。
+MLEW Tracker は CloudFormation テンプレート `MLEWTrackerDeploymentStack.yaml` を用いたワンクリックデプロイに統一されています。スタックを作成すると、付属の CodeBuild プロジェクトがリポジトリをクローンし、Lambda・ダッシュボード・SDK をビルドしたのち AWS CDK (`cdk-app`) でインフラをデプロイします。
 
 ```bash
-# CloudFormationテンプレートを使用した簡易デプロイ
+# CloudFormation テンプレートによるデプロイ
 aws cloudformation deploy \
   --template-file MLEWTrackerDeploymentStack.yaml \
   --stack-name mlew-tracker \
@@ -24,30 +22,16 @@ aws cloudformation deploy \
   --capabilities CAPABILITY_IAM
 ```
 
-**特徴:**
-- ワンクリックデプロイ
-- GitHubからの自動ビルド・デプロイ
-- メール通知機能
+パイプラインで行われる主な処理:
+- ルートで `npm ci` を実行して依存関係を整備
+- `npm run build --workspace=packages/dashboard` と `npm run build --workspace=packages/tracker-sdk` で静的アセットをビルド
+- `npm ci --prefix cdk-app` で CDK 依存関係をインストールし、`npx cdk deploy` によりバックエンド/配信基盤をデプロイ（Lambda は CDK の NodejsFunction でバンドル、ダッシュボードと SDK は `BucketDeployment` で配置）
 
-### 方法2: AWS CDK（高度なカスタマイズ）
-開発者向け。細かなカスタマイズや段階的デプロイが可能。
-
-```bash
-# CDKを使用したカスタマイズ可能なデプロイ
-npm install
-npm run deploy:with-config
-```
-
-**特徴:**
-- TypeScriptによる型安全なインフラ定義
-- テスト駆動開発対応
-- 段階的デプロイ・更新
-- 高度なカスタマイズ
-  
-デプロイが完了すると、以下の情報が出力されます。
-- **API Endpoint**: APIゲートウェイのURL
-- **API Key**: API認証用のキー
-- **Dashboard URL**: ダッシュボードのCloudFront URL
+デプロイ完了後、SNS 通知メールおよび CodeBuild の `deployment-info.txt` から以下を確認できます。
+- **API Endpoint**: API ゲートウェイの URL
+- **API Key**: API 認証用キー
+- **Dashboard URL**: ダッシュボードの CloudFront ドメイン
+- **Tracker SDK URL**: SDK を配信する CloudFront ドメイン
 
 ### 2. Webサイトへの統合
 

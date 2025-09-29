@@ -1,21 +1,16 @@
 import { APIGatewayProxyEvent, APIGatewayProxyResult } from 'aws-lambda';
 import { DynamoDBClient } from '@aws-sdk/client-dynamodb';
 import { DynamoDBDocumentClient, BatchWriteCommand, UpdateCommand } from '@aws-sdk/lib-dynamodb';
-import { CloudWatchClient, PutMetricDataCommand, StandardUnit } from '@aws-sdk/client-cloudwatch';
-import { S3Client, PutObjectCommand } from '@aws-sdk/client-s3';
 import { randomUUID } from 'crypto';
 
 // Initialize AWS clients
 const dynamoClient = new DynamoDBClient({});
 const docClient = DynamoDBDocumentClient.from(dynamoClient);
-const cloudwatchClient = new CloudWatchClient({});
-const s3Client = new S3Client({});
 
 // Environment variables
 const EVENTS_TABLE = process.env.EVENTS_TABLE!;
 const APPLICATIONS_TABLE = process.env.APPLICATIONS_TABLE!;
-const ARCHIVE_BUCKET = process.env.ARCHIVE_BUCKET!;
-const ENVIRONMENT = process.env.ENVIRONMENT || 'dev';
+const EVENT_TTL_DAYS = Number(process.env.EVENT_TTL_DAYS ?? '30');
 
 interface AnalyticsEvent {
   eventId: string;
@@ -86,7 +81,7 @@ export const handler = async (
       applicationId: batch.applicationId,
       timestampEventId: `${event.timestamp}#${event.eventId || randomUUID()}`,
       date: new Date(event.timestamp).toISOString().split('T')[0],
-      ttl: Math.floor(Date.now() / 1000) + (30 * 24 * 60 * 60) // 30 days TTL
+      ttl: Math.floor(Date.now() / 1000) + EVENT_TTL_DAYS * 24 * 60 * 60
     }));
 
     // Batch write to DynamoDB (max 25 items per batch)
@@ -106,12 +101,6 @@ export const handler = async (
     // Update application statistics
     await updateApplicationStats(batch.applicationId, batch.events.length);
 
-    // Send metrics to CloudWatch
-    await sendMetrics(batch.applicationId, batch.events);
-
-    // Archive to S3 (async, don't wait)
-    archiveEvents(batch.applicationId, processedEvents).catch(console.error);
-
     return {
       statusCode: 200,
       headers: getCorsHeaders(),
@@ -124,9 +113,6 @@ export const handler = async (
 
   } catch (error) {
     console.error('Error processing events:', error);
-    
-    // Send error metric
-    await sendErrorMetric(error);
 
     return {
       statusCode: 500,
@@ -158,77 +144,6 @@ async function updateApplicationStats(applicationId: string, eventCount: number)
     }));
   } catch (error) {
     console.error('Error updating application stats:', error);
-  }
-}
-
-async function sendMetrics(applicationId: string, events: any[]): Promise<void> {
-  const metrics = [
-    {
-      MetricName: 'EventsProcessed',
-      Value: events.length,
-      Unit: StandardUnit.Count,
-      Timestamp: new Date(),
-      Dimensions: [
-        { Name: 'ApplicationId', Value: applicationId },
-        { Name: 'Environment', Value: ENVIRONMENT }
-      ]
-    },
-    {
-      MetricName: 'UniqueUsers',
-      Value: new Set(events.map(e => e.userId).filter(Boolean)).size,
-      Unit: StandardUnit.Count,
-      Timestamp: new Date(),
-      Dimensions: [
-        { Name: 'ApplicationId', Value: applicationId },
-        { Name: 'Environment', Value: ENVIRONMENT }
-      ]
-    }
-  ];
-
-  try {
-    await cloudwatchClient.send(new PutMetricDataCommand({
-      Namespace: 'MLEWW3/Analytics',
-      MetricData: metrics
-    }));
-  } catch (error) {
-    console.error('Error sending metrics:', error);
-  }
-}
-
-async function sendErrorMetric(error: any): Promise<void> {
-  try {
-    await cloudwatchClient.send(new PutMetricDataCommand({
-      Namespace: 'MLEWW3/Analytics',
-      MetricData: [{
-        MetricName: 'EventsFailed',
-        Value: 1,
-        Unit: StandardUnit.Count,
-        Timestamp: new Date(),
-        Dimensions: [
-          { Name: 'Environment', Value: ENVIRONMENT },
-          { Name: 'ErrorType', Value: error.name || 'Unknown' }
-        ]
-      }]
-    }));
-  } catch (metricError) {
-    console.error('Error sending error metric:', metricError);
-  }
-}
-
-async function archiveEvents(applicationId: string, events: any[]): Promise<void> {
-  const now = new Date();
-  const key = `${now.getFullYear()}/${String(now.getMonth() + 1).padStart(2, '0')}/${String(now.getDate()).padStart(2, '0')}/${applicationId}/${now.getHours()}/events-${Date.now()}.json`;
-
-  try {
-    await s3Client.send(new PutObjectCommand({
-      Bucket: ARCHIVE_BUCKET,
-      Key: key,
-      Body: JSON.stringify(events),
-      ContentType: 'application/json',
-      ContentEncoding: 'gzip'
-    }));
-  } catch (error) {
-    console.error('Error archiving events:', error);
   }
 }
 
