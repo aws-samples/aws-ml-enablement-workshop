@@ -2,6 +2,8 @@
 
 ML Enablement Workshop で開発者 / データサイエンティスト担当の方は、**チーム全員が生成 AI を扱えるように**下記の環境セットアップをワークショップ開始前に完了してください。環境セットアップは、[Amazon Q Developer CLI](https://docs.aws.amazon.com/ja_jp/amazonq/latest/qdeveloper-ug/command-line.html) を想定しています。
 
+なお、Mock の生成以外は [GenU : Generative AI Use Cases](https://aws-samples.github.io/generative-ai-use-cases/en/) で行うこともできます。GenU を使用する場合は、[ワークショップ用のユースケース](/docs/organizer/assets/day0/ML_Enablement_Workshop_GenU.json) をダウンロードし、[ユースケースビルダーにインポート](https://aws-samples.github.io/sample-one-click-generative-ai-solutions/solutions/generative-ai-use-cases-ready-to-use/) してください。
+
 ## AWS 環境の事前準備
 
 ### IAM ユーザーの作成
