@@ -215,7 +215,42 @@ pwd
 cd /your/working/directory/aws-ml-enablement-workshop/yourwork 
 ```
 
-#### 2. Amazon Q Developer CLI の起動
+#### 2. Tracker システムのデプロイ（オプション）
+
+> [!NOTE]
+> この手順はオプションです。構築したモックアプリケーションの View 数や Click 数などのメトリクスを計測したい場合はデプロイしてください。
+
+ワークショップで使用するモックアプリケーションの分析トラッカーシステムをデプロイします。このシステムはユーザーの操作を記録し、ダッシュボードで可視化します。
+
+```bash
+# AWS CLI を使用して CloudFormation スタックをデプロイ
+# {任意のメールアドレス} を実際のメールアドレスに置き換えてください
+# デプロイ先のリージョンはデフォルトでは東京リージョン（ap-northeast-1）になっています
+aws cloudformation deploy \
+  --template-file ./tracker/MLEWTrackerDeploymentStack.yaml \
+  --stack-name mlew-tracker-stack \
+  --parameter-overrides \
+    NotificationEmailAddress={任意のメールアドレス} \
+    Environment=dev \
+  --capabilities CAPABILITY_IAM \
+  --region ap-northeast-1
+```
+
+デプロイ実行後、指定したメールアドレスに「**MLEW Tracker Deployment Notifications <no-reply@sns.amazonaws.com>**」からメールが届きます。メール本文の「**Confirm subscription**」リンクをクリックして、SNS通知の購読を確認してください。
+
+10～15分ほど待つと、デプロイ完了通知メールが再度届きます。メールには以下のような情報が記載されているので、控えておいてください。
+
+```
+Access Information:
+----------------------
+API Endpoint: https://xxxxxxxxxx.execute-api.ap-northeast-1.amazonaws.com/dev
+API Key: XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+Dashboard URL: https://dxxxxxxxxxx.cloudfront.net
+```
+
+これらの情報は `4. カスタムエージェントの実行` で利用します。
+
+#### 3. Amazon Q Developer CLI の起動
 
 以下のコマンドで Amazon Q Developer CLI のモデル構築用エージェントを起動します。
 
@@ -223,7 +258,7 @@ cd /your/working/directory/aws-ml-enablement-workshop/yourwork
 q chat --agent mock-builder
 ```
 
-#### 3. カスタムエージェントの実行
+#### 4. カスタムエージェントの実行
 
 `こんにちは` や `アプリケーションを作成したい` など適当な言葉を入力いただくと、カスタムエージェントが実行されます。
 カスタムエージェントは実装を開始する前に、以下の２つの質問を順番にユーザーに確認します。
