@@ -1,0 +1,32 @@
+{
+  "name": "mlew-tracker",
+  "version": "1.0.0",
+  "description": "Analytics tracking system",
+  "private": true,
+  "workspaces": [
+    "packages/dashboard",
+    "packages/tracker-sdk",
+    "packages/lambdas/*"
+  ],
+  "scripts": {
+    "dev": "npm-run-all --parallel dev:*",
+    "dev:dashboard": "npm run dev --workspace=packages/dashboard",
+    "build": "npm run build --workspaces",
+    "build:sdk": "npm run build --workspace=packages/tracker-sdk",
+    "build:dashboard": "npm run build --workspace=packages/dashboard",
+    "test": "npm run test --workspaces",
+    "clean": "npm run clean --workspaces",
+    "cdk": "npm --prefix cdk-app run cdk"
+  },
+  "devDependencies": {
+    "@types/node": "^20.10.0",
+    "npm-run-all": "^4.1.5",
+    "typescript": "^5.8.3"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "dependencies": {
+    "nanoid": "^5.1.5"
+  }
+}

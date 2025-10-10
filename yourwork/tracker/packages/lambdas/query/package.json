@@ -1,0 +1,21 @@
+{
+  "name": "mlew-query",
+  "version": "1.0.0",
+  "description": "Query Lambda function for analytics data",
+  "main": "index.js",
+  "scripts": {
+    "build": "tsc",
+    "clean": "rm -rf node_modules *.zip index.js dist"
+  },
+  "dependencies": {
+    "@aws-sdk/client-dynamodb": "^3.868.0",
+    "@aws-sdk/lib-dynamodb": "^3.868.0",
+    "aws-lambda": "^1.0.7",
+    "nanoid": "^5.1.5"
+  },
+  "devDependencies": {
+    "@types/aws-lambda": "^8.10.152",
+    "@types/node": "^20.10.0",
+    "typescript": "^5.8.3"
+  }
+}
