@@ -102,10 +102,9 @@ export class TrackerStack extends Stack {
 
 
     // CloudFront Distributions
-    const dashboardOAC = new cloudfront.OriginAccessControl(this, 'DashboardOAC', {
+    const dashboardOAC = new cloudfront.S3OriginAccessControl(this, 'DashboardOAC', {
       originAccessControlName: `mlew-dashboard-oac-${accountId}`,
       description: 'OAC for Dashboard S3 bucket',
-      originAccessControlOriginType: cloudfront.OriginAccessControlOriginType.S3,
       signing: cloudfront.Signing.SIGV4_ALWAYS,
     });
 
@@ -130,10 +129,9 @@ export class TrackerStack extends Stack {
       ],
     });
 
-    const sdkOAC = new cloudfront.OriginAccessControl(this, 'SdkOAC', {
+    const sdkOAC = new cloudfront.S3OriginAccessControl(this, 'SdkOAC', {
       originAccessControlName: `mlew-sdk-oac-${accountId}`,
       description: 'OAC for SDK S3 bucket',
-      originAccessControlOriginType: cloudfront.OriginAccessControlOriginType.S3,
       signing: cloudfront.Signing.SIGV4_ALWAYS,
     });
 
