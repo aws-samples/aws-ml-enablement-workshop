@@ -161,8 +161,6 @@ Resources:
                 - aws sns publish --topic-arn ${SNSTopicArn} --subject "MLEW Tracker Deployment Started" --message "Deployment of MLEW Tracker has started. You will receive another notification when deployment is complete."
                 - echo "Cloning repository from GitHub..."
                 - git clone https://github.com/aws-samples/aws-ml-enablement-workshop.git
-                - cd aws-ml-enablement-workshop && git fetch origin && git checkout fix/mitigate-public-access
-                - cd ../
                 - echo "Repository cloned successfully"
             pre_build:
               commands:
