@@ -83,22 +83,9 @@ export class TrackerStack extends Stack {
       versioned: isProd,
       autoDeleteObjects: !isProd,
       encryption: s3.BucketEncryption.S3_MANAGED,
-      blockPublicAccess: new s3.BlockPublicAccess({
-        blockPublicAcls: false,
-        blockPublicPolicy: false,
-        ignorePublicAcls: false,
-        restrictPublicBuckets: false,
-      }),
-      publicReadAccess: true,
-      websiteIndexDocument: 'index.html',
-      websiteErrorDocument: 'error.html',
+      blockPublicAccess: s3.BlockPublicAccess.BLOCK_ALL,
+      publicReadAccess: false,
       removalPolicy: persistentResourcePolicy,
-    });
-    dashboardBucket.addCorsRule({
-      allowedHeaders: ['*'],
-      allowedMethods: [s3.HttpMethods.GET],
-      allowedOrigins: ['*'],
-      maxAge: 3600,
     });
     tagResource(dashboardBucket, 'Storage');
 
@@ -107,29 +94,27 @@ export class TrackerStack extends Stack {
       versioned: isProd,
       autoDeleteObjects: !isProd,
       encryption: s3.BucketEncryption.S3_MANAGED,
-      blockPublicAccess: new s3.BlockPublicAccess({
-        blockPublicAcls: false,
-        blockPublicPolicy: false,
-        ignorePublicAcls: false,
-        restrictPublicBuckets: false,
-      }),
-      publicReadAccess: true,
+      blockPublicAccess: s3.BlockPublicAccess.BLOCK_ALL,
+      publicReadAccess: false,
       removalPolicy: persistentResourcePolicy,
-    });
-    sdkBucket.addCorsRule({
-      allowedHeaders: ['*'],
-      allowedMethods: [s3.HttpMethods.GET],
-      allowedOrigins: ['*'],
-      maxAge: 3600,
     });
     tagResource(sdkBucket, 'Storage');
 
 
     // CloudFront Distributions
+    const dashboardOAC = new cloudfront.OriginAccessControl(this, 'DashboardOAC', {
+      originAccessControlName: `mlew-dashboard-oac-${accountId}`,
+      description: 'OAC for Dashboard S3 bucket',
+      originAccessControlOriginType: cloudfront.OriginAccessControlOriginType.S3,
+      signing: cloudfront.Signing.SIGV4_ALWAYS,
+    });
+
     const dashboardDistribution = new cloudfront.Distribution(this, 'DashboardDistribution', {
       defaultRootObject: 'index.html',
       defaultBehavior: {
-        origin: new origins.S3Origin(dashboardBucket),
+        origin: origins.S3BucketOrigin.withOriginAccessControl(dashboardBucket, {
+          originAccessControl: dashboardOAC,
+        }),
         viewerProtocolPolicy: cloudfront.ViewerProtocolPolicy.REDIRECT_TO_HTTPS,
         allowedMethods: cloudfront.AllowedMethods.ALLOW_GET_HEAD_OPTIONS,
         cachePolicy: cloudfront.CachePolicy.CACHING_OPTIMIZED,
@@ -145,9 +130,18 @@ export class TrackerStack extends Stack {
       ],
     });
 
+    const sdkOAC = new cloudfront.OriginAccessControl(this, 'SdkOAC', {
+      originAccessControlName: `mlew-sdk-oac-${accountId}`,
+      description: 'OAC for SDK S3 bucket',
+      originAccessControlOriginType: cloudfront.OriginAccessControlOriginType.S3,
+      signing: cloudfront.Signing.SIGV4_ALWAYS,
+    });
+
     const sdkDistribution = new cloudfront.Distribution(this, 'SdkDistribution', {
       defaultBehavior: {
-        origin: new origins.S3Origin(sdkBucket),
+        origin: origins.S3BucketOrigin.withOriginAccessControl(sdkBucket, {
+          originAccessControl: sdkOAC,
+        }),
         viewerProtocolPolicy: cloudfront.ViewerProtocolPolicy.REDIRECT_TO_HTTPS,
         allowedMethods: cloudfront.AllowedMethods.ALLOW_GET_HEAD,
         cachePolicy: cloudfront.CachePolicy.CACHING_OPTIMIZED,
@@ -157,6 +151,31 @@ export class TrackerStack extends Stack {
 
     tagResource(dashboardDistribution, 'Delivery');
     tagResource(sdkDistribution, 'Delivery');
+
+    // Grant CloudFront OAC access to S3 buckets
+    dashboardBucket.addToResourcePolicy(new iam.PolicyStatement({
+      effect: iam.Effect.ALLOW,
+      principals: [new iam.ServicePrincipal('cloudfront.amazonaws.com')],
+      actions: ['s3:GetObject'],
+      resources: [dashboardBucket.arnForObjects('*')],
+      conditions: {
+        StringEquals: {
+          'AWS:SourceArn': `arn:aws:cloudfront::${accountId}:distribution/${dashboardDistribution.distributionId}`,
+        },
+      },
+    }));
+
+    sdkBucket.addToResourcePolicy(new iam.PolicyStatement({
+      effect: iam.Effect.ALLOW,
+      principals: [new iam.ServicePrincipal('cloudfront.amazonaws.com')],
+      actions: ['s3:GetObject'],
+      resources: [sdkBucket.arnForObjects('*')],
+      conditions: {
+        StringEquals: {
+          'AWS:SourceArn': `arn:aws:cloudfront::${accountId}:distribution/${sdkDistribution.distributionId}`,
+        },
+      },
+    }));
 
     // Lambda functions
     const bundling: lambdaNodejs.BundlingOptions = {
