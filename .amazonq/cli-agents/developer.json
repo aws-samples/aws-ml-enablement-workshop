@@ -1,0 +1,80 @@
+{
+  "name": "developer",
+  "description": "Default agent configuration",
+  "mcpServers": {
+    "AWS Core MCP Server": {
+      "command": "uvx",
+      "args": [
+        "awslabs.core-mcp-server@latest"
+      ],
+      "env": {
+        "FASTMCP_LOG_LEVEL": "ERROR"
+      },
+      "timeout": 60000
+    },
+    "AWS Documentation MCP Server": {
+      "command": "uvx",
+      "args": [
+        "awslabs.aws-documentation-mcp-server@latest"
+      ],
+      "env": {
+        "FASTMCP_LOG_LEVEL": "ERROR",
+        "AWS_DOCUMENTATION_PARTITION": "aws"
+      },
+      "timeout": 60000
+    },
+    "awslabs.aws-diagram-mcp-server": {
+      "command": "uvx",
+      "args": [
+        "awslabs.aws-diagram-mcp-server"
+      ],
+      "env": {
+        "FASTMCP_LOG_LEVEL": "ERROR"
+      }
+    },
+    "awslabs.cdk-mcp-server": {
+      "command": "uvx",
+      "args": [
+        "awslabs.cdk-mcp-server@latest"
+      ],
+      "env": {
+        "FASTMCP_LOG_LEVEL": "ERROR"
+      }
+    },
+    "aws-knowledge-mcp-server": {
+      "command": "npx",
+      "args": [
+          "mcp-remote",
+          "https://knowledge-mcp.global.api.aws"
+      ]
+    }
+  },
+  "tools": [
+	"*"
+  ],
+  "allowedTools": [
+    "fs_read",
+    "fs_write",
+    "prompt_understanding",
+    "read_documentation",
+    "search_documentation"
+  ],
+  "toolsSettings": {
+    "execute_bash": {
+      "alwaysAllow": [
+        {
+          "preset": "readOnly"
+        }
+      ]
+    },
+    "use_aws": {
+      "alwaysAllow": [
+        {
+          "preset": "readOnly"
+        }
+      ]
+    }
+  },
+  "resources": [
+  ]
+}
