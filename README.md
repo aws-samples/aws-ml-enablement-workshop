@@ -13,8 +13,8 @@ ML Enablement Workshop は、生成 AI を含めた AI/ML 技術をプロダク�
 ワークショップを始める際は、参加者に対しワークショップの意義と役割を伝える [Day0](https://github.com/aws-samples/aws-ml-enablement-workshop/blob/main/docs/organizer/day0.md) から始めます。Day0 実施後、実践編・改善編の 2 部構成プログラムに進みます。 
 
 * [**Day0**](./docs/organizer/day0.md) で、開始条件の確認と開始前の準備事項を確認します
-* [**実践編**](./docs/organizer/day1.md) で Amazon のプロダクト開発プロセスを実践し新規プロダクト / 機能のプレスリリースを複数作成します。同時に、それらを生成 AI に与え仮説検証を行うためのモックを構築します
-* [**改善編**](./docs/organizer/day2.md) でモックを通じて得られた知見を統合し、参加者自信で Amazon のプロセスを実践しプレスリリースを更新します。その後、今後 3~6 カ月でリリースするための最初のステップを計画します
+* [**実践編**](./docs/organizer/day1.md) で Amazon のプロダクト開発プロセスを実践し、**生成 AI と共に**新規プロダクト / 機能のプレスリリースを複数作成します。同時に、それらから仮説検証を行うためのモックを構築します (参考 : [当日の流れ](https://github.com/aws-samples/aws-ml-enablement-workshop/tree/main/yourwork))
+* [**改善編**](./docs/organizer/day2.md) でモックを通じて得られた知見を統合し、参加者自身で Amazon のプロセスを実践しプレスリリースを更新します。その後、今後 3~6 カ月でリリースするための最初のステップを計画します
 
 | Title |Day0: 目的と役割の確認|実践編: Amazon 流を実践|改善編: 仮説検証の自走を開始|
 |:--------|:---------|:------|:------|
@@ -27,6 +27,10 @@ ML Enablement Workshop のメリットは次の通りです。
 * ⚡ **Amazon のプロダクトづくりのプロセス Working Backwards の学習と実践を短時間で行える**
 * 🤖 **生成 AI を企画からモック構築の全工程に適用する経験を通じプロダクト開発プロセスを洗練できる**
 * 🛠 **モックを使ったフィードバック取得を実践することで、机上の空論に留まらない企画を作成できる**
+
+| Point | Message|
+|:------|:------|
+|<img src="docs/images/top/kiro.svg" width=50/> | 生成 AI として仕様駆動を実践する [Kiro CLI](https://kiro.dev/docs/cli/) を使用しており、ワークショップ実施後に仕様を基にした設計・実装へとスムーズに移行できます。|
 
 ### 成果物例
 

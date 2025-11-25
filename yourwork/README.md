@@ -37,11 +37,10 @@ cd aws-ml-enablement-workshop/yourwork
 pwd
 ```
 
-移っていることを確認ののち、Amazon Q Developer 等のツールを起動します。
+移っていることを確認ののち、Kiro CLI 等のツールを起動します。
 
 ```
-q
-# q chat でも構いません
+kiro-cli
 ```
 
 以下、プロンプトについては "**🤖[Prompt]**" と明示しているので、そちらをコピー、編集して生成 AI のツールに入力してワークを進めてください。
@@ -50,7 +49,7 @@ q
 
 ### 実践編 : ユーザー行動の推定・確認
 
-ワークでは次のプロンプトを使用してください。Amazon Q Developer CLI などの生成 AI ツールに次のプロンプトを与えます。
+ワークでは次のプロンプトを使用してください。Kiro CLI などの生成 AI ツールに次のプロンプトを与えます。
 
 > [!IMPORTANT]
 > 事前に、今回検討する顧客についてまとめたスライドが `customer.png` として `discovery` ディレクトリに保存されているか確認ください。
@@ -190,11 +189,11 @@ Invent を始める前に、事前準備したソリューションを評価し�
 
 ```
 yourwork
-├── .amazonq/                  # カスタムエージェント等、Q Developer CLI 用設定ファイルディレクトリ
-├── prompt/                    # プロンプトファイルディレクトリ
-│   └── prompt.md             # アプリケーション仕様記述ファイル
-├── template/                  # アプリケーションテンプレート
-└── product/                  # 生成されるアプリケーション（Q Developer CLI により作成されます)
+├── .kiro/                  # カスタムエージェント等、Kiro CLI 用設定ファイルディレクトリ
+├── prompt/                 # プロンプトファイルディレクトリ
+│   └── prompt.md           # アプリケーション仕様記述ファイル
+├── template/               # アプリケーションテンプレート
+└── product/                # 生成されるアプリケーション（Kiro CLI により作成されます)
 ```
 
 ### モックの構築
@@ -206,7 +205,7 @@ yourwork
 
 #### 1. ディレクトリの移動
 
-`yourwork` で作業しているか確認します。いなければ、以下のコマンドを実行し、`yourwork` ディレクトリに移動します。
+**`yourwork` で作業しているか確認します。いなければ、以下のコマンドを実行し、`yourwork` ディレクトリに移動します。**
 
 ```
 pwd
@@ -250,12 +249,12 @@ Dashboard URL: https://dxxxxxxxxxx.cloudfront.net
 
 これらの情報は `4. カスタムエージェントの実行` で利用します。
 
-#### 3. Amazon Q Developer CLI の起動
+#### 3. Kiro CLI の起動
 
-以下のコマンドで Amazon Q Developer CLI のモデル構築用エージェントを起動します。
+以下のコマンドで Kiro CLI のモデル構築用エージェントを起動します。
 
 ```
-q chat --agent mock-builder
+kiro-cli --agent mock-builder
 ```
 
 #### 4. カスタムエージェントの実行
@@ -271,7 +270,7 @@ q chat --agent mock-builder
 
 #### 4. ホスティングしたアプリケーションの削除
 
-AWS にデプロイしたアプリケーションを削除したい場合は、Q Developer CLI に、`/product/ ディレクトリを参照し、デプロイしたアプリケーションを削除したい` と伝えてください。
+AWS にデプロイしたアプリケーションを削除したい場合は、Kiro CLI に、`/product/ ディレクトリを参照し、デプロイしたアプリケーションを削除したい` と伝えてください。
 各種リソースの削除が行われます。
 
 ## Test/Iterate

@@ -36,6 +36,7 @@
 - `/template/DEPLOYMENT_GUIDE.md` の技術選定ガイドラインに従う
 - `/product/` ディレクトリを作成し、`/template/app/` の構成を参考にする
 - `template/TRACKER_INTEGRATION_GUIDE.md` に従ってトラッカーを完全に統合する
+- **Tailwind CSS v4の設定**: `/template/app/src/styles/globals.css` を参考に、必ず `@theme` ディレクティブでカスタムカラーを定義し、`@layer base` 内にベーススタイルを記述すること
 </technical_requirements>
 
 <tracker_integration_rules>
