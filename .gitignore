@@ -133,3 +133,6 @@ model/
 notebooks/environment.yml
 yourwork/product
 yourwork/construction
+
+# Node.js
+node_modules/
