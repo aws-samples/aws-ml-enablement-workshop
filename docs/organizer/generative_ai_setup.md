@@ -1,6 +1,6 @@
 # ML Enablement Workshop 生成 AI 環境事前準備
 
-ML Enablement Workshop で開発者 / データサイエンティスト担当の方は、**チーム全員が生成 AI を扱えるように**下記の環境セットアップをワークショップ開始前に完了してください。環境セットアップは、[Amazon Q Developer CLI](https://docs.aws.amazon.com/ja_jp/amazonq/latest/qdeveloper-ug/command-line.html) を想定しています。
+ML Enablement Workshop で開発者 / データサイエンティスト担当の方は、**チーム全員が生成 AI を扱えるように**下記の環境セットアップをワークショップ開始前に完了してください。環境セットアップは、[Kiro CLI](https://kiro.dev/docs/cli/installation/) を想定しています。
 
 なお、Mock の生成以外は [GenU : Generative AI Use Cases](https://aws-samples.github.io/generative-ai-use-cases/en/) で行うこともできます。GenU を使用する場合は、[ワークショップ用のユースケース](/docs/organizer/assets/day0/ML_Enablement_Workshop_GenU.json) をダウンロードし、[ユースケースビルダーにインポート](https://aws-samples.github.io/sample-one-click-generative-ai-solutions/solutions/generative-ai-use-cases-ready-to-use/) してください。
 
@@ -10,31 +10,29 @@ ML Enablement Workshop で開発者 / データサイエンティスト担当の
 - Administrator 権限を保有する IAM ユーザーを人数分発行し、認証情報（アクセスキー、シークレットキー）を準備する
   - ※最小権限の法則上好ましくないため、あくまで一時的な対応としてください。すでに参加者に IAM ユーザーをはじめとした AWS にアクセス可能なプロファイル等が払い出されている場合この手順は不要ですが、モックの作成が可能なことを事前に確認ください
 
-### Amazon Q Developer Pro のライセンス準備
-- Amazon Q Developer Pro のライセンスを人数分準備する
+### サブスクリプションの用意
+- Kiro、もしくは Amazon Q Developer のサブスクリプションを人数分用意します
+
+※ Free/Individual のサブスクリプションで進めて頂くことができます。ただ、この場合データの取り扱いについて十分確認・検討の上でご判断ください。
+
+* [Kiro 導入ガイド：始める前に知っておくべきすべてのこと](https://aws.amazon.com/jp/blogs/news/kiroweeeeeeek-in-japan-day-1-implementation-guide/)
 
 ## 端末でのセットアップ
 
-### 1. Amazon Q Developer CLI のインストール
+### 1. Kiro CLI のインストール
 
-Amazon Q Developer CLIは、コマンドラインでAI支援によるコード生成、チャット、コマンド自動補完を提供するツールです。
+Kiro CLIは、コマンドラインでAI支援によるコード生成、チャット、コマンド自動補完を提供するツールです。
 
-- Windows 以外: [公式ドキュメント](https://docs.aws.amazon.com/amazonq/latest/qdeveloper-ug/command-line-installing.html)
-- Windows の場合: [Qiita記事](https://qiita.com/nagisa_53/items/ab5ef9a8d799ea964e1e)
+- Windows 以外: [AWS Blog](https://aws.amazon.com/jp/blogs/news/introducing-kiro-cli/)
+- Windows の場合: WSL を設定し、Ubuntu としてセットアップします。Amazon Q Developer の設定をご参照ください : [Qiita記事](https://qiita.com/nagisa_53/items/ab5ef9a8d799ea964e1e)
 
 ### 2. AWS CLI のインストールと設定
 
 [AWS CLI インストール方法](https://docs.aws.amazon.com/ja_jp/cli/latest/userguide/getting-started-install.html)
 
 ```bash
-# AWS CLI の設定（IAMユーザーの認証情報を入力）
-aws configure
-
-# 以下の項目を順番に入力：
-# AWS Access Key ID [None]: [IAMユーザーのアクセスキーID]
-# AWS Secret Access Key [None]: [IAMユーザーのシークレットアクセスキー]
-# Default region name [None]: ap-northeast-1
-# Default output format [None]: json
+# AWS CLI の設定（ブラウザで認証）
+aws login
 
 # 設定確認
 aws sts get-caller-identity
@@ -56,22 +54,27 @@ npm --version
 
 https://git-scm.com/downloads
 
-### 5. Amazon Q Developer CLI へのログイン
+### 5. Kiro CLI へのログイン
 
-AWS コンソールから、Amazon Q Developer を検索しサービスページにアクセス。Start URL とリージョンを確認。
-![Amazon Q](/docs/organizer/assets/day0/amazon-q-developer.png)
+AWS コンソールから、Amazon Q Developer / Kiro を検索しサービスページにアクセス。Start URL とリージョンを確認。
+
+**Amazon Q Developer:**
+![Amazon Q Developer](/docs/organizer/assets/day0/amazon-q-developer.png)
+
+**Kiro:**
+![Kiro](/docs/organizer/assets/day0/kiro.png)
 
 ```bash
-# Q Developer Pro にログイン
-q login
+# Kiro にログイン
+kiro-cli login
 
-# Select login method => Use with Pro license
+# Select login method => Use with IDC Account (Free の場合 Builder ID)
 # Enter Start URL => AWS コンソールで確認した値
 # Enter Region => AWS コンソールで確認した Region
-# 表示される URL にアクセスし、Amazon Q Developer の利用を許可
+# 表示される URL にアクセスし、認証・Kiro のアクセスを許可
 
 # 認証後、確認
-q chat
+kiro-cli
 ```
 
 ### (Optional) 画像生成用
@@ -93,7 +96,7 @@ git clone https://github.com/aws-samples/aws-ml-enablement-workshop.git
 cd aws-ml-enablement-workshop/yourwork
 
 # 3. Q Developer CLI のカスタムエージェントを起動
-q chat --agent mock-builder
+kiro-cli --agent mock-builder
 
 # 4. 「アプリを作りたい」など適当な指示を入力
 # 5. アプリケーションの詳細を入力
