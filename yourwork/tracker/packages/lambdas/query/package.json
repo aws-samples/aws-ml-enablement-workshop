@@ -14,8 +14,8 @@
     "nanoid": "^5.1.5"
   },
   "devDependencies": {
-    "@types/aws-lambda": "^8.10.152",
-    "@types/node": "^20.10.0",
-    "typescript": "^5.8.3"
+    "@types/aws-lambda": "^8.10.159",
+    "@types/node": "^24.10.1",
+    "typescript": "^5.9.3"
   }
 }
