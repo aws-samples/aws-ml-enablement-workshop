@@ -1,0 +1,47 @@
+version: 2
+updates:
+  # Template app dependencies
+  - package-ecosystem: "npm"
+    directory: "/yourwork/template/app"
+    schedule:
+      interval: "weekly"
+    groups:
+      vitest:
+        patterns:
+          - "vitest*"
+          - "@vitest/*"
+      react:
+        patterns:
+          - "react"
+          - "react-dom"
+          - "@types/react*"
+      typescript-eslint:
+        patterns:
+          - "@typescript-eslint/*"
+          - "eslint*"
+      testing-library:
+        patterns:
+          - "@testing-library/*"
+      tailwindcss:
+        patterns:
+          - "tailwindcss"
+          - "@tailwindcss/*"
+          - "prettier-plugin-tailwindcss"
+
+  # Tracker backend dependencies
+  - package-ecosystem: "npm"
+    directory: "/yourwork/tracker"
+    schedule:
+      interval: "weekly"
+    groups:
+      aws-cdk:
+        patterns:
+          - "aws-cdk*"
+          - "@aws-cdk/*"
+      aws-sdk:
+        patterns:
+          - "@aws-sdk/*"
+      typescript:
+        patterns:
+          - "typescript"
+          - "@types/*"
