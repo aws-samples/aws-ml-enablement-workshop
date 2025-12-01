@@ -23,7 +23,7 @@
     "@headlessui/react": "^2.2.8",
     "@heroicons/react": "^2.2.0",
     "clsx": "^2.1.1",
-    "framer-motion": "^12.23.16",
+    "framer-motion": "^12.23.25",
     "lucide-react": "^0.544.0",
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
