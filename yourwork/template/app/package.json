@@ -20,7 +20,7 @@
     "analyze": "npm run build && npx vite-bundle-analyzer dist"
   },
   "dependencies": {
-    "@headlessui/react": "^2.2.8",
+    "@headlessui/react": "^2.2.9",
     "@heroicons/react": "^2.2.0",
     "clsx": "^2.1.1",
     "framer-motion": "^12.23.16",
