@@ -66,6 +66,7 @@ ML Enablement Workshop のメリットは次の通りです。
 
 | Customer | Quote |
 |:--------|:---------|
+| <a href="https://prtimes.jp/main/html/rd/p/000000080.000049664.html" target="_blank"><img src="docs/images/cases/studypocket_logotype_withicon_horizontal.png" width=120></a>|  **スタディポケット株式会社** <br/> *ML Enablement Workshop での生成 AI を用いた Working Backwards の実践により、常識を疑う問いに向き合い教育現場に寄りそう機能をリリースすることが出来ました。Day1/Day2 の間に設けられたユーザーインタビューでも、プロトタイプを基に仮説を裏付ける声を得て確信を深めることが出来ました。* |
 | <a href="https://jinsholdings.com/jp/ja/news/jins_ai/" target="_blank"><img src="docs/images/cases/JINS_logo.png" width=120></a>|  **株式会社ジンズ** <br/> *ML Enablement Workshop では、店舗経験者とデータサイエンティストが協働し、生成 AI を活用した新たな顧客体験について具体化しました。顧客課題や JINS の強みについて議論の中で理解を深め、具体的な計画を立てることで、その後のプロジェクトを円滑に進めることができました。* |
 | <a href="https://www.pkshatech.com/" target="_blank"><img src="docs/images/cases/pksha_technology_vertical.png" width=120></a>|  **株式会社 PKSHA Technology** <br/> *Amazon の『Working Backwards』を一通り実施するだけでなく、その後に振り返りとブラッシュアップの機会を設けた二部構成により、当初は不確実であった機能やビジネス計画について、自らの手で見直し・改善を行うことができました。その結果、非常に実践的かつ有用なフレームワークを習得することができたと感じております。* |
 | <a href="https://thebase.com/" target="_blank"><img src="docs/images/cases/base_logo_corporate_RGB.png" width=100></a>|  **BASE株式会社** <br/> *5 つのプロダクトチームで同時並行で実施しましたが、短い時間の中でエンジニアとプロダクトマネージャーとの間で企画・実装・KPIまで濃縮された議論ができ迅速かつ効果的な生成 AI のユースケース実装につながりました* |
