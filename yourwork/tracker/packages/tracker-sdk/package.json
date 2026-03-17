@@ -23,10 +23,10 @@
     "clean": "rm -rf dist"
   },
   "dependencies": {
-    "nanoid": "^5.1.5"
+    "nanoid": "^5.1.6"
   },
   "devDependencies": {
-    "@types/node": "^24.10.1",
+    "@types/node": "^25.0.10",
     "typescript": "^5.9.3",
     "vite": "^7.1.11",
     "vite-plugin-dts": "^4.5.4",
