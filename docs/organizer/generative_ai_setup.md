@@ -50,11 +50,32 @@ node --version
 npm --version
 ```
 
-### 4. Git のインストール (未インストールであれば) 
+### 4. uv（Python パッケージマネージャー）のインストール
+
+Kiro GUI でワークショップを進める場合に必要です。
+
+[uv インストールガイド](https://docs.astral.sh/uv/getting-started/installation/)
+
+```bash
+# インストール（pip を使う場合）
+pip install uv
+
+# または macOS/Linux
+curl -LsSf https://astral.sh/uv/install.sh | sh
+
+# インストール確認
+uv --version
+
+# 依存関係のインストール（aws-ml-enablement-workshop ディレクトリで実行）
+cd aws-ml-enablement-workshop
+uv sync
+```
+
+### 5. Git のインストール (未インストールであれば) 
 
 https://git-scm.com/downloads
 
-### 5. Kiro CLI へのログイン
+### 6. Kiro CLI へのログイン
 
 AWS コンソールから、Amazon Q Developer / Kiro を検索しサービスページにアクセス。Start URL とリージョンを確認。
 
@@ -86,7 +107,7 @@ kiro-cli
 **参考ドキュメント**: [Amazon Nova Canvas を使用したテキストからの画像生成の基本](https://aws.amazon.com/jp/blogs/news/text-to-image-basics-with-amazon-nova-canvas/)
 
 
-### 5. モックアプリケーションの動作確認
+### 6. モックアプリケーションの動作確認
 
 ```bash
 # 1. zip ファイルを解凍
@@ -104,6 +125,6 @@ kiro-cli --agent mock-builder
 # 7. 20~30分待機
 ```
 
-### 6. 作成されたモックアプリケーションの削除
+### 7. 作成されたモックアプリケーションの削除
 
 - 「作成したアプリケーションを削除して」とカスタムエージェントに指示

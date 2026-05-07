@@ -34,6 +34,8 @@ git clone https://github.com/aws-samples/aws-ml-enablement-workshop.git
 
 ### 方法 A : Kiro（GUI）で進める
 
+事前に環境セットアップが必要です : [準備ガイド参照](/docs/organizer/generative_ai_setup.md)
+
 1. Kiro で `aws-ml-enablement-workshop` ディレクトリを開く
 2. チャットに「MLEWをはじめたい」と入力する
 
