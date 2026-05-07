@@ -13,7 +13,7 @@
   "dependencies": {
     "react": "^19.1.1",
     "react-dom": "^19.2.0",
-    "react-router-dom": "^6.20.1",
+    "react-router-dom": "^6.30.3",
     "@tanstack/react-query": "^5.62.0",
     "zustand": "^4.4.1",
     "recharts": "^2.8.0",
