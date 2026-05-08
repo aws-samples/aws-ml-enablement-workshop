@@ -1,6 +1,6 @@
 # ML Enablement Workshop 生成 AI 環境事前準備
 
-ML Enablement Workshop で開発者 / データサイエンティスト担当の方は、**チーム全員が生成 AI を扱えるように**下記の環境セットアップをワークショップ開始前に完了してください。環境セットアップは、[Kiro CLI](https://kiro.dev/docs/cli/installation/) を想定しています。
+ML Enablement Workshop で開発者 / データサイエンティスト担当の方は、**チーム全員が生成 AI を扱えるように**下記の環境セットアップをワークショップ開始前に完了してください。
 
 なお、Mock の生成以外は [GenU : Generative AI Use Cases](https://aws-samples.github.io/generative-ai-use-cases/en/) で行うこともできます。GenU を使用する場合は、[ワークショップ用のユースケース](/docs/organizer/assets/day0/ML_Enablement_Workshop_GenU.json) をダウンロードし、[ユースケースビルダーにインポート](https://aws-samples.github.io/sample-one-click-generative-ai-solutions/solutions/generative-ai-use-cases-ready-to-use/) してください。
 
@@ -17,16 +17,9 @@ ML Enablement Workshop で開発者 / データサイエンティスト担当の
 
 * [Kiro 導入ガイド：始める前に知っておくべきすべてのこと](https://aws.amazon.com/jp/blogs/news/kiroweeeeeeek-in-japan-day-1-implementation-guide/)
 
-## 端末でのセットアップ
+## 端末でのセットアップ（共通）
 
-### 1. Kiro CLI のインストール
-
-Kiro CLIは、コマンドラインでAI支援によるコード生成、チャット、コマンド自動補完を提供するツールです。
-
-- Windows 以外: [AWS Blog](https://aws.amazon.com/jp/blogs/news/introducing-kiro-cli/)
-- Windows の場合: WSL を設定し、Ubuntu としてセットアップします。Amazon Q Developer の設定をご参照ください : [Qiita記事](https://qiita.com/nagisa_53/items/ab5ef9a8d799ea964e1e)
-
-### 2. AWS CLI のインストールと設定
+### 1. AWS CLI のインストールと設定
 
 [AWS CLI インストール方法](https://docs.aws.amazon.com/ja_jp/cli/latest/userguide/getting-started-install.html)
 
@@ -38,7 +31,7 @@ aws login
 aws sts get-caller-identity
 ```
 
-### 3. Node.js と npm のインストール
+### 2. Node.js と npm のインストール
 
 [Node.js ダウンロード](https://nodejs.org/ja/download) から "ビルド済みのNode.js" をダウンロード、インストール。
 
@@ -50,19 +43,43 @@ node --version
 npm --version
 ```
 
+### 3. uv（Python パッケージマネージャー）のインストール
+
+[uv インストールガイド](https://docs.astral.sh/uv/getting-started/installation/)
+
+```bash
+# インストール（pip を使う場合）
+pip install uv
+
+# または macOS/Linux
+curl -LsSf https://astral.sh/uv/install.sh | sh
+
+# インストール確認
+uv --version
+
+# 依存関係のインストール（aws-ml-enablement-workshop ディレクトリで実行）
+cd aws-ml-enablement-workshop
+uv sync
+```
+
 ### 4. Git のインストール (未インストールであれば) 
 
 https://git-scm.com/downloads
 
-### 5. Kiro CLI へのログイン
+## 方法 A : Kiro（GUI）でワークショップを進める
 
-AWS コンソールから、Amazon Q Developer / Kiro を検索しサービスページにアクセス。Start URL とリージョンを確認。
+Kiro GUI は仕様駆動開発をサポートする AI Coding エディタです。
 
-**Amazon Q Developer:**
-![Amazon Q Developer](/docs/organizer/assets/day0/amazon-q-developer.png)
+1. [Kiro](https://kiro.dev) をインストール
+2. インストール後、Kiro Subscription の情報を使用しログインして使用します ([セットアップ参考動画](https://youtu.be/_qmKY_9qtaU?si=StEuV9e2UjxURSEg))
+3. チャットで応答が返ってくることを確認
 
-**Kiro:**
-![Kiro](/docs/organizer/assets/day0/kiro.png)
+## 方法 B : Kiro CLI でワークショップを進める
+
+Kiro CLIは、コマンドラインでAI支援によるコード生成、チャット、コマンド自動補完を提供するツールです。
+
+- [Kiro CLI](https://kiro.dev/docs/cli/installation/) をインストール
+- Kiro CLI でログイン
 
 ```bash
 # Kiro にログイン
@@ -85,8 +102,7 @@ kiro-cli
 
 **参考ドキュメント**: [Amazon Nova Canvas を使用したテキストからの画像生成の基本](https://aws.amazon.com/jp/blogs/news/text-to-image-basics-with-amazon-nova-canvas/)
 
-
-### 5. モックアプリケーションの動作確認
+### 7. モックアプリケーションの動作確認
 
 ```bash
 # 1. zip ファイルを解凍
@@ -104,6 +120,6 @@ kiro-cli --agent mock-builder
 # 7. 20~30分待機
 ```
 
-### 6. 作成されたモックアプリケーションの削除
+### 8. 作成されたモックアプリケーションの削除
 
 - 「作成したアプリケーションを削除して」とカスタムエージェントに指示
