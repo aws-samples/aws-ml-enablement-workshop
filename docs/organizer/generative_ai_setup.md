@@ -71,28 +71,15 @@ https://git-scm.com/downloads
 Kiro GUI は仕様駆動開発をサポートする AI Coding エディタです。
 
 1. [Kiro](https://kiro.dev) をインストール
-2. インストール後、Kiro Subscription の情報を使用しログインして使用します
-
-Kiro が事前準備の確認からワークショップの各ステップまで自動でガイドします。
+2. インストール後、Kiro Subscription の情報を使用しログインして使用します ([セットアップ参考動画](https://youtu.be/_qmKY_9qtaU?si=StEuV9e2UjxURSEg))
+3. チャットで応答が返ってくることを確認
 
 ## 方法 B : Kiro CLI でワークショップを進める
 
-### 5. Kiro CLI のインストール
-
 Kiro CLIは、コマンドラインでAI支援によるコード生成、チャット、コマンド自動補完を提供するツールです。
 
-- Windows 以外: [AWS Blog](https://aws.amazon.com/jp/blogs/news/introducing-kiro-cli/)
-- Windows の場合: WSL を設定し、Ubuntu としてセットアップします。Amazon Q Developer の設定をご参照ください : [Qiita記事](https://qiita.com/nagisa_53/items/ab5ef9a8d799ea964e1e)
-
-インストール後、Kiro CLI へログインします
-
-AWS コンソールから、Amazon Q Developer / Kiro を検索しサービスページにアクセス。Start URL とリージョンを確認。
-
-**Amazon Q Developer:**
-![Amazon Q Developer](/docs/organizer/assets/day0/amazon-q-developer.png)
-
-**Kiro:**
-![Kiro](/docs/organizer/assets/day0/kiro.png)
+- [Kiro CLI](https://kiro.dev/docs/cli/installation/) をインストール
+- Kiro CLI でログイン
 
 ```bash
 # Kiro にログイン
