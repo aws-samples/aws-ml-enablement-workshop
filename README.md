@@ -30,7 +30,7 @@ ML Enablement Workshop のメリットは次の通りです。
 
 | Point | Message|
 |:------|:------|
-|<img src="docs/images/top/kiro.svg" width=50/> | 生成 AI として仕様駆動を実践する [Kiro CLI](https://kiro.dev/docs/cli/) を使用しており、ワークショップ実施後に仕様を基にした設計・実装へとスムーズに移行できます。|
+|<img src="docs/images/top/kiro.svg" width=50/> | 生成 AI として仕様駆動を実践する [Kiro](https://kiro.dev/) を使用しており、ワークショップ実施後に仕様を基にした設計・実装へとスムーズに移行できます。|
 
 ### 成果物例
 
