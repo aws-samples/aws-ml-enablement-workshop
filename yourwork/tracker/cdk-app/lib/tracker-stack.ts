@@ -184,9 +184,22 @@ export class TrackerStack extends Stack {
       sourcesContent: false,
     };
 
+    // The Lambda sources live in ../packages/lambdas, i.e. outside this CDK app.
+    // NodejsFunction defaults projectRoot to the directory holding the nearest
+    // lock file (cdk-app/) and rejects any entry that is not under projectRoot,
+    // so point both at the npm workspace root (yourwork/tracker) that owns the
+    // Lambda packages. Bundling then runs with the workspace root as its cwd,
+    // where `npm ci` has installed esbuild and the @aws-sdk/* dependencies.
+    const workspaceRoot = path.join(__dirname, '..', '..');
+    const lambdaSource = (packageName: string) => ({
+      entry: path.join(workspaceRoot, 'packages', 'lambdas', packageName, 'src', 'index.ts'),
+      projectRoot: workspaceRoot,
+      depsLockFilePath: path.join(workspaceRoot, 'package-lock.json'),
+    });
+
     const eventIngestionFunction = new lambdaNodejs.NodejsFunction(this, 'EventIngestionFunction', {
       functionName: `mleww3-event-ingestion-${props.environmentName}`,
-      entry: path.join(__dirname, '..', '..', 'packages', 'lambdas', 'event-ingestion', 'src', 'index.ts'),
+      ...lambdaSource('event-ingestion'),
       handler: 'handler',
       runtime: lambda.Runtime.NODEJS_20_X,
       memorySize: 256,
@@ -203,7 +216,7 @@ export class TrackerStack extends Stack {
 
     const queryFunction = new lambdaNodejs.NodejsFunction(this, 'QueryFunction', {
       functionName: `mleww3-query-${props.environmentName}`,
-      entry: path.join(__dirname, '..', '..', 'packages', 'lambdas', 'query', 'src', 'index.ts'),
+      ...lambdaSource('query'),
       handler: 'handler',
       runtime: lambda.Runtime.NODEJS_20_X,
       memorySize: 512,
@@ -220,16 +233,7 @@ export class TrackerStack extends Stack {
 
     const streamAggregationFunction = new lambdaNodejs.NodejsFunction(this, 'StreamAggregationFunction', {
       functionName: `mleww3-stream-aggregation-${props.environmentName}`,
-      entry: path.join(
-        __dirname,
-        '..',
-        '..',
-        'packages',
-        'lambdas',
-        'stream-aggregation',
-        'src',
-        'index.ts'
-      ),
+      ...lambdaSource('stream-aggregation'),
       handler: 'handler',
       runtime: lambda.Runtime.NODEJS_20_X,
       memorySize: 128,

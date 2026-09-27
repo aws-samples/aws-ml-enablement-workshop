@@ -12,8 +12,36 @@
   --color-primary-800: #075985;
   --color-primary-900: #0c4a6e;
   
+  /* 影のトークン（Tailwind v4 の --shadow-* 名前空間）
+     ここで定義すると shadow-soft / hover:shadow-medium のように
+     variant 付きでも使えるユーティリティが生成される */
+  --shadow-soft: 0 2px 8px -2px rgb(15 23 42 / 0.08), 0 1px 2px -1px rgb(15 23 42 / 0.04);
+  --shadow-medium: 0 8px 24px -6px rgb(15 23 42 / 0.12), 0 2px 6px -2px rgb(15 23 42 / 0.06);
+  --shadow-strong: 0 24px 48px -12px rgb(15 23 42 / 0.18), 0 8px 16px -8px rgb(15 23 42 / 0.08);
+
   --animate-fade-in: fadeIn 0.5s ease-in-out;
   --animate-slide-up: slideUp 0.5s ease-out;
+
+  /* --animate-* から参照される keyframes は @theme 内に置く（v4 の仕様） */
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+
+  @keyframes slideUp {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
 }
 
 @layer base {
@@ -27,17 +55,107 @@
 }
 
 @layer components {
+  /* ---- レイアウト ---- */
+  .container-custom {
+    @apply w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
+  }
+
+  .section-padding {
+    @apply py-16 lg:py-24;
+  }
+
+  /* ---- カード ---- */
   .card {
     @apply bg-white rounded-xl shadow-sm border border-gray-100;
     @apply transition-all duration-200;
   }
-  
+
+  .pricing-card {
+    @apply relative flex flex-col h-full bg-white rounded-2xl border border-gray-200 p-8 shadow-soft;
+    @apply transition-all duration-200;
+  }
+
+  .testimonial-card {
+    @apply flex flex-col h-full bg-white rounded-2xl border border-gray-100 p-6 shadow-soft;
+    @apply transition-all duration-200;
+  }
+
+  /* pricing-card の border / shadow を上書きするので pricing-card より後に置く */
+  .pricing-card-popular {
+    @apply border-primary-500 shadow-medium;
+  }
+
+  /* ---- ボタン ---- */
+  .btn-primary {
+    @apply inline-flex items-center justify-center rounded-lg px-6 py-3 font-medium;
+    @apply bg-primary-600 text-white hover:bg-primary-700;
+    @apply transition-colors duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-500;
+    @apply disabled:opacity-50 disabled:cursor-not-allowed;
+  }
+
+  .btn-secondary {
+    @apply inline-flex items-center justify-center rounded-lg px-6 py-3 font-medium;
+    @apply bg-white text-primary-700 border border-primary-200 hover:bg-primary-50;
+    @apply transition-colors duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-500;
+    @apply disabled:opacity-50 disabled:cursor-not-allowed;
+  }
+
+  .btn-ghost {
+    @apply inline-flex items-center justify-center rounded-lg px-4 py-2 font-medium;
+    @apply text-gray-700 hover:text-primary-600 hover:bg-gray-100;
+    @apply transition-colors duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-500;
+  }
+
+  /* btn-primary / btn-secondary の padding を上書きするので後に置く */
+  .btn-lg {
+    @apply px-8 py-4 text-lg;
+  }
+
+  /* ---- フォーム ---- */
+  .form-label {
+    @apply block mb-2 text-sm font-medium text-gray-700;
+  }
+
+  .form-input {
+    @apply w-full rounded-lg border border-gray-300 px-4 py-3 text-gray-900 placeholder-gray-400;
+    @apply transition-colors duration-200 focus:border-primary-500 focus:outline-none focus:ring-2 focus:ring-primary-500;
+  }
+
+  .form-textarea {
+    @apply w-full rounded-lg border border-gray-300 px-4 py-3 text-gray-900 placeholder-gray-400;
+    @apply transition-colors duration-200 focus:border-primary-500 focus:outline-none focus:ring-2 focus:ring-primary-500;
+    @apply resize-y min-h-32;
+  }
+
+  /* ---- その他 ---- */
   .gradient-text {
     @apply bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent;
+  }
+
+  /* ヒーロー背景のドットパターン（装飾用） */
+  .hero-pattern {
+    background-image: radial-gradient(
+      circle at 1px 1px,
+      var(--color-primary-200) 1px,
+      transparent 0
+    );
+    background-size: 24px 24px;
+  }
+
+  /* 送信中インジケーター */
+  .spinner {
+    @apply inline-block w-4 h-4 rounded-full border-2 border-current border-t-transparent;
+    animation: mlewSpin 0.6s linear infinite;
   }
 }
 
 /* Custom animations */
+@keyframes mlewSpin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
 @keyframes fadeInUp {
   from {
     opacity: 0;

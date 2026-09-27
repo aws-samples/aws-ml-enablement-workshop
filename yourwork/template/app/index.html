@@ -15,6 +15,28 @@
     <script type="module" src="/src/main.tsx"></script>
     
     <script>
+      // ブラウザごとに永続する訪問者 ID を発行する。
+      // localStorage / crypto.randomUUID が使えない環境では 'anonymous' にフォールバックする。
+      function getVisitorId() {
+        var STORAGE_KEY = 'mlew-visitor-id';
+        try {
+          var stored = window.localStorage.getItem(STORAGE_KEY);
+          if (stored) {
+            return stored;
+          }
+          if (!window.crypto || typeof window.crypto.randomUUID !== 'function') {
+            return 'anonymous';
+          }
+          var generated = window.crypto.randomUUID();
+          window.localStorage.setItem(STORAGE_KEY, generated);
+          return generated;
+        } catch (error) {
+          // プライベートブラウジングや Cookie ブロック時はここに入る
+          console.warn('Failed to persist visitor ID. Falling back to anonymous.', error);
+          return 'anonymous';
+        }
+      }
+
       // MLEW Tracker initialization
       if (typeof window !== 'undefined' && window.MLEWTracker) {
         const tracker = new window.MLEWTracker.Tracker({
@@ -26,8 +48,8 @@
           debug: true // Enable debug mode for development
         });
         
-        // Set anonymous user ID for template
-        tracker.setUserId('anonymous');
+        // ブラウザ単位で永続する ID を設定する（利用者単位の指標を出すために必要）
+        tracker.setUserId(getVisitorId());
         
         // Make tracker globally available
         window.tracker = tracker;

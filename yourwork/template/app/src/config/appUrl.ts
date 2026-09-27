@@ -1,6 +1,7 @@
 /**
  * App URL Configuration
- * ビルド時に環境変数 VITE_APP_URL から取得される Pomodoro Timer App の URL
+ * ビルド時に環境変数 VITE_APP_URL から取得されるアプリ本体の URL
+ * 未設定の場合は統合アプリ内の /app ルートにフォールバックする
  */
 
 export const getAppUrl = (): string => {

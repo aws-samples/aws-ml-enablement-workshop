@@ -52,6 +52,22 @@ window.MLEWTracker = {
     
     <!-- ステップ2: SDKの初期化（body閉じタグ直前） -->
     <script>
+        // ブラウザごとに永続する匿名ID（訪問者ID）を取得する
+        // 詳細は「ユーザーID設定」の節を参照
+        function getVisitorId() {
+            try {
+                let id = localStorage.getItem('mlew-visitor-id');
+                if (!id) {
+                    id = crypto.randomUUID();
+                    localStorage.setItem('mlew-visitor-id', id);
+                }
+                return id;
+            } catch (e) {
+                // localStorage / crypto.randomUUID が使えない環境のフォールバック
+                return 'anonymous';
+            }
+        }
+
         // 🚨 重要: window.MLEWTracker.Trackerを自作実装しない
         // 外部SDKが提供するクラスを使用する
         if (typeof window !== 'undefined' && window.MLEWTracker) {
@@ -64,8 +80,8 @@ window.MLEWTracker = {
                 debug: true  // 開発環境では true に設定
             });
             
-            // ユーザーID設定（オプション）
-            tracker.setUserId('anonymous');
+            // ユーザーID設定（推奨: 利用者単位の指標を出すために設定する）
+            tracker.setUserId(getVisitorId());
             
             // グローバルにアクセス可能にする
             window.tracker = tracker;
@@ -115,16 +131,38 @@ window.MLEWTracker = {
 tracker.setUserId('user-12345');  // 実際のユーザーID
 ```
 
-### モック実装・ログイン機能がない場合
+### モック実装・ログイン機能がない場合（推奨: ブラウザごとの永続的な匿名ID）
+
+ログイン機能がないときは、**ブラウザごとに永続する匿名ID（訪問者ID）を発行**します。`localStorage` のキー `mlew-visitor-id` に `crypto.randomUUID()` の値を保存し、2回目以降のアクセスでは保存済みの値を再利用します。
+
 ```javascript
-// 匿名ユーザーとして設定
-tracker.setUserId('anonymous');  // または 'guest-' + ランダムID
+// ブラウザごとに永続する匿名ID（訪問者ID）を取得する
+function getVisitorId() {
+  try {
+    let id = localStorage.getItem('mlew-visitor-id');
+    if (!id) {
+      id = crypto.randomUUID();
+      localStorage.setItem('mlew-visitor-id', id);
+    }
+    return id;
+  } catch (e) {
+    // localStorage が使えない（プライベートブラウジング等）、
+    // crypto.randomUUID が無い（HTTPS でない環境等）場合のフォールバック
+    return 'anonymous';
+  }
+}
+
+// 訪問者IDをユーザーIDとして設定する
+tracker.setUserId(getVisitorId());
 ```
 
 > ⚠️ **重要**: ユーザーIDは分析の精度に影響します。
 > - ログイン機能がある場合: 実際のユーザーIDを使用
-> - ログイン機能がない場合: 'anonymous' という値を利用
+> - ログイン機能がない場合: `localStorage` の `mlew-visitor-id` に保存した永続的な匿名ID（`crypto.randomUUID()`）を使用
+> - `localStorage` や `crypto.randomUUID` が使えない環境: `'anonymous'` にフォールバック（その端末の利用は区別できなくなる）
 > - 未設定の場合: セッションベースの追跡のみ
+
+> ❌ **全利用者に `'anonymous'` を固定で設定しないでください**: 全員のイベントが同一IDにまとまるため、「1人あたりの利用回数」「継続率」「再訪率」といった利用者単位の指標が原理的に算出できなくなります。モックへの反応を実データで測るというワークショップの目的が果たせないので、`'anonymous'` は上記が動かない環境での最後の手段としてのみ使ってください。
 
 ## React/TypeScript サービス層の実装
 
