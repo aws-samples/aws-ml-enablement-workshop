@@ -66,6 +66,11 @@ uv sync
 
 https://git-scm.com/downloads
 
+## 利用する AI コーディングツールの選択
+
+モックの作成には、下記の方法 A 〜 D のいずれかを使います。**どれか 1 つが利用できればワークは完走できます**ので、複数を用意する必要はありません。
+組織のセキュリティポリシーや、すでに契約しているサブスクリプション・ライセンスに合わせて選んでください。
+
 ## 方法 A : Kiro（GUI）でワークショップを進める
 
 Kiro GUI は仕様駆動開発をサポートする AI Coding エディタです。
@@ -102,6 +107,67 @@ kiro-cli
 
 **参考ドキュメント**: [Amazon Nova Canvas を使用したテキストからの画像生成の基本](https://aws.amazon.com/jp/blogs/news/text-to-image-basics-with-amazon-nova-canvas/)
 
+## 方法 C : Claude Code でワークショップを進める
+
+Claude Code は、ターミナルで動作する Anthropic のコーディングエージェントです。
+
+- [Claude Code のセットアップ](https://code.claude.com/docs/en/setup) に従ってインストール（対応 OS と OS ごとのインストール方法が記載されています）
+
+```bash
+# インストールの確認
+claude --version
+
+# インストール状況と設定の診断
+claude doctor
+
+# 起動（初回はブラウザでのログインが案内されます）
+claude
+
+# 後からアカウントを切り替える場合は、セッション内で /login
+```
+
+> [!IMPORTANT]
+> Claude Code の利用には Pro / Max / Team / Enterprise のいずれか、または Claude Console のアカウントが必要です。無料の claude.ai プランは対象外です。詳細は [Quickstart](https://code.claude.com/docs/en/quickstart) を参照してください。
+
+> [!TIP]
+> **Amazon Bedrock 経由で利用することもできます。** AWS アカウントの認証情報をそのまま使えるため、AWS を前提に進める本ワークショップでは選択肢になります。
+>
+> 1. [Amazon Bedrock コンソール](https://console.aws.amazon.com/bedrock/) の Model catalog で Anthropic のモデルを選び、ユースケースフォームを送信してモデルアクセスを有効化する（AWS アカウントごとに 1 回）
+> 2. `claude` を起動し、ログイン画面で **3rd-party platform** → **Amazon Bedrock** を選ぶ（すでにログイン済みの場合はセッション内で `/setup-bedrock`）
+>
+> ウィザードが AWS プロファイル・リージョン・利用するモデルを設定します。必要な IAM 権限（`bedrock:InvokeModel` 等）を含む詳細は [Claude Code on Amazon Bedrock](https://code.claude.com/docs/en/amazon-bedrock) を参照してください。
+
+## 方法 D : OpenAI Codex CLI でワークショップを進める
+
+OpenAI Codex CLI は、ターミナルで動作する OpenAI のコーディングエージェントです。
+
+- [Codex CLI のドキュメント](https://learn.chatgpt.com/docs/codex/cli) に従ってインストール
+
+```bash
+# ログイン（ブラウザが開き、ChatGPT アカウントでサインインします）
+codex login
+
+# 認証方法の確認
+codex login status
+
+# ChatGPT アカウントの代わりに OpenAI API キーを使う場合
+printenv OPENAI_API_KEY | codex login --with-api-key
+
+# 起動
+codex
+```
+
+> [!NOTE]
+> どの ChatGPT プランで Codex を利用できるかは、公式ドキュメントの [認証オプション](https://learn.chatgpt.com/docs/auth) から確認してください。プランごとの対応状況は変更されるため、ここには記載しません。
+
+## モデルについて
+
+**各ツールの既定モデルで十分です。** 品質が足りないと感じた場合は、モデルを変えるより先に thinking / reasoning effort（思考にかける量）を上げてください。モデルの切り替えよりも結果に効きやすいレバーです。
+
+具体的なモデル名やモデル ID はここには記載しません。世代交代が速く、書いた時点で古くなるためです。現在利用できるモデルは、各ツールのモデル選択機能で確認してください。
+
+**参考ドキュメント**: [Choosing a model](https://platform.claude.com/docs/en/about-claude/models/choosing-a-model)
+
 ### 7. モックアプリケーションの動作確認
 
 ```bash
@@ -111,7 +177,7 @@ git clone https://github.com/aws-samples/aws-ml-enablement-workshop.git
 # 2. mock を作成するディレクトリへ移動
 cd aws-ml-enablement-workshop/yourwork
 
-# 3. Q Developer CLI のカスタムエージェントを起動
+# 3. Kiro CLI のカスタムエージェントを起動
 kiro-cli --agent mock-builder
 
 # 4. 「アプリを作りたい」など適当な指示を入力
@@ -119,6 +185,26 @@ kiro-cli --agent mock-builder
 # 6. Tracker情報は「なし」と回答
 # 7. 20~30分待機
 ```
+
+方法 C / 方法 D を利用する場合は、上記の 3. を次のコマンドに置き換えてください（4. 以降は同じです）。
+
+**方法 C : Claude Code**
+
+```bash
+# 3. Claude Code を起動
+claude
+```
+
+`yourwork/CLAUDE.md` と `yourwork/AGENTS.md` が読み込まれた状態で起動します。`yourwork/.claude/skills/mock-builder/` にモック構築用の skill があるため、「アプリを作りたい」と依頼すればモック構築の手順に入ります（`/mock-builder` と明示的に呼び出すこともできます）。
+
+**方法 D : OpenAI Codex CLI**
+
+```bash
+# 3. Codex CLI を起動
+codex
+```
+
+`yourwork/AGENTS.md` が読み込まれた状態で起動します。「アプリを作りたい」と依頼し、作業の起点として `yourwork/prompt/prompt.md` を渡してください。
 
 ### 8. 作成されたモックアプリケーションの削除
 

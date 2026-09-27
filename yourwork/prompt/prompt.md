@@ -1,7 +1,14 @@
-<role>
-あなたは経験豊富なソフトウェアエンジニアです。
-ユーザーが<application_requirements></application_requirements>で定義したMVP（Minimum Viable Product）レベルの Web アプリケーションを実装する専門家として、以下のタスクを実行してください。
-</role>
+このプロンプトは `aws-ml-enablement-workshop/yourwork` をカレントディレクトリとして実行します。以下に出てくるパスはすべてこのディレクトリからの相対パスです。
+
+# このプロンプトで作るもの
+
+`<application_requirements>` で定義された Web アプリケーションを、MVP として動作する状態まで実装し、`<tracker_configuration>` の MLEW トラッカーで利用者の反応を計測できる形にして AWS にデプロイします。
+
+判断に迷ったときは、次の基準で決めてください。
+
+- **MVP 優先**: 要件を満たす最小の構成を選びます。機能を増やすより、画面が一通り動くことを先に成立させます。
+- **モック前提**: バックエンド API・データベース・外部サービス連携はモック実装で構いません。トラッカーだけは例外で、実際の SDK と実際のエンドポイントを使います。
+- **UI の動作確認を最優先**: このワークショップの目的は実際の利用者に触ってもらって反応を測ることなので、内部設計の美しさよりも、画面が表示され操作でき計測が飛ぶことを優先します。
 
 <application_requirements>
 {ここに作成したいアプリケーションの詳細を入力してください}
@@ -15,68 +22,54 @@
 - **Tracker SDK URL** : `https://xxxxxxxx.cloudfront.net/tracker-sdk.js`
 </tracker_configuration>
 
+# 成果物
 
-<deliverables>
-以下の成果物を完全に実装してください：
-1. **ランディングページ（LP）**: アプリケーションへの導線となる魅力的なページ
-2. **メインアプリケーション**: 完全に動作するMVPレベルの実装
-3. **インフラストラクチャ**: CloudFormationテンプレートとデプロイスクリプト
-</deliverables>
+1. **ランディングページ（LP）**: アプリケーションへの導線となるページ
+2. **メインアプリケーション**: MVP レベルで一通り動作する実装
+3. **インフラストラクチャ**: CloudFormation テンプレートとデプロイ手順
 
-<implementation_constraints>
-- **データ処理**: すべてのバックエンドAPIやデータベース連携はモック実装とする（<tracker_configuration></tracker_configuration>のみは例外で、実際に SDK を利用する)
-- **サンプルデータ**: イレギュラーな入力を防ぐため、事前定義されたサンプルデータを用意する
-- **外部連携**: 外部サービスとの連携はすべてモックレスポンスで実装する
-- **UI優先**: ユーザーインターフェースの動作確認を最優先とする
-- **言語設定**: 特別な指定がない限り、すべてのコンテンツは日本語で作成する
-- **画像**: 画像はプレースホルダーを利用してください。（アプリケーション完成後、人物画像や商品画像、風景画像が必要な部分については awslabs.nova-canvas-mcp-server を利用して生成した画像を利用する。生成した画像はpublicフォルダに配置し、直接パスで参照する
-</implementation_constraints>
+作業場所は `product/` ディレクトリです（ファイルではなくディレクトリとして作成してください）。技術選定は `template/DEPLOYMENT_GUIDE.md` に従い、構成は `template/app/` を参考にします。
 
-<technical_requirements>
-- `/template/DEPLOYMENT_GUIDE.md` の技術選定ガイドラインに従う
-- `/product/` ディレクトリを作成し、`/template/app/` の構成を参考にする
-- `template/TRACKER_INTEGRATION_GUIDE.md` に従ってトラッカーを完全に統合する
-- **Tailwind CSS v4の設定**: `/template/app/src/styles/globals.css` を参考に、必ず `@theme` ディレクティブでカスタムカラーを定義し、`@layer base` 内にベーススタイルを記述すること
-</technical_requirements>
+# 実装の方針
 
-<tracker_integration_rules>
-- 以下の要素には必ずトラッキングを実装してください
-  - すべてのCTAボタン（購入、申込み、問い合わせ等）
-  - すべてのナビゲーションリンク
-  - すべてのフォーム送信イベント
-- applicationIdは製品名に基づいて適切に設定する
-- エンドポイントは <tracker_configuration></tracker_configuration> で指定されたエンドポイントをそのまま利用する
-- **外部 SDK `tracker-sdk.js` を呼び出して利用すること（独自実装はしない）**
-</tracker_integration_rules>
+- **サンプルデータ**: イレギュラーな入力で画面が壊れないよう、事前定義したサンプルデータを用意します。
+- **言語**: 特別な指定がない限り、画面に出るテキストはすべて日本語にします。
+- **画像**: まずプレースホルダーで実装を完成させます。アプリケーションが動いたあと、画像生成 MCP が利用できる場合（例: Amazon Nova Canvas の MCP サーバー）は人物・商品・風景の画像を生成し、`public/` に配置して直接パスで参照します。画像生成 MCP が使えない環境では、プレースホルダーのままで構いません。
+- **Tailwind CSS v4 の設定**: `template/app/src/styles/globals.css` を参考に、カスタムカラーは `@theme` ディレクティブで定義し、ベーススタイルは `@layer base` 内に記述します。v4 は設定を CSS 側で行う方式のため、旧来の設定ファイルに色を書いてもクラスが生成されず、配色が反映されない画面になります。
 
-<execution_phases>
-**Phase 1: インフラ準備フェーズ（即座に実行）**
-<phase1_tasks>
-1. `/product/` ディレクトリを作成(ファイルとして作成せず、ディレクトリとして作成すること)
-2. `/template/app/cloudformation.yaml` を cp コマンドでコピーして、`ProjectName` のみ修正
-3. CloudFormationスタック作成をバックグラウンドで開始（完了を待たずにPhase2へ進む）
-</phase1_tasks>
+# トラッカーの統合
 
-**Phase 2: アプリケーション開発フェーズ（Phase 1終了後、即座に着手）**
-<phase2_tasks>
-1. `construction/plan.md` に詳細な実装計画を日本語で作成（チェックボックス付き）
-2. 各コンポーネントを順次実装し、完了したらチェックボックスにマークを付ける
-3. `/template/app/` の実装を参考にすべての成果物の実装を完了させる
-4. 実装完了後、Nova Canvas MCP で画像生成を行い、プレースホルダーを置き換える(Nova Canvas MCP が利用できない場合はスキップ)
-5. `npm run build` でビルドの成功を確認
-6. アプリケーションのルーティングに問題がないことを確認
-7. Tracker 用の SDK がダミーではないことを確認（絶対に確認すること）
-8. Phase 1のCloudFormation完了を確認後、AWSにデプロイ
-</phase2_tasks>
-</execution_phases>
+計測の実装は `template/TRANCKER_INTEGRATION_GUIDE.md` に従います。統合の要点は次の3つです。
 
-<cleanup_commands>
-ユーザーから削除指示があった場合には、以下の<cleanup_tasks></cleanup_tasks>を実行すること
-    <cleanup_tasks>
-    1. CloudFormationスタックに含まれるS3バケットを特定
-    2. 各S3バケット内のすべてのオブジェクトを、削除マーカーを含めて削除
-    3. S3バケットが空になったことを確認
-    4. CloudFormationスタックを削除
-    5. 削除の完了を確認
-    </cleanup_tasks>
-</cleanup_commands>
+- **外部 SDK `tracker-sdk.js` を script タグで読み込んで使います。** トラッカーを自分で実装すると、見た目は動いているのにイベントがどこにも送信されず、実データで反応を測るというワークショップの目的が達成できません。SDK の中身は書き換えず、読み込んで使うだけにしてください。
+- **エンドポイントと API Key は `<tracker_configuration>` の値をそのまま使います。** `applicationId` は製品名に基づいて設定します。
+- **計測対象**: すべての CTA ボタン（購入・申込み・問い合わせなど）、すべてのナビゲーションリンク、すべてのフォーム送信イベント。
+
+# 進め方
+
+**Phase 1: インフラ準備（最初に着手）**
+
+`template/app/cloudformation.yaml` を `product/` にコピーし、`ProjectName` だけを書き換えてスタック作成を開始します。スタック作成には時間がかかるので、完了を待たずにバックグラウンドで走らせたまま Phase 2 の開発に進んでください。待ち時間をアプリ実装に使えます。
+
+**Phase 2: アプリケーション開発**
+
+`construction/plan.md` にチェックボックス付きの実装計画を日本語で作成し、実装しながら進捗を更新します。実装が固まったら Phase 1 のスタック作成完了を確認して、ビルド成果物を AWS にデプロイします。
+
+# 完了条件
+
+以下がすべて満たされた時点で完了です。「確認しました」という報告では完了とせず、それぞれコマンドの出力か該当行を示してください。
+
+- `npm run build` が成功する — コマンドの出力（末尾のビルド結果）を示す
+- ルーティングが機能する — LP から各画面へ遷移でき、直接 URL でも表示されることを、確認した経路とともに示す
+- `tracker-sdk.js` の外部読み込みが実在する — `grep -rn "tracker-sdk.js" product/` の出力で、`<tracker_configuration>` の SDK URL を指す script タグの該当行を示す
+- デプロイ後の URL が開ける — CloudFront の URL と、そこへのアクセスが成功した結果を示す
+
+# 削除
+
+ユーザーから明示的な削除指示があった場合にのみ、次の順序で実行します。順序を変えると、中身が残っているバケットのせいでスタック削除が失敗します。
+
+1. CloudFormation スタックに含まれる S3 バケットを特定する
+2. 各 S3 バケット内のすべてのオブジェクトを、削除マーカーを含めて削除する
+3. S3 バケットが空になったことを確認する
+4. CloudFormation スタックを削除する
+5. 削除が完了したことを確認する
