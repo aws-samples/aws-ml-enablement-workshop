@@ -40,6 +40,10 @@
       },
       "disabled": false,
       "autoApprove": []
+    },
+    "nx-plugin-for-aws": {
+      "command": "npx",
+      "args": ["-y", "@aws/nx-plugin-mcp"]
     }
   },
   "tools": [
@@ -80,6 +84,7 @@
   "resources": [
     "file://README.md",
     "file://AGENTS.md",
+    "file://prompt/prompt.md",
     "file://template/DEPLOYMENT_GUIDE.md",
     "file://template/TRANCKER_INTEGRATION_GUIDE.md"
   ],

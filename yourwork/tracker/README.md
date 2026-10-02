@@ -51,6 +51,8 @@ aws cloudformation deploy \
 </script>
 ```
 
+> ⚠️ 上のインライン初期化は CSP の無いサイト向けです。CSP のあるサイト（ワークショップのモックは `script-src 'self'`）ではインライン script が実行されないため、初期化をバンドルされる JS に移し、SDK のオリジン（Tracker SDK URL のスキーム+ホスト）を `script-src` に追加してください。モックでの具体的な手順は `yourwork/template/TRANCKER_INTEGRATION_GUIDE.md` を参照してください。
+
 ### 3. ダッシュボードでデータ確認
 
 デプロイ後に表示されるDashboard URLにアクセスしてデータが確認可能です。

@@ -36,14 +36,28 @@ aws sts get-caller-identity
 [Node.js ダウンロード](https://nodejs.org/ja/download) から "ビルド済みのNode.js" をダウンロード、インストール。
 
 ```bash
-# Node.js のバージョン確認（v18.0.0 以上必須）
+# Node.js のバージョン確認（v22.12.0 以上、または v20.19.0 以上が必須。v18 ではモックをビルドできません）
 node --version
 
 # npm のバージョン確認（v8.0.0 以上必須）
 npm --version
 ```
 
-### 3. uv（Python パッケージマネージャー）のインストール
+### 3. pnpm のインストール
+
+モックは pnpm でワークスペースを作成・ビルドします（npm では依存をインストールできません）。
+
+```bash
+# インストール
+npm install -g pnpm
+
+# インストール確認
+pnpm --version
+```
+
+### 4. uv（Python パッケージマネージャー）のインストール
+
+ワークショップの依存関係のほか、モックのビルド（infra の checkov を `uvx` で実行）にも使います。未インストールだとモックのビルドが失敗します。
 
 [uv インストールガイド](https://docs.astral.sh/uv/getting-started/installation/)
 
@@ -62,7 +76,7 @@ cd aws-ml-enablement-workshop
 uv sync
 ```
 
-### 4. Git のインストール (未インストールであれば) 
+### 5. Git のインストール (未インストールであれば) 
 
 https://git-scm.com/downloads
 
@@ -183,8 +197,11 @@ kiro-cli --agent mock-builder
 # 4. 「アプリを作りたい」など適当な指示を入力
 # 5. アプリケーションの詳細を入力
 # 6. Tracker情報は「なし」と回答
-# 7. 20~30分待機
+# 7. 20~30分待機（このうちワークスペース作成 約 1.5 分、build 約 50 秒、初回デプロイ 約 4 分）
 ```
+
+> [!IMPORTANT]
+> **CDK bootstrap はアカウントごとに初回 1 回必要です。** エージェントが `yourwork/product` を作成した後、`product/` で `pnpm nx bootstrap infra` を実行します（通常はエージェントが実行します）。モックのデプロイ先リージョンと WAF 用の us-east-1 の両方が bootstrap されます。未 bootstrap のアカウントではデプロイが失敗します。この動作確認で一度実行しておけば、同じアカウントでは当日の再実行は不要です。
 
 方法 C / 方法 D を利用する場合は、上記の 3. を次のコマンドに置き換えてください（4. 以降は同じです）。
 
@@ -209,3 +226,5 @@ codex
 ### 8. 作成されたモックアプリケーションの削除
 
 - 「作成したアプリケーションを削除して」とカスタムエージェントに指示
+- 手動で削除する場合は、`yourwork/product` で `pnpm nx destroy-sandbox infra` を実行
+- WAF と KMS キーに 1 デプロイあたり月額 約 $8 の固定費がかかるため、動作確認が終わったら削除してください
