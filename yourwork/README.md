@@ -293,7 +293,7 @@ Dashboard URL: https://dxxxxxxxxxx.cloudfront.net
 Tracker SDK URL: https://dyyyyyyyyyy.cloudfront.net/tracker-sdk.js
 ```
 
-これらの情報は `4. モック構築の実行` で利用します。Dashboard URL と Tracker SDK URL はどちらも `cloudfront.net` ですがドメインが異なります。モックに組み込むのは **Tracker SDK URL** なので、取り違えないよう注意してください。
+これらの情報は `4. モック構築の実行` の Prompt 4.3 に貼り付けます。Dashboard URL と Tracker SDK URL はどちらも `cloudfront.net` ですがドメインが異なります。モックに組み込むのは **Tracker SDK URL** なので、取り違えないよう注意してください。
 
 #### 3. 生成 AI ツールの起動
 
@@ -313,26 +313,32 @@ kiro-cli --agent mock-builder
 claude
 ```
 
-起動後、`/mock-builder` と入力してスキルを呼び出します。
-
 **OpenAI Codex CLI**
 
 ```
 codex
 ```
 
-起動後、`prompt/prompt.md` のプレースホルダを埋めた上で、内容をそのまま貼り付けます。
+起動したら、どのツールでも `4. モック構築の実行` のプロンプトを貼り付けます。
 
 #### 4. モック構築の実行
 
-ツールに次の 2 つを渡すと、アプリケーションの実装が始まります。
+> [!IMPORTANT]
+> 事前に、Refine で作成した PR/FAQ（顧客パートと提供者・会社パート）が `discovery/README.md` の Refine セクションに記載されているか確認してください。Tracker を使う場合は、`2. Tracker システムのデプロイ` で控えた 4 つの値を手元に用意してください。
 
-* 実装したいアプリケーションの詳細
-* （Option)トラッキング用エンドポイント等の情報（`2. Tracker システムのデプロイ` で控えた API Endpoint / API Key / Dashboard URL / Tracker SDK URL）
+次のプロンプトの `{...}` 4 か所を、`2. Tracker システムのデプロイ` で控えた値に置き換えて貼り付けます。PR/FAQ はツールが `discovery/README.md` から読み込むので、貼り付ける必要はありません。
 
-**実装したいアプリケーションの詳細については、Refine で作成した PR/FAQ を与えてください**。 
+**🤖[Prompt 4.3]**
+> `prompt/prompt.md` を読み、記載された実装の方針・進め方・完了条件に従ってモックを構築し、AWS にデプロイしてください。`<application_requirements>` には `discovery/README.md` の Refine セクションにある PR/FAQ（顧客パートと提供者・会社パートの両方）を、`<tracker_configuration>` には次の値を使ってください。`prompt/prompt.md` 自体は書き換えず、成果物は `product/` に作成してください。完了したら、`prompt/prompt.md` の完了条件の各項目についてコマンドの出力か該当行を示し、デプロイした CloudFront の URL を教えてください。
+>
+> \- API Endpoint : `{API Endpoint}`  
+> \- API Key : `{API Key}`  
+> \- Dashboard URL : `{Dashboard URL}`  
+> \- Tracker SDK URL : `{Tracker SDK URL}`
 
-Kiro CLI のカスタムエージェントや Claude Code の `/mock-builder` スキルを使う場合は、`こんにちは` や `アプリケーションを作成したい` など適当な言葉を入力いただくと、上記の 2 点をツール側から順番に質問されます。`prompt/prompt.md` を貼り付ける場合は、該当するプレースホルダをこの 2 点で置き換えてください。Tracker をデプロイしていない場合は、トラッキングは不要と伝えるか、該当のプレースホルダを削除すれば省略できます。
+Tracker をデプロイしていない場合は、4 行の値を消して「Tracker は使わない」の 1 行に置き換えてください。この場合、モックは計測が動かない状態で完成します。
+
+Claude Code では、このプロンプトを貼り付けると `mock-builder` スキルが使われます。スキルが呼ばれない場合は、先頭に `/mock-builder ` を付けて貼り付けてください。
 
 渡した内容をもとにアプリケーションが自動的に実装され、CDK（Nx Plugin for AWS）で作成した S3 + CloudFront + WAF でホスティングされます。WAF と KMS キーに 1 デプロイあたり月額 約 $8 の固定費がかかるので、使い終わったら削除してください。
 
