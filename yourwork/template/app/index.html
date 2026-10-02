@@ -14,6 +14,10 @@
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
     
+    <!--
+      CSP のある Nx 構成ではこの初期化（インライン script）はブロックされて実行されない。
+      現行の手順では TRANCKER_INTEGRATION_GUIDE.md の TypeScript 初期化（src/services/mlewTracker.ts）を使う。
+    -->
     <script>
       // ブラウザごとに永続する訪問者 ID を発行する。
       // localStorage / crypto.randomUUID が使えない環境では 'anonymous' にフォールバックする。
@@ -43,7 +47,7 @@
           applicationId: 'unified-react-app',
           applicationName: 'Unified React App Template',
           apiEndpoint: 'https://api123456.execute-api.us-west-2.amazonaws.com/dev/',
-          apiKey: 'abcd1234efgh5678ijkl9012mnop3456qrst7890',
+          apiKey: 'YOUR_TRACKER_API_KEY',
           autoTrack: true,
           debug: true // Enable debug mode for development
         });

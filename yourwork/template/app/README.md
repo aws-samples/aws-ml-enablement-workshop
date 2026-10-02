@@ -1,8 +1,8 @@
 # 統合 React アプリテンプレート
 
-ランディングページ（`/`）とアプリ本体（`/app`）を 1 つの React プロジェクトで管理するワークショップ用のテンプレートです。MLEW Tracker による計測が組み込まれており、AWS（S3 + CloudFront）へ静的サイトとしてデプロイできます。
+> **注記** : 現行のモック作成手順では、このディレクトリはコピーせず、Nx Plugin for AWS で雛形を作ります（`pnpm create @aws/nx-workspace`）。手順は [デプロイメントガイド](/yourwork/template/DEPLOYMENT_GUIDE.md) を参照してください。このディレクトリは LP・画面構成・サンプルデータの参考として残しています。インフラ（`cloudformation.yaml`）・ビルド・Tracker の初期化は旧構成なので参考にしないでください。
 
-このディレクトリをコピーして自分のモックアプリを作ってください。デプロイの詳細や、プロジェクト固有の変更箇所の一覧は [デプロイメントガイド](/yourwork/template/DEPLOYMENT_GUIDE.md) を参照してください。
+ランディングページ（`/`）とアプリ本体（`/app`）を 1 つの React プロジェクトで管理するワークショップ用のテンプレートです（旧構成）。MLEW Tracker による計測が組み込まれており、AWS（S3 + CloudFront）へ静的サイトとしてデプロイする構成でした。
 
 ## 技術スタック
 
@@ -23,7 +23,9 @@
 - `vite.config.ts` で `@` を `src/` のエイリアスに設定しています（例 : `import { getAppUrl } from '@/config/appUrl'`）。
 - リンタ・フォーマッタは ESLint（`eslint.config.js`）と Prettier です。
 
-## 前提
+## 前提（旧構成・参考）
+
+この節は旧構成の前提です。現行の手順の前提条件（Node.js 22.12 以上、pnpm、uv、CDK bootstrap など）は [デプロイメントガイド](/yourwork/template/DEPLOYMENT_GUIDE.md) を参照してください。
 
 - Node.js 20 以上、npm 10 以上を推奨します（`package.json` の `engines` は Node 18 以上と書かれていますが、Vite 7 系は 20 以上が必要です）。動作確認は Node 24.13.0 / npm 11.6.2 で実施しています。
 - デプロイする場合は AWS CLI v2 と、S3 / CloudFront / CloudFormation を操作できる権限が必要です。
@@ -89,7 +91,9 @@ app/
 
 ランディングページの CTA は `src/config/appUrl.ts` の `getAppUrl()` が返す URL に遷移します。環境変数 `VITE_APP_URL` が設定されていればその URL へ、未設定なら同じアプリ内の `/app` へ遷移します。アプリ本体を別ホストに置く場合だけ `VITE_APP_URL` をビルド時に設定してください。
 
-## MLEW Tracker の設定（コピーしたら必ず置き換える）
+## MLEW Tracker の設定（旧構成・参考）
+
+> CSP のある環境（現行の Nx 構成）では、`index.html` のインライン script による初期化はブロックされて実行されません。現行の手順では SDK の script タグだけを `index.html` に置き、初期化は TypeScript（`src/services/mlewTracker.ts`）で行います。[MLEW Tracker 導入ガイド](/yourwork/template/TRANCKER_INTEGRATION_GUIDE.md) を参照してください。
 
 `index.html` に SDK の読み込みと初期化コードが入っていますが、**値はすべてダミーのプレースホルダー**です。そのままではイベントが送信されません。ワークショップの担当者から受け取った値に置き換えてください。
 
@@ -97,7 +101,7 @@ app/
 | --- | --- | --- |
 | `<script src="...">` | `https://{ここに正しいURLを設定}.cloudfront.net/tracker-sdk.js` | 配布された SDK の URL |
 | `apiEndpoint` | `https://api123456.execute-api.us-west-2.amazonaws.com/dev/` | Tracker API のエンドポイント |
-| `apiKey` | `abcd1234efgh5678ijkl9012mnop3456qrst7890` | 発行された API キー |
+| `apiKey` | `YOUR_TRACKER_API_KEY` | 発行された API キー |
 | `applicationId` / `applicationName` | `unified-react-app` / `Unified React App Template` | 自分のアプリの ID と名前 |
 
 補足 :
@@ -107,7 +111,9 @@ app/
 - アプリ側のコードからは `src/services/mlewTracker.ts` 経由で `trackClick` / `trackView` を呼びます。SDK 読み込み前のイベントはキューに入り、接続後に送信されます。
 - `apiKey` はビルド成果物に含まれます。ワークショップで発行されたキー以外を書かないでください。
 
-## AWS へのデプロイ
+## AWS へのデプロイ（旧構成・参考）
+
+> この節は旧構成（CloudFormation）の手順です。現行のモックは `product/` で `pnpm nx deploy-sandbox infra` を使ってデプロイします。[デプロイメントガイド](/yourwork/template/DEPLOYMENT_GUIDE.md) を参照してください。
 
 `cloudformation.yaml` で S3 バケットと CloudFront ディストリビューション（OAC 経由、SPA 用の 404/403 → `index.html` 書き換え、セキュリティヘッダー付き）を作成し、`dist/` を S3 へ同期します。
 
@@ -156,7 +162,7 @@ npm run deploy
 - `ProjectName` の既定値は `unified-react-app`、`Environment` の既定値は `prod`（`dev` / `staging` / `prod` から選択）です。バケット名は `${ProjectName}-${Environment}-${AWS::AccountId}` になります。
 - `DomainName` パラメータは定義されているだけで、テンプレート内では使われていません。独自ドメインを使うには `cloudformation.yaml` の追記が必要です。
 - CloudFront のキャッシュは開発しやすさを優先して無効（TTL 0、CachingDisabled ポリシー）に設定されています。本番運用ではキャッシュポリシーを見直してください。
-- スタック作成が失敗したときの調べ方は [デプロイメントガイド](/yourwork/template/DEPLOYMENT_GUIDE.md) のトラブルシューティングにまとめています。
+- デプロイメントガイドは Nx 構成向けに書き換えたため、このスタックのトラブルシューティングは載っていません。
 
 ## npm スクリプト
 
@@ -178,9 +184,9 @@ npm run deploy
 - **使われていない依存があります**。`@headlessui/react`、`@heroicons/react`、`zustand` は `src/` と `index.html` から参照されていません。使わないなら削除してかまいません（アイコンは `lucide-react` を、状態管理は React のフックを使っています）。
 - **`.env` は不要です**。コード内で参照している環境変数は `VITE_APP_URL` だけです（`src/config/appUrl.ts`）。`VITE_API_URL` や `VITE_ANALYTICS_ID` を読む処理はありません。`S3_BUCKET_NAME` と `CLOUDFRONT_DISTRIBUTION_ID` は `npm run deploy` 用のシェル環境変数で、`.env` からは読み込まれません。
 - **`npm run lint` は警告が出た状態で通ります**。初期状態で `no-explicit-any` の警告が 7 件あります（エラーは 0 件）。
-- コピー後に変更し忘れやすい箇所 : `index.html` の `<title>` と `description`、`package.json` の `name` / `description` / `author`、`cloudformation.yaml` の `ProjectName`、ランディングページ各セクションの文面。
+- 参考にするときに自分のプロダクト向けに書き換える箇所 : `<title>` と `description`、ランディングページ各セクションの文面。Nx の生成物では `packages/website/index.html` と `packages/website/src/routes/` が該当します。
 
 ## 関連ドキュメント
 
-- [デプロイメントガイド](/yourwork/template/DEPLOYMENT_GUIDE.md) : 変更箇所の一覧、セキュリティ設定、トラブルシューティング
+- [デプロイメントガイド](/yourwork/template/DEPLOYMENT_GUIDE.md) : 現行（Nx Plugin for AWS）のセットアップ・デプロイ・削除の手順、変更箇所の一覧、セキュリティ設定、トラブルシューティング
 - [MLEW Tracker 導入ガイド](/yourwork/template/TRANCKER_INTEGRATION_GUIDE.md) : SDK の使い方、ユーザー ID の設計、よくあるエラー

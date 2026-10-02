@@ -14,7 +14,13 @@ description: PR/FAQ からワークショップ用のモック Web アプリを�
 1. **実装したいアプリケーションの詳細**（Refine で作成した PR/FAQ）。長文をそのまま貼ってもらって構いません。
 2. **（任意）MLEW Tracker のエンドポイント情報**: API Endpoint / API Key / Dashboard URL / Tracker SDK URL。
 
-2 が空のまま進める場合は、計測が動かない状態で完成することと、あとでエンドポイントを差し替える必要があることをユーザーに伝えてから着手します。
+2 が空のまま進める場合は、計測が動かない状態で完成することと、あとで Tracker を追加するには次の 3 か所を差し替えて infra を再デプロイする必要があることをユーザーに伝えてから着手します。CSP の `script-src` に SDK のオリジンが入らないと、SDK がブロックされて計測が始まらないためです。
+
+- `packages/website/index.html` の SDK の script タグ（Tracker SDK URL）
+- `packages/website/src/config.ts` の Tracker 接続情報（API Endpoint / API Key など）
+- `packages/infra/src/stacks/application-stack.ts` の `scriptSrc`（Tracker SDK URL のオリジン）
+
+差し替えたら `product/` で `pnpm nx deploy-sandbox infra` を再実行します。
 
 ## 2. prompt.md を読んで実行する
 

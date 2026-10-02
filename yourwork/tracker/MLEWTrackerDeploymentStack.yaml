@@ -204,8 +204,8 @@ Resources:
                 - SDK_BUCKET=$(aws cloudformation describe-stacks --stack-name $STACK_NAME --query "Stacks[0].Outputs[?OutputKey=='SdkBucketName'].OutputValue" --output text 2>/dev/null | tr -d '\r')
                 - DASHBOARD_URL=$(aws cloudformation describe-stacks --stack-name $STACK_NAME --query "Stacks[0].Outputs[?OutputKey=='DashboardURL'].OutputValue" --output text 2>/dev/null | tr -d '\r')
                 - SDK_URL=$(aws cloudformation describe-stacks --stack-name $STACK_NAME --query "Stacks[0].Outputs[?OutputKey=='SdkDistributionDomain'].OutputValue" --output text 2>/dev/null | tr -d '\r')
-                - DASHBOARD_DISTRIBUTION_ID=$(aws cloudformation describe-stack-resources --stack-name $STACK_NAME --query "StackResources[?ResourceType=='AWS::CloudFront::Distribution' && LogicalResourceId=='DashboardDistribution'].PhysicalResourceId" --output text 2>/dev/null | tr -d '\r')
-                - SDK_DISTRIBUTION_ID=$(aws cloudformation describe-stack-resources --stack-name $STACK_NAME --query "StackResources[?ResourceType=='AWS::CloudFront::Distribution' && LogicalResourceId=='SdkDistribution'].PhysicalResourceId" --output text 2>/dev/null | tr -d '\r')
+                - DASHBOARD_DISTRIBUTION_ID=$(aws cloudformation describe-stack-resources --stack-name $STACK_NAME --query "StackResources[?ResourceType=='AWS::CloudFront::Distribution' && starts_with(LogicalResourceId, 'DashboardDistribution')].PhysicalResourceId" --output text 2>/dev/null | tr -d '\r')
+                - SDK_DISTRIBUTION_ID=$(aws cloudformation describe-stack-resources --stack-name $STACK_NAME --query "StackResources[?ResourceType=='AWS::CloudFront::Distribution' && starts_with(LogicalResourceId, 'SdkDistribution')].PhysicalResourceId" --output text 2>/dev/null | tr -d '\r')
                 - |
                   cat <<EOF > packages/dashboard/.env.production
                   VITE_API_ENDPOINT=${API_ENDPOINT}

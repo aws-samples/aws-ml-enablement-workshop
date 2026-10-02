@@ -235,6 +235,7 @@ yourwork
 │   └── prompt.md           # アプリケーション仕様記述ファイル（ツール非依存）
 ├── template/               # アプリケーションテンプレート
 └── product/                # 生成されるアプリケーション（生成 AI ツールにより作成されます)
+                            # Nx Plugin for AWS のワークスペース（packages/website: 画面、packages/infra: AWS CDK）
 ```
 
 モックの仕様そのものは `prompt/prompt.md` に書かれており、ツールに依存しません。`.kiro/` `.claude/skills/` `AGENTS.md` `CLAUDE.md` は、各ツールがこの仕様書と作業規約にたどり着くための入口です。そのため、どのツールを使っても同じ仕様でモックが構築されます。
@@ -242,7 +243,7 @@ yourwork
 ### モックの構築
 
 > [!IMPORTANT]
-> 事前に環境構築が完了しているか確認ください : [準備ガイド参照](/docs/organizer/generative_ai_setup.md)。また、項目済みのモックがある場合は削除の手順を参考に一度削除することを推奨します。モックは反応を得るための使い捨てなので、ためらいなく削除してください。
+> 事前に環境構築が完了しているか確認ください : [準備ガイド参照](/docs/organizer/generative_ai_setup.md)。また、構築済みのモックがある場合は削除の手順を参考に一度削除することを推奨します。モックは反応を得るための使い捨てなので、ためらいなく削除してください。
 
 ### 使用方法
 
@@ -267,7 +268,8 @@ cd /your/working/directory/aws-ml-enablement-workshop/yourwork
 ```bash
 # AWS CLI を使用して CloudFormation スタックをデプロイ
 # {任意のメールアドレス} を実際のメールアドレスに置き換えてください
-# デプロイ先のリージョンはデフォルトでは東京リージョン（ap-northeast-1）になっています
+# Tracker のデプロイ先リージョンはデフォルトでは東京リージョン（ap-northeast-1）になっています
+# （モック本体とは別のリージョンでも構いません）
 aws cloudformation deploy \
   --template-file ./tracker/MLEWTrackerDeploymentStack.yaml \
   --stack-name mlew-tracker-stack \
@@ -288,9 +290,10 @@ Access Information:
 API Endpoint: https://xxxxxxxxxx.execute-api.ap-northeast-1.amazonaws.com/dev
 API Key: XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 Dashboard URL: https://dxxxxxxxxxx.cloudfront.net
+Tracker SDK URL: https://dyyyyyyyyyy.cloudfront.net/tracker-sdk.js
 ```
 
-これらの情報は `4. モック構築の実行` で利用します。
+これらの情報は `4. モック構築の実行` で利用します。Dashboard URL と Tracker SDK URL はどちらも `cloudfront.net` ですがドメインが異なります。モックに組み込むのは **Tracker SDK URL** なので、取り違えないよう注意してください。
 
 #### 3. 生成 AI ツールの起動
 
@@ -325,18 +328,27 @@ codex
 ツールに次の 2 つを渡すと、アプリケーションの実装が始まります。
 
 * 実装したいアプリケーションの詳細
-* （Option)トラッキング用エンドポイント等の情報（`2. Tracker システムのデプロイ` で控えた API Endpoint / API Key / Dashboard URL）
+* （Option)トラッキング用エンドポイント等の情報（`2. Tracker システムのデプロイ` で控えた API Endpoint / API Key / Dashboard URL / Tracker SDK URL）
 
 **実装したいアプリケーションの詳細については、Refine で作成した PR/FAQ を与えてください**。 
 
 Kiro CLI のカスタムエージェントや Claude Code の `/mock-builder` スキルを使う場合は、`こんにちは` や `アプリケーションを作成したい` など適当な言葉を入力いただくと、上記の 2 点をツール側から順番に質問されます。`prompt/prompt.md` を貼り付ける場合は、該当するプレースホルダをこの 2 点で置き換えてください。Tracker をデプロイしていない場合は、トラッキングは不要と伝えるか、該当のプレースホルダを削除すれば省略できます。
 
-渡した内容をもとにアプリケーションが自動的に実装され、CloudFront + S3 でホスティングされます。
+渡した内容をもとにアプリケーションが自動的に実装され、CDK（Nx Plugin for AWS）で作成した S3 + CloudFront + WAF でホスティングされます。WAF と KMS キーに 1 デプロイあたり月額 約 $8 の固定費がかかるので、使い終わったら削除してください。
+
+モック本体は AWS プロファイルの既定リージョンにデプロイされます（環境変数 `AWS_REGION` が設定されているとそちらが優先されます）。CloudFront 用の WAF は us-east-1 にしか作れないため、us-east-1 に別スタックとして作成されます。Tracker のリージョンとそろえる必要はありません。
 
 #### 5. ホスティングしたアプリケーションの削除
 
 AWS にデプロイしたアプリケーションを削除したい場合は、Kiro CLI などの起動中の生成 AI ツールに、`product/ ディレクトリを参照し、デプロイしたアプリケーションを削除したい` と伝えてください。
 各種リソースの削除が行われます。
+
+手動で削除する場合は、`product/` で次のコマンドを実行します。
+
+```bash
+cd product
+pnpm nx destroy-sandbox infra
+```
 
 ## Test/Iterate
 

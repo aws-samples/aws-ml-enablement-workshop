@@ -1,5 +1,7 @@
 # MLEW Tracker 導入ガイド
 
+パスは Nx ワークスペース（`yourwork/product/`）からの相対です。
+
 ## 🚨 重要: 必ず外部SDKを使用してください
 
 **絶対に自作実装しないでください**。MLEW Trackerは必ず提供された外部SDKを使用する必要があります。
@@ -18,143 +20,163 @@ window.MLEWTracker = {
 ```
 
 ### ✅ 正しい実装例（必須）
+
+モックは CloudFront の CSP（`script-src 'self'` + SDK のオリジン）の下で配信されます。**インライン script は実行されない**ため、SDK の読み込みは `index.html`、初期化はバンドルされる TypeScript で行います。
+
 ```html
-<!-- 外部SDKを読み込む（必須） -->
+<!-- packages/website/index.html の <head> 内: 外部SDKを読み込む（必須） -->
 <script src="https://{ダミーURL}.cloudfront.net/tracker-sdk.js"></script>
-<script>
-  // SDKが提供するTrackerクラスを使用
-  const tracker = new window.MLEWTracker.Tracker(config);
-</script>
 ```
 
-## 必要な情報
-担当者から以下の情報を受取ってください。
-- **SDK URL**: `https://{ダミーURL}.cloudfront.net/tracker-sdk.js`（外部CDN必須）
-- **API Endpoint**: `https://api123456.execute-api.us-west-2.amazonaws.com/dev/`
-- **API Key**: 認証キー（例: `abcd1234efgh5678ijkl9012mnop3456qrst7890`）
+```ts
+// packages/website/src/main.tsx: SDKが提供するTrackerクラスで初期化する
+import { initTracker, trackView } from './services/mlewTracker';
 
-## 基本セットアップ（3分）
+initTracker();
+```
+
+`initTracker` の中身は下の「React/TypeScript サービス層の実装」の `mlewTracker.ts` です。
+
+## 必要な情報
+担当者から以下の情報を受取ってください（Tracker デプロイ完了通知に記載されています）。
+- **SDK URL**: 「Tracker SDK URL」の値。`https://{ダミーURL}.cloudfront.net/tracker-sdk.js`（外部CDN必須）
+  - ⚠️ **Dashboard URL のドメインではありません**。SDK 配信用の CloudFront です
+- **API Endpoint**: `https://api123456.execute-api.us-west-2.amazonaws.com/dev/`
+- **API Key**: 認証キー（例: `YOUR_TRACKER_API_KEY`）
+
+## 基本セットアップ
 
 ### 実装手順
 
-#### ステップ1: 必ず外部SDKを読み込む
+#### ステップ1: `packages/website/index.html` の `<head>` で外部SDKを読み込む
 ```html
-<!DOCTYPE html>
-<html>
 <head>
     <!-- 他のheadタグ要素 -->
-    
-    <!-- 🚨 重要: 必ず外部SDKを先に読み込む -->
+
+    <!-- 🚨 重要: 必ず外部SDKを読み込む。async / defer は付けない（バンドルより先に読ませる） -->
     <script src="https://{ダミーURL}.cloudfront.net/tracker-sdk.js"></script>
 </head>
-<body>
-    <!-- サイトコンテンツ -->
-    
-    <!-- ステップ2: SDKの初期化（body閉じタグ直前） -->
-    <script>
-        // ブラウザごとに永続する匿名ID（訪問者ID）を取得する
-        // 詳細は「ユーザーID設定」の節を参照
-        function getVisitorId() {
-            try {
-                let id = localStorage.getItem('mlew-visitor-id');
-                if (!id) {
-                    id = crypto.randomUUID();
-                    localStorage.setItem('mlew-visitor-id', id);
-                }
-                return id;
-            } catch (e) {
-                // localStorage / crypto.randomUUID が使えない環境のフォールバック
-                return 'anonymous';
-            }
-        }
-
-        // 🚨 重要: window.MLEWTracker.Trackerを自作実装しない
-        // 外部SDKが提供するクラスを使用する
-        if (typeof window !== 'undefined' && window.MLEWTracker) {
-            const tracker = new window.MLEWTracker.Tracker({
-                applicationId: 'your-app-name',
-                applicationName: 'Your Application Name',
-                apiEndpoint: 'https://api123456.execute-api.us-west-2.amazonaws.com/dev/',
-                apiKey: 'abcd1234efgh5678ijkl9012mnop3456qrst7890',
-                autoTrack: true,
-                debug: true  // 開発環境では true に設定
-            });
-            
-            // ユーザーID設定（推奨: 利用者単位の指標を出すために設定する）
-            tracker.setUserId(getVisitorId());
-            
-            // グローバルにアクセス可能にする
-            window.tracker = tracker;
-            
-            console.log('MLEW Tracker initialized successfully');
-        } else {
-            console.error('MLEW Tracker SDK not loaded - 外部SDKの読み込みを確認してください');
-        }
-    </script>
-</body>
-</html>
 ```
+
+#### ステップ2: CSP の `script-src` に SDK のオリジンを追加する
+`packages/infra/src/stacks/application-stack.ts` の `TRACKER_SDK_ORIGIN` に SDK URL の**スキーム+ホスト**（例 `https://xxxxxxxx.cloudfront.net`、パスなし）を書き、`new Website(this, 'Website', { scriptSrc: [TRACKER_SDK_ORIGIN] })` で渡します。あとから追加・変更した場合は `pnpm nx deploy-sandbox infra` を再実行します。
+
+> CSP は CloudFront のレスポンスヘッダーで付くため、`pnpm dev` では問題が出ず、デプロイ後に初めてブロックされます。
+
+#### ステップ3: 接続情報を `packages/website/src/config.ts` に書く
+生成された `config.ts` に `tracker` を追加します。
+
+```ts
+export default {
+  // ...生成された項目
+  tracker: {
+    applicationId: 'your-app-name',
+    applicationName: 'Your Application Name',
+    apiEndpoint: 'https://api123456.execute-api.us-west-2.amazonaws.com/dev/',
+    apiKey: 'YOUR_TRACKER_API_KEY',
+  },
+};
+```
+
+#### ステップ4: `packages/website/src/services/mlewTracker.ts` を作り、`main.tsx` で初期化する
+`mlewTracker.ts` は「React/TypeScript サービス層の実装」のコードをそのまま使います。`packages/website/src/main.tsx` には次を足します（`createRouter` は生成済みの行を置き換え）。
+
+```ts
+import { initTracker, trackView } from './services/mlewTracker';
+
+initTracker();
+
+const router = createRouter({ routeTree, context: {} });
+
+let lastPath = window.location.pathname;
+router.history.subscribe(({ location, action }) => {
+  if (location.pathname === lastPath) return;
+  lastPath = location.pathname;
+  if (action.type === 'PUSH' || action.type === 'REPLACE') {
+    trackView(location.pathname);
+  }
+});
+```
+
+`router.history.subscribe` が必要な理由は「SDK の既知の挙動と対処」の 1 を参照してください。
 
 #### 実装時の注意事項
 1. **必ず外部SDK URLを使用**: 自作実装は禁止
-2. **読み込み順序を守る**: SDK → 初期化スクリプト
-3. **SDKの存在確認**: `window.MLEWTracker`の存在を確認してから初期化
-4. **エラーハンドリング**: SDKが読み込まれない場合のエラー表示
+2. **読み込み順序を守る**: `<head>` の SDK（async / defer なし）→ `main.tsx` の `initTracker()`
+3. **SDKの存在確認**: `window.MLEWTracker`の存在を確認してから初期化（`initTracker` が行う）
+4. **エラーハンドリング**: SDKが読み込まれない場合のエラー表示（`initTracker` が行う）
+5. **インライン script で初期化しない**: CSP で実行されません
+
+#### 参考: CSP の無い環境（素の HTML など）
+CSP の無いサイトに限り、`</body>` 直前のインライン script で初期化できます。モック（Nx 版）では使えません。
+
+```html
+<script>
+  if (window.MLEWTracker) {
+    const visitorId = getVisitorId(); // mlewTracker.ts の getVisitorId と同じ処理
+    localStorage.setItem('mlew_tracker_userId', visitorId); // SDK 生成前に書く（下記の既知の挙動 3）
+    window.tracker = new window.MLEWTracker.Tracker({ /* config.ts の tracker と同じ値 */ autoTrack: true });
+    window.tracker.setUserId(visitorId);
+  }
+</script>
+```
 
 ## クリック追跡
 
-重要な要素に `data-track="true"` を追加する。
+計測したい要素に `data-track="true"` と `data-track-name` を付けます。SDK は親要素をたどって `data-track` を探すので、リンク内のアイコンや文字をクリックしても記録されます。
 
-```html
-<!-- ボタン -->
+**計測対象**: すべての CTA、すべてのナビゲーションリンク（ヘッダー・サイドバー・パンくず・フッター・404 ページのトップへ戻るリンクを含む）、すべてのフォーム送信。開閉ボタン等の UI 操作にも付けてかまいません。
+
+```tsx
+import { Link } from '@tanstack/react-router';
+
+{/* ボタン */}
 <button data-track="true" data-track-name="purchase-button">
     購入する
 </button>
 
-<!-- リンク -->
-<a href="/contact" data-track="true" data-track-name="contact-link">
+{/* リンク（TanStack Router の Link。<a href> は全ページ再読込になる） */}
+<Link to="/contact" data-track="true" data-track-name="contact-link">
     お問い合わせ
-</a>
+</Link>
 
-<!-- フォーム -->
+{/* フォーム（送信時に form-submit として記録される） */}
 <form data-track="true" data-track-name="signup-form">
-    <input type="email" placeholder="メールアドレス">
+    <input type="email" placeholder="メールアドレス" />
     <button type="submit">登録</button>
 </form>
 ```
+
+## SDK の既知の挙動と対処
+
+いずれも SDK は編集せず、`mlewTracker.ts` と `main.tsx` で対処します（Nx 固有ではなく SPA 共通の問題です）。
+
+### 1. SPA の画面遷移でページビューが記録されない
+- **症状**: 初回表示と「戻る・進む」のページビューしかダッシュボードに出ない
+- **理由**: `autoTrack` のページビューは初回表示と `popstate` だけを記録する。Link による遷移（pushState）では `popstate` が発生しない
+- **対処**: `main.tsx` の `router.history.subscribe` で、`PUSH` / `REPLACE` のときだけ `trackView` を呼ぶ。`BACK` / `FORWARD` は SDK が `popstate` で記録するので除外する（両方で記録すると二重になる）
+
+### 2. Link クリックの page が遷移先のパスになる
+- **症状**: 「LP の CTA」のクリックが、遷移先の画面で起きたクリックとして記録される
+- **理由**: SDK はクリックの page を記録時点の `location.pathname` から取る。Link のクリックでは、記録時点で URL がすでに遷移先になっている
+- **対処**: `initTracker` がキャプチャ段階のクリックリスナーで、最寄りの `[data-track="true"]` に `data-track-page` = 遷移前のパスを入れる。SDK は `data-track-*` をプロパティにして page を上書きする
+
+### 3. 初回ページビューの userId が空になる
+- **症状**: 各訪問の最初のページビューだけ userId が無い
+- **理由**: SDK はコンストラクタで初回ページビューを送るため、その後の `setUserId` が間に合わない
+- **対処**: SDK を生成する前に `localStorage.setItem('mlew_tracker_userId', visitorId)` を書く。SDK は起動時にこのキーから userId を復元する（`initTracker` が行う）
 
 ## ユーザーID設定
 
 ### ログイン機能がある場合
 ```javascript
 // ログイン後にユーザーIDを設定
-tracker.setUserId('user-12345');  // 実際のユーザーID
+window.tracker?.setUserId('user-12345');  // 実際のユーザーID
 ```
 
 ### モック実装・ログイン機能がない場合（推奨: ブラウザごとの永続的な匿名ID）
 
-ログイン機能がないときは、**ブラウザごとに永続する匿名ID（訪問者ID）を発行**します。`localStorage` のキー `mlew-visitor-id` に `crypto.randomUUID()` の値を保存し、2回目以降のアクセスでは保存済みの値を再利用します。
-
-```javascript
-// ブラウザごとに永続する匿名ID（訪問者ID）を取得する
-function getVisitorId() {
-  try {
-    let id = localStorage.getItem('mlew-visitor-id');
-    if (!id) {
-      id = crypto.randomUUID();
-      localStorage.setItem('mlew-visitor-id', id);
-    }
-    return id;
-  } catch (e) {
-    // localStorage が使えない（プライベートブラウジング等）、
-    // crypto.randomUUID が無い（HTTPS でない環境等）場合のフォールバック
-    return 'anonymous';
-  }
-}
-
-// 訪問者IDをユーザーIDとして設定する
-tracker.setUserId(getVisitorId());
-```
+ログイン機能がないときは、**ブラウザごとに永続する匿名ID（訪問者ID）を発行**します。`localStorage` のキー `mlew-visitor-id` に `crypto.randomUUID()` の値を保存し、2回目以降のアクセスでは保存済みの値を再利用します。`mlewTracker.ts` の `getVisitorId` がこれを行い、SDK 生成前に `mlew_tracker_userId` へ書いたうえで `setUserId` も呼びます（既知の挙動 3）。
 
 > ⚠️ **重要**: ユーザーIDは分析の精度に影響します。
 > - ログイン機能がある場合: 実際のユーザーIDを使用
@@ -166,189 +188,93 @@ tracker.setUserId(getVisitorId());
 
 ## React/TypeScript サービス層の実装
 
-実際の実装例に基づいた TypeScript サービス層を作成します。
+### 1. TypeScript サービスファイル作成 (`packages/website/src/services/mlewTracker.ts`)
 
-### 1. TypeScript サービスファイル作成 (`src/services/mlewTracker.ts`)
+このコードをそのまま使います（`initTracker` が SDK の生成・userId の設定・`window.tracker` への代入・遷移前パスの付与まで行います）。
 
-```typescript
-// MLEW Tracker Service - 統一テンプレート用のシンプルな統合
-// trackClick と trackView のみを使用（要件通り）
+```ts
+import Config from '../config';
+
+type TrackerInstance = {
+  trackClick: (elementName: string, properties?: Record<string, unknown>) => void;
+  trackView: (pageName: string, properties?: Record<string, unknown>) => void;
+  setUserId: (userId: string) => void;
+};
 
 declare global {
   interface Window {
-    MLEWTracker?: {
-      Tracker: new (config: any) => {
-        trackClick: (elementName: string, properties?: Record<string, any>) => void;
-        trackView: (pageName: string, properties?: Record<string, any>) => void;
-        setUserId: (userId: string) => void;
-      };
-    };
-    tracker?: {
-      trackClick: (elementName: string, properties?: Record<string, any>) => void;
-      trackView: (pageName: string, properties?: Record<string, any>) => void;
-      setUserId: (userId: string) => void;
-    };
+    MLEWTracker?: { Tracker: new (config: Record<string, unknown>) => TrackerInstance };
+    tracker?: TrackerInstance;
   }
 }
 
-export interface TrackingProperties {
-  [key: string]: string | number | boolean;
-}
-
-class MLEWTrackerService {
-  private isReady = false;
-  private pendingEvents: Array<{ type: 'click' | 'view'; name: string; properties?: TrackingProperties }> = [];
-
-  constructor() {
-    this.init();
-  }
-
-  private init() {
-    // MLEW Tracker が利用可能になるまで待機
-    if (typeof window !== 'undefined') {
-      if (window.tracker) {
-        this.isReady = true;
-        this.flushPendingEvents();
-      } else {
-        // 5秒間、100msごとにチェック
-        let attempts = 0;
-        const checkTracker = () => {
-          attempts++;
-          if (window.tracker) {
-            this.isReady = true;
-            this.flushPendingEvents();
-            console.log('[MLEW Tracker] Successfully connected');
-          } else if (attempts < 50) {
-            setTimeout(checkTracker, 100);
-          } else {
-            console.warn('[MLEW Tracker] Failed to connect after 5 seconds');
-          }
-        };
-        checkTracker();
-      }
+const getVisitorId = (): string => {
+  try {
+    let id = localStorage.getItem('mlew-visitor-id');
+    if (!id) {
+      id = crypto.randomUUID();
+      localStorage.setItem('mlew-visitor-id', id);
     }
+    return id;
+  } catch {
+    return 'anonymous';
   }
+};
 
-  private flushPendingEvents() {
-    if (this.isReady && window.tracker) {
-      this.pendingEvents.forEach(event => {
-        if (event.type === 'click') {
-          window.tracker!.trackClick(event.name, event.properties);
-        } else if (event.type === 'view') {
-          window.tracker!.trackView(event.name, event.properties);
-        }
-      });
-      this.pendingEvents = [];
-    }
+export const initTracker = (): void => {
+  if (window.tracker) return;
+  if (!window.MLEWTracker) {
+    console.error('MLEW Tracker SDK not loaded - 外部SDKの読み込みを確認してください');
+    return;
   }
-
-  /**
-   * ボタン、リンク、その他のインタラクティブ要素のクリックイベントを追跡
-   */
-  trackClick(elementName: string, properties?: TrackingProperties) {
-    if (this.isReady && window.tracker) {
-      window.tracker.trackClick(elementName, properties);
-      console.log('[MLEW Tracker] Click tracked:', elementName, properties);
-    } else {
-      // トラッカーが準備できていない場合はキューに保存
-      this.pendingEvents.push({ type: 'click', name: elementName, properties });
-      console.log('[MLEW Tracker] Click queued:', elementName, properties);
-    }
+  const visitorId = getVisitorId();
+  try {
+    localStorage.setItem('mlew_tracker_userId', visitorId);
+  } catch {
+    // localStorage が使えない環境では setUserId だけで続行する
   }
+  const tracker = new window.MLEWTracker.Tracker({
+    ...Config.tracker, // applicationId, applicationName, apiEndpoint, apiKey
+    autoTrack: true,
+    debug: import.meta.env.DEV,
+  });
+  tracker.setUserId(visitorId);
+  window.tracker = tracker;
 
-  /**
-   * ページやセクションのビューイベントを追跡
-   */
-  trackView(pageName: string, properties?: TrackingProperties) {
-    if (this.isReady && window.tracker) {
-      window.tracker.trackView(pageName, properties);
-      console.log('[MLEW Tracker] View tracked:', pageName, properties);
-    } else {
-      // トラッカーが準備できていない場合はキューに保存
-      this.pendingEvents.push({ type: 'view', name: pageName, properties });
-      console.log('[MLEW Tracker] View queued:', pageName, properties);
-    }
-  }
+  document.addEventListener(
+    'click',
+    (event) => {
+      const el = (event.target as Element | null)?.closest<HTMLElement>('[data-track="true"]');
+      if (el) el.dataset.trackPage = window.location.pathname;
+    },
+    true,
+  );
+};
 
-  /**
-   * ナビゲーションクリック用の便利メソッド
-   */
-  trackNavigation(linkName: string, destination: string, source: string) {
-    this.trackClick(`nav-${linkName}`, {
-      destination,
-      source,
-      type: 'navigation'
-    });
-  }
+export const trackView = (pageName: string): void => {
+  window.tracker?.trackView(pageName, { title: document.title });
+};
 
-  /**
-   * CTAボタンクリック用の便利メソッド
-   */
-  trackCTAClick(buttonText: string, location: string, destination: string) {
-    this.trackClick(`cta-${buttonText.toLowerCase().replace(/\s+/g, '-')}`, {
-      buttonText,
-      location,
-      destination,
-      type: 'cta'
-    });
-  }
-
-  /**
-   * フォーム送信用の便利メソッド
-   */
-  trackFormSubmit(formName: string, source: string) {
-    this.trackClick(`form-${formName}`, {
-      formName,
-      source,
-      type: 'form-submit'
-    });
-  }
-
-  /**
-   * ページビュー用の便利メソッド
-   */
-  trackPageView(pageName: string, section?: string) {
-    this.trackView(pageName, {
-      ...(section && { section }),
-      url: typeof window !== 'undefined' ? window.location.href : '',
-      timestamp: Date.now()
-    });
-  }
-
-  /**
-   * トラッカー準備状況チェック
-   */
-  isTrackerReady(): boolean {
-    return this.isReady;
-  }
-
-  /**
-   * 待機中イベント数取得（デバッグ用）
-   */
-  getPendingEventsCount(): number {
-    return this.pendingEvents.length;
-  }
-}
-
-// シングルトンインスタンスをエクスポート
-export const mlewTracker = new MLEWTrackerService();
-
-// 便利のためのデフォルトエクスポート
-export default mlewTracker;
+export const trackClick = (elementName: string, properties?: Record<string, unknown>): void => {
+  window.tracker?.trackClick(elementName, properties);
+};
 ```
 
 ### 2. React コンポーネントでの使用例
 
-```typescript
-import React, { useEffect, useRef } from 'react';
-import { useInView } from 'react-intersection-observer';
-import { mlewTracker } from '../services/mlewTracker';
+セクション表示の計測に `react-intersection-observer` を使う場合は、Nx の website には含まれないので `product/` で `pnpm add react-intersection-observer --filter @product/website` を実行してから使います。
 
-const MyComponent: React.FC = () => {
+```tsx
+import { Link } from '@tanstack/react-router';
+import { useEffect, useRef } from 'react';
+import { useInView } from 'react-intersection-observer';
+import { trackClick, trackView } from '../services/mlewTracker';
+
+export const MyComponent = () => {
   // セクション表示トラッキング用
-  const [ref, inView] = useInView({ 
+  const [ref, inView] = useInView({
     threshold: 0.3,
-    triggerOnce: true  // 重要: 重複を防ぐため
+    triggerOnce: true, // 重要: 重複を防ぐため
   });
 
   // React Strict Mode での重複実行を防ぐ
@@ -357,36 +283,24 @@ const MyComponent: React.FC = () => {
   useEffect(() => {
     if (inView && !hasTracked.current) {
       hasTracked.current = true;
-      mlewTracker.trackView('section-name', { 
-        section: 'section-name', 
-        timestamp: Date.now() 
-      });
+      trackView('section-name');
     }
   }, [inView]);
-
-  const handleCTAClick = () => {
-    mlewTracker.trackCTAClick('Get Started', 'hero-section', '/signup');
-  };
-
-  const handleNavClick = (name: string, href: string) => {
-    mlewTracker.trackNavigation(name.toLowerCase(), href, 'header-menu');
-  };
 
   return (
     <section ref={ref} id="my-section">
       {/* data-track 属性を使用した自動トラッキング */}
-      <button 
-        data-track="true"
-        data-track-name="hero-get-started-cta"
-        onClick={handleCTAClick}
-      >
+      <Link to="/signup" data-track="true" data-track-name="hero-get-started-cta">
         Get Started
-      </button>
-      
+      </Link>
+
       {/* 手動トラッキング（data-track と併用しない） */}
-      <a href="/about" onClick={() => handleNavClick('about', '/about')}>
+      <Link
+        to="/about"
+        onClick={() => trackClick('nav-about', { destination: '/about', source: 'header-menu', type: 'navigation' })}
+      >
         About
-      </a>
+      </Link>
     </section>
   );
 };
@@ -422,8 +336,8 @@ window.tracker.trackClick('button-name', properties);
 #### 3. 正しい実装パターン
 ```javascript
 // ✅ 正しい実装の流れ
-// 1. 外部SDKが読み込まれるまで待機
-// 2. SDKが提供するTrackerクラスを使用
+// 1. index.html の <head> で外部SDKを読み込む
+// 2. バンドルされる TS（mlewTracker.ts）で SDK が提供する Tracker クラスを使用
 // 3. SDKに全てのAPI通信を委任
 
 if (window.MLEWTracker) {
@@ -439,6 +353,7 @@ if (window.MLEWTracker) {
 - ❌ `/track`等の推測エンドポイント使用
 - ❌ 独自のCORS対応実装
 - ❌ 画像タグやフォームを使った迂回送信
+- ❌ SDK の取り込み（ダウンロードして `public/` に置く、npm で入れる等）。必ず SDK URL から読み込む
 
 #### 5. なぜ外部SDKが必須なのか
 1. **正しいAPI仕様**: SDKのみが正確なエンドポイントを知っている
@@ -448,6 +363,22 @@ if (window.MLEWTracker) {
 5. **バージョン管理**: API仕様変更への自動対応
 
 ## よくある問題と解決法
+
+### コンソールに CSP 違反が出る場合
+
+**症状**: デプロイ後のブラウザのコンソールに次のどちらかが出る（`pnpm dev` では出ない）
+- `Refused to load the script '...tracker-sdk.js'` — SDK の読み込みがブロックされた
+- `Refused to execute inline script` — インライン script がブロックされた
+
+**原因と解決**:
+- `Refused to load the script`: CSP の `script-src` に SDK のオリジンが無い。`application-stack.ts` の `TRACKER_SDK_ORIGIN` に SDK URL のスキーム+ホスト（パスなし）を書いて `scriptSrc` に渡し、`pnpm nx deploy-sandbox infra` を再実行する。オリジンが index.html の SDK URL と一致しているかも確認する
+- `Refused to execute inline script`: index.html のインライン script で初期化している。初期化を `mlewTracker.ts` の `initTracker()` に移し、`main.tsx` から呼ぶ
+
+### SDK URL に Dashboard のドメインを使ってしまった場合
+
+**症状**: `MLEW Tracker SDK not loaded` が出る、またはイベントが期待どおりに記録されない
+**原因**: Tracker デプロイ完了通知の「Dashboard URL」のドメインで `tracker-sdk.js` を指定している（ダッシュボード側にあった SDK は古いビルドのコピーで、リポジトリからは削除済み。ただし削除前にデプロイした Tracker では、再デプロイするまで Dashboard のドメインから古い SDK が配信され続けます）
+**解決**: 「Tracker SDK URL」（SDK 配信用 CloudFront）の値に直し、`TRACKER_SDK_ORIGIN` もそのオリジンに揃えて `pnpm nx deploy-sandbox infra` を再実行する
 
 ### 403 Forbidden エラーが発生する場合
 
@@ -464,23 +395,23 @@ window.tracker.trackClick('element-name', properties);
 
 ### 重複イベントが大量に送信される場合
 
-**原因**: 複数のトラッキングシステムや設定ミス  
+**原因**: 複数のトラッキングシステムや設定ミス
 **解決策**:
 
 1. **data-track 属性と手動トラッキングの併用を避ける**
-```typescript
+```tsx
 // ❌ 悪い例: 重複する
-<button 
-  data-track="true" 
+<button
+  data-track="true"
   data-track-name="cta-button"
-  onClick={() => mlewTracker.trackClick('cta-button')}  // 重複!
+  onClick={() => trackClick('cta-button')}  // 重複!
 >
   Click Me
 </button>
 
 // ✅ 良い例: どちらか一方を使用
-<button 
-  data-track="true" 
+<button
+  data-track="true"
   data-track-name="cta-button"
   onClick={handleClick}
 >
@@ -488,21 +419,23 @@ window.tracker.trackClick('element-name', properties);
 </button>
 ```
 
-2. **React Strict Mode での重複実行を防ぐ**
-```typescript
+2. **ページビューを二重に記録しない**: `router.history.subscribe` で `BACK` / `FORWARD` を記録しない（SDK が `popstate` で記録する）。各画面の `useEffect` で同じページビューを送らない
+
+3. **React Strict Mode での重複実行を防ぐ**
+```tsx
 const hasTracked = useRef(false);
 
 useEffect(() => {
   if (inView && !hasTracked.current) {
     hasTracked.current = true;  // 重複防止フラグ
-    mlewTracker.trackView('section-name');
+    trackView('section-name');
   }
 }, [inView]);
 ```
 
-3. **useInView で triggerOnce: true を設定**
-```typescript
-const [ref, inView] = useInView({ 
+4. **useInView で triggerOnce: true を設定**
+```tsx
+const [ref, inView] = useInView({
   threshold: 0.3,
   triggerOnce: true  // 重要: 一度だけ発火
 });
@@ -511,40 +444,19 @@ const [ref, inView] = useInView({
 ### データが送信されない場合
 
 **デバッグ方法**:
-```javascript
-// 1. コンソールでトラッカー状態確認
-console.log('Tracker ready:', mlewTracker.isTrackerReady());
-console.log('Pending events:', mlewTracker.getPendingEventsCount());
-
-// 2. 初期化設定でデバッグモード有効化
-const tracker = new window.MLEWTracker.Tracker({
-    // ... 他の設定 ...
-    debug: true  // コンソールログでデバッグ
-});
-```
+1. コンソールで `window.tracker` が存在するか確認する（無ければ下の「トラッカーが初期化されない場合」）
+2. `pnpm dev` では `debug: import.meta.env.DEV` により SDK のログがコンソールに出る
+3. ブラウザの開発者ツールの Network タブで `/v1/events` への POST が 200 になっているか確認する（SDK は 5 秒ごと・10 件たまったとき・ページ離脱時にまとめて送信する）
 
 ### CORSエラーが発生する場合
 
-**原因**: API Key が未設定または不正  
-**解決**: 正しい API Key を設定してください
-
-```html
-<script>
-const tracker = new window.MLEWTracker.Tracker({
-    // ...
-    apiKey: 'あなたの正しいAPIキー',  // 必須
-    // ...
-});
-</script>
-```
+**原因**: API Key が未設定または不正
+**解決**: `packages/website/src/config.ts` の `tracker.apiKey` に正しい API Key を設定してください
 
 ### トラッカーが初期化されない場合
 
-**症状**: `window.tracker` が undefined  
-**原因**: SDK の読み込みタイミング問題
-
-**解決策**:
-```typescript
-// mlewTracker.ts のサービス層が自動的に待機・再試行します
-// 5秒間、100msごとにチェックし、利用可能になると自動接続されます
-```
+**症状**: `window.tracker` が undefined、コンソールに `MLEW Tracker SDK not loaded`
+**原因と解決**:
+- SDK の script タグが無い、または `async` / `defer` が付いていて `main.tsx` より後に読み込まれている → `packages/website/index.html` の `<head>` に async / defer なしで書く
+- CSP でブロックされている → 上の「コンソールに CSP 違反が出る場合」
+- SDK URL が誤っている → 上の「SDK URL に Dashboard のドメインを使ってしまった場合」
