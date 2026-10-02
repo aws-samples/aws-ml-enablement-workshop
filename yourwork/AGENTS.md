@@ -17,7 +17,6 @@
 | `prompt/prompt.md` | 作るものの仕様と進め方。作業の起点 |
 | `template/DEPLOYMENT_GUIDE.md` | Nx Plugin for AWS でのビルドとデプロイ手順 |
 | `template/TRANCKER_INTEGRATION_GUIDE.md` | Tracker 統合の実装方法。ファイル名の `N` は既存の綴り誤りですが実体のファイル名なので、このまま参照してください |
-| `template/app/` | LP・画面構成・サンプルデータの参考。インフラ・ビルド・Tracker 初期化は旧構成なので参考にしません。雛形は `pnpm create @aws/nx-workspace` で作ります |
 
 ## 成果物の置き場
 

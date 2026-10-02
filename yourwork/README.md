@@ -233,7 +233,7 @@ yourwork
 ├── CLAUDE.md               # Claude Code 用の入口。AGENTS.md を読み込みます
 ├── prompt/                 # プロンプトファイルディレクトリ
 │   └── prompt.md           # アプリケーション仕様記述ファイル（ツール非依存）
-├── template/               # アプリケーションテンプレート
+├── template/               # デプロイ手順と Tracker 導入のガイド
 └── product/                # 生成されるアプリケーション（生成 AI ツールにより作成されます)
                             # Nx Plugin for AWS のワークスペース（packages/website: 画面、packages/infra: AWS CDK）
 ```

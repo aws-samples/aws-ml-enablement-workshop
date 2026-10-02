@@ -28,7 +28,7 @@
 2. **メインアプリケーション**: MVP レベルで一通り動作する実装
 3. **インフラストラクチャ**: Nx の infra プロジェクト（AWS CDK）とデプロイ手順
 
-作業場所は `product/` ディレクトリです（ファイルではなくディレクトリとして作成してください）。技術選定は Nx Plugin for AWS の生成物（TanStack Router / shadcn / Tailwind CSS v4 / AWS CDK）に従い、ビルドとデプロイの詳細は `template/DEPLOYMENT_GUIDE.md` に従います。`template/app/` は LP・画面構成・サンプルデータの参考にのみ使い、インフラ・ビルド・Tracker 初期化は参考にしません。旧構成のままなので、真似ると Nx の手順と食い違います。
+作業場所は `product/` ディレクトリです（ファイルではなくディレクトリとして作成してください）。技術選定は Nx Plugin for AWS の生成物（TanStack Router / shadcn / Tailwind CSS v4 / AWS CDK）に従い、ビルドとデプロイの詳細は `template/DEPLOYMENT_GUIDE.md` に従います。
 
 # 前提条件
 
