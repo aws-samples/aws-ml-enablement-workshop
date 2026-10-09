@@ -9,19 +9,25 @@ description: PR/FAQ からワークショップ用のモック Web アプリを�
 
 ## 1. 入力を集める
 
-ユーザーに次の 2 つを尋ねます。1 は必須、2 は任意です。
+次の 2 つを集めます。1 は必須、2 は任意です。依頼文に値（またはその置き場所）が書かれていれば、それを使い、聞き直しません。
 
-1. **実装したいアプリケーションの詳細**（Refine で作成した PR/FAQ）。長文をそのまま貼ってもらって構いません。
-2. **（任意）MLEW Tracker のエンドポイント情報**: API Endpoint / API Key / Dashboard URL / Tracker SDK URL。
+1. **実装したいアプリケーションの詳細**（Refine で作成した PR/FAQ）。依頼文に指定が無ければ、まず `discovery/README.md` の Refine セクションを読みます。そこが空のときだけユーザーに尋ねます（長文をそのまま貼ってもらって構いません）。
+2. **（任意）MLEW Tracker のエンドポイント情報**: API Endpoint / API Key / Dashboard URL / Tracker SDK URL。値がプレースホルダーのまま（`{` を含む、`xxxxxxxx`・`dummyapikey` など）なら着手せずユーザーに確認し、「Tracker を使わない」と明示されたときだけ Tracker なしで進めます。ユーザーが値を控えていなければ、`prompt/prompt.md` の `<tracker_configuration>` 直後にあるコマンドで取り直せます。
 
-2 が空のまま進める場合は、計測が動かない状態で完成することと、あとでエンドポイントを差し替える必要があることをユーザーに伝えてから着手します。
+Tracker なしで進める場合は、計測が動かない状態で完成することと、あとで Tracker を追加するには次の 3 か所を差し替えて infra を再デプロイする必要があることをユーザーに伝えてから着手します。CSP の `script-src` に SDK のオリジンが入らないと、SDK がブロックされて計測が始まらないためです。
+
+- `packages/website/index.html` の SDK の script タグ（Tracker SDK URL）
+- `packages/website/src/config.ts` の Tracker 接続情報（API Endpoint / API Key など）
+- `packages/infra/src/stacks/application-stack.ts` の `scriptSrc`（Tracker SDK URL のオリジン）
+
+差し替えたら `product/` で `AWS_REGION=<デプロイ先リージョン> pnpm nx deploy-sandbox infra` を再実行します。リージョンは既存の `product-infra-sandbox-Application` と同じ値にします（`product/construction/plan.md` に記録したもの）。
 
 ## 2. prompt.md を読んで実行する
 
-`prompt/prompt.md` を読み、プレースホルダーに上の回答を当てて実行します。
+`prompt/prompt.md` を読み、プレースホルダーに上で集めた内容を当てて実行します。
 
-- `<application_requirements>` ← 1 の回答
-- `<tracker_configuration>` ← 2 の回答
+- `<application_requirements>` ← 1 の内容
+- `<tracker_configuration>` ← 2 の内容
 
 成果物・実装方針・進め方・完了条件は `prompt/prompt.md` にあるものを使います。このファイルには複製していないので、着手前に読んでください。ディレクトリ全体の決めごと（編集してはいけない場所、ビルドコマンド）は `AGENTS.md` にあります。
 

@@ -233,8 +233,9 @@ yourwork
 ├── CLAUDE.md               # Claude Code 用の入口。AGENTS.md を読み込みます
 ├── prompt/                 # プロンプトファイルディレクトリ
 │   └── prompt.md           # アプリケーション仕様記述ファイル（ツール非依存）
-├── template/               # アプリケーションテンプレート
+├── template/               # デプロイ手順と Tracker 導入のガイド
 └── product/                # 生成されるアプリケーション（生成 AI ツールにより作成されます)
+                            # Nx Plugin for AWS のワークスペース（packages/website: 画面、packages/infra: AWS CDK）
 ```
 
 モックの仕様そのものは `prompt/prompt.md` に書かれており、ツールに依存しません。`.kiro/` `.claude/skills/` `AGENTS.md` `CLAUDE.md` は、各ツールがこの仕様書と作業規約にたどり着くための入口です。そのため、どのツールを使っても同じ仕様でモックが構築されます。
@@ -242,7 +243,7 @@ yourwork
 ### モックの構築
 
 > [!IMPORTANT]
-> 事前に環境構築が完了しているか確認ください : [準備ガイド参照](/docs/organizer/generative_ai_setup.md)。また、項目済みのモックがある場合は削除の手順を参考に一度削除することを推奨します。モックは反応を得るための使い捨てなので、ためらいなく削除してください。
+> 事前に環境構築が完了しているか確認ください : [準備ガイド参照](/docs/organizer/generative_ai_setup.md)。また、構築済みのモックがある場合は削除の手順を参考に一度削除することを推奨します。モックは反応を得るための使い捨てなので、ためらいなく削除してください。
 
 ### 使用方法
 
@@ -267,7 +268,8 @@ cd /your/working/directory/aws-ml-enablement-workshop/yourwork
 ```bash
 # AWS CLI を使用して CloudFormation スタックをデプロイ
 # {任意のメールアドレス} を実際のメールアドレスに置き換えてください
-# デプロイ先のリージョンはデフォルトでは東京リージョン（ap-northeast-1）になっています
+# Tracker のデプロイ先リージョンはデフォルトでは東京リージョン（ap-northeast-1）になっています
+# （モック本体とは別のリージョンでも構いません）
 aws cloudformation deploy \
   --template-file ./tracker/MLEWTrackerDeploymentStack.yaml \
   --stack-name mlew-tracker-stack \
@@ -288,9 +290,42 @@ Access Information:
 API Endpoint: https://xxxxxxxxxx.execute-api.ap-northeast-1.amazonaws.com/dev
 API Key: XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 Dashboard URL: https://dxxxxxxxxxx.cloudfront.net
+Tracker SDK URL: https://dyyyyyyyyyy.cloudfront.net/tracker-sdk.js
 ```
 
-これらの情報は `4. モック構築の実行` で利用します。
+これらの情報は `4. モック構築の実行` の Prompt 4.3 に貼り付けます。Dashboard URL と Tracker SDK URL はどちらも `cloudfront.net` ですがドメインが異なります。モックに組み込むのは **Tracker SDK URL** なので、取り違えないよう注意してください。API Endpoint の末尾には `/` を付けません。
+
+失敗した場合は「MLEW Tracker Deployment Failed」メール（ログへのリンク付き）が届きます。Tracker はアカウントに 1 つなので、同じアカウントで別リージョンにもう 1 つデプロイすることはできません。
+
+**完了メールが届かない・見失った場合**は、CDK が作る子スタック `MLEWTrackerStack-dev`（`dev` は `Environment` の値）から 4 つの値を取り直せます。
+
+```bash
+aws cloudformation describe-stacks --region ap-northeast-1 \
+  --stack-name MLEWTrackerStack-dev --query 'Stacks[0].Outputs'
+# ApiKeyId は ID なので、キーの値は次で取得する
+aws apigateway get-api-key --region ap-northeast-1 \
+  --api-key <ApiKeyId の値> --include-value --query value --output text
+```
+
+| 値 | 組み立て方 |
+| --- | --- |
+| API Endpoint | `ApiEndpoint` の値そのまま（末尾に `/` を付けない） |
+| API Key | 上の `get-api-key` の出力（`ApiKeyId` の値ではない） |
+| Dashboard URL | `https://` + `DashboardURL` の値 |
+| Tracker SDK URL | `https://` + `SdkDistributionDomain` の値 + `/tracker-sdk.js` |
+
+**Tracker を削除する場合**は、親スタックを削除します。子スタック `MLEWTrackerStack-dev` の削除も自動で始まります。
+
+```bash
+aws cloudformation delete-stack --region ap-northeast-1 --stack-name mlew-tracker-stack
+```
+
+子スタックの削除は非同期で進み、数分（実測 3 分）〜20 分かかります。次のコマンドが `does not exist` のエラーを返せば完了です。`DELETE_FAILED` で止まった場合や削除が始まらない場合は、`aws cloudformation delete-stack --region ap-northeast-1 --stack-name MLEWTrackerStack-dev` で子スタックを直接削除します。
+
+```bash
+aws cloudformation describe-stacks --region ap-northeast-1 \
+  --stack-name MLEWTrackerStack-dev --query 'Stacks[0].StackStatus'
+```
 
 #### 3. 生成 AI ツールの起動
 
@@ -310,33 +345,57 @@ kiro-cli --agent mock-builder
 claude
 ```
 
-起動後、`/mock-builder` と入力してスキルを呼び出します。
-
 **OpenAI Codex CLI**
 
 ```
 codex
 ```
 
-起動後、`prompt/prompt.md` のプレースホルダを埋めた上で、内容をそのまま貼り付けます。
+起動したら、どのツールでも `4. モック構築の実行` のプロンプトを貼り付けます。
 
 #### 4. モック構築の実行
 
-ツールに次の 2 つを渡すと、アプリケーションの実装が始まります。
+> [!IMPORTANT]
+> 事前に、Refine で作成した PR/FAQ（顧客パートと提供者・会社パート）が `discovery/README.md` の Refine セクションに記載されているか確認してください。Tracker を使う場合は、`2. Tracker システムのデプロイ` で控えた 4 つの値を手元に用意してください。
 
-* 実装したいアプリケーションの詳細
-* （Option)トラッキング用エンドポイント等の情報（`2. Tracker システムのデプロイ` で控えた API Endpoint / API Key / Dashboard URL）
+次のプロンプトの `{...}` 4 か所を、`2. Tracker システムのデプロイ` で控えた値に置き換えて貼り付けます。PR/FAQ はツールが `discovery/README.md` から読み込むので、貼り付ける必要はありません。
 
-**実装したいアプリケーションの詳細については、Refine で作成した PR/FAQ を与えてください**。 
+**🤖[Prompt 4.3]**
+> `prompt/prompt.md` を読み、記載された実装の方針・進め方・完了条件に従ってモックを構築し、AWS にデプロイしてください。`<application_requirements>` には `discovery/README.md` の Refine セクションにある PR/FAQ（顧客パートと提供者・会社パートの両方）を、`<tracker_configuration>` には次の値を使ってください。`prompt/prompt.md` 自体は書き換えず、成果物は `product/` に作成してください。完了したら、`prompt/prompt.md` の完了条件の各項目についてコマンドの出力か該当行を示し、デプロイした CloudFront の URL を教えてください。
+>
+> \- API Endpoint : `{API Endpoint}`  
+> \- API Key : `{API Key}`  
+> \- Dashboard URL : `{Dashboard URL}`  
+> \- Tracker SDK URL : `{Tracker SDK URL}`
 
-Kiro CLI のカスタムエージェントや Claude Code の `/mock-builder` スキルを使う場合は、`こんにちは` や `アプリケーションを作成したい` など適当な言葉を入力いただくと、上記の 2 点をツール側から順番に質問されます。`prompt/prompt.md` を貼り付ける場合は、該当するプレースホルダをこの 2 点で置き換えてください。Tracker をデプロイしていない場合は、トラッキングは不要と伝えるか、該当のプレースホルダを削除すれば省略できます。
+Tracker をデプロイしていない場合は、4 行の値を消して「Tracker は使わない」の 1 行に置き換えてください。この場合、モックは計測が動かない状態で完成します。
 
-渡した内容をもとにアプリケーションが自動的に実装され、CloudFront + S3 でホスティングされます。
+Claude Code では、このプロンプトを貼り付けると `mock-builder` スキルが使われます。スキルが呼ばれない場合は、先頭に `/mock-builder ` を付けて貼り付けてください。
+
+渡した内容をもとにアプリケーションが自動的に実装され、CDK（Nx Plugin for AWS）で作成した S3 + CloudFront + WAF でホスティングされます。WAF と KMS キーに 1 デプロイあたり月額 約 $8 の固定費がかかるので、使い終わったら削除してください。
+
+エージェントはモック本体のデプロイ・削除のたびに `AWS_REGION` でリージョンを明示し、選んだリージョンを `product/construction/plan.md` に記録します。プロファイルの既定リージョン（`aws configure get region`）が空の場合は、エージェントからリージョンを聞かれるので指定してください。事前確認と当日で同じリージョンを使うと、CDK bootstrap をやり直さずに済みます。CloudFront 用の WAF は us-east-1 にしか作れないため、us-east-1 に別スタックとして作成されます。Tracker のリージョンとそろえる必要はありません。
 
 #### 5. ホスティングしたアプリケーションの削除
 
 AWS にデプロイしたアプリケーションを削除したい場合は、Kiro CLI などの起動中の生成 AI ツールに、`product/ ディレクトリを参照し、デプロイしたアプリケーションを削除したい` と伝えてください。
 各種リソースの削除が行われます。
+
+手動で削除する場合は、`product/` で次のコマンドを実行します。`<デプロイ先リージョン>` は `product/construction/plan.md` に記録されたリージョンです。確認（y/n）が出るので `y` で進めます（エージェントに実行させる場合は、確認できずに失敗するため末尾に `-- --force` を付けます）。
+
+```bash
+cd product
+AWS_REGION=<デプロイ先リージョン> pnpm nx destroy-sandbox infra
+```
+
+続けて、デプロイ先リージョンと us-east-1（WAF）の両方でスタックが残っていないことを確認します。どちらも表が空なら完了です。
+
+```bash
+aws cloudformation describe-stacks --region <デプロイ先リージョン> \
+  --query "Stacks[?starts_with(StackName,'product-infra-sandbox-')].[StackName,StackStatus]" --output table
+aws cloudformation describe-stacks --region us-east-1 \
+  --query "Stacks[?starts_with(StackName,'product-infra-sandbox-')].[StackName,StackStatus]" --output table
+```
 
 ## Test/Iterate
 
