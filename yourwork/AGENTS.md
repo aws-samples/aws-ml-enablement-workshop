@@ -2,60 +2,56 @@
 
 このディレクトリは、ワークショップで立てた仮説（Refine で作成した PR/FAQ）を、実際の利用者に触ってもらえる Web アプリのモックにするための作業場所です。モックには MLEW Tracker を組み込み、利用者の反応を実データで計測します。
 
-## 前提
-
-- カレントディレクトリは `aws-ml-enablement-workshop/yourwork`。以下のパスはすべてここからの相対パスです。
-- Node.js 22.12 以上（または 20.19 以上）。生成物の vite と nx がこれを要求するため、Node 18 では動きません。
-- pnpm。依存が `catalog:` 指定のため、npm では install できません。
-- uv。infra の build に含まれる checkov を `uvx` で実行します。
-- AWS にデプロイする場合は、AWS CLI v2 と認証情報が設定済みで、デプロイ先のアカウント×リージョンが CDK bootstrap 済みであること（初回は `product/` で `AWS_REGION=<デプロイ先リージョン> pnpm nx bootstrap infra`）。
-- デプロイ先リージョンは作業の最初に決め、`product/construction/plan.md` に記録して使い続けます（記録 → 既存の `product-infra-sandbox-Application` のリージョン → `aws configure get region` → ユーザーに確認、の順。詳細は `prompt/prompt.md` の Phase 1）。
+カレントディレクトリは `aws-ml-enablement-workshop/yourwork` です。以下のパスはすべてここからの相対パスです。
 
 ## まず読むファイル
 
 | ファイル | 役割 |
 |---|---|
-| `prompt/prompt.md` | 作るものの仕様と進め方。作業の起点 |
-| `template/DEPLOYMENT_GUIDE.md` | Nx Plugin for AWS でのビルドとデプロイ手順 |
-| `template/TRANCKER_INTEGRATION_GUIDE.md` | Tracker 統合の実装方法。ファイル名の `N` は既存の綴り誤りですが実体のファイル名なので、このまま参照してください |
+| `prompt/prompt.md` | 作るものの目的・判断基準・完了条件。作業の起点 |
+| `template/DEPLOYMENT_GUIDE.md` | 前提条件、リージョンの決め方、生成からデプロイまでの手順、削除、既知の問題への対処 |
+| `template/TRACKER_INTEGRATION_GUIDE.md` | Tracker の固定ファイル、接続コード、命名規約、計測対象 |
+
+完了条件は `prompt/prompt.md` の「完了条件」、前提ツールは `template/DEPLOYMENT_GUIDE.md` の `## 前提条件` にあります。このファイルには重複して書きません。
+
+## 検証済みバージョン
+
+手順はこの組み合わせで確認しています。生成コマンドのバージョンはこの表と揃えます。plugin を上げるときは、この表と `template/DEPLOYMENT_GUIDE.md` の `## 既知の問題への対処（@aws/nx-plugin 1.0.6 で確認）` を見直します。
+
+| 項目 | バージョン |
+|---|---|
+| `@aws/create-nx-workspace` / `@aws/nx-plugin` | 1.0.6（`pnpm create @aws/nx-workspace@1.0.6 product --iac=cdk --no-interactive`） |
+| Node.js | 22.13 以上（推奨: 24 LTS）。検証環境は 24.13.0 |
+| pnpm | 12.4.1 |
+| uv | 0.5.29 以上 |
+| 検証日 | 2026-10-10（macOS。Claude Code と Kiro CLI で生成〜build〜deploy〜destroy を確認。Windows は未検証） |
+
+## シェルの扱い
+
+Windows では、ネイティブの PowerShell で動かします（WSL2 や Git Bash は前提にしません）。macOS / Linux では標準のシェルを使います。文書のコマンドは、シェルで書き方が変わる部分を意図で書いているので、構文は実行するシェルに合わせて選んでください。
+
+- **コマンドは 1 行で書きます。** 行末の `\` や `` ` `` による継続行は使いません。
+- **デプロイ先リージョンは環境変数で渡しません。** 生成された `packages/infra/src/main.ts` の `env.region` に書きます（`template/DEPLOYMENT_GUIDE.md` の `## リージョンの決め方`）。シェルの `AWS_REGION` はエージェント自身の設定に由来することがあり、それに頼ると意図しないリージョンへデプロイされます。
+- **`aws` CLI は `--region` を付け、`--query` の式はダブルクォートで囲みます。** シングルクォートは PowerShell と cmd で解釈が異なるためです。
+- **`curl` は、PowerShell の場合だけ `curl.exe` と書きます**（macOS / Linux では `curl` のまま）。PowerShell の `curl` は `Invoke-WebRequest` の別名です。
+- **JSON の本文はファイルに書いてから渡します**（`curl` の `--data-binary "@<ファイル>"` など）。コマンドラインに JSON を直接書くと、引用符の扱いがシェルごとに異なります。
+- **検索や環境変数の設定など、シェル固有のコマンドは同等のものに置き換えます**（例: `grep` は PowerShell の `Select-String`）。
+- **`pnpm nx <target> <project> -- <引数>` の `--` の後ろが渡らないときは、`"--"` と引用符で囲みます。** PowerShell から `.ps1` のシムを経由すると `--` が消えることがあるためです。
 
 ## 成果物の置き場
 
-ランディングページ・メインアプリケーション・Nx の infra プロジェクト（AWS CDK）は `product/` に置きます。`product/` は**ファイルではなくディレクトリとして作成**してください。
+- ランディングページ・メインアプリケーション・Nx の infra プロジェクト（AWS CDK）は `product/` に置きます。`product/` は**ファイルではなくディレクトリとして作成**し、作るのは生成コマンドに任せます（先に作ると生成が失敗することがあります）。
+- `product/nx.json` があれば生成済みです。再実行の判定にはこれを使います。
+- 計画・進捗・デプロイ先リージョンは、生成が終わってから `product/construction/plan.md` に記録します。
 
-## ビルドと確認
+## このディレクトリでの決まりごと
 
-すべて `product/` 直下で実行します。
-
-| 目的 | コマンド |
-|---|---|
-| 依存インストール | `pnpm install` |
-| ローカル確認 | `pnpm dev`（website は http://localhost:4200） |
-| 本番ビルドの確認 | `pnpm nx run @product/website:preview`（http://localhost:4300） |
-| ビルド（完了条件） | `pnpm nx run-many -t build` |
-| 整形の自動修正 | `pnpm lint`（Biome の整形漏れで build が失敗したとき） |
-| bootstrap（アカウント×リージョンごとに初回のみ） | `AWS_REGION=<デプロイ先リージョン> pnpm nx bootstrap infra` |
-| デプロイ | `AWS_REGION=<デプロイ先リージョン> pnpm nx deploy-sandbox infra`（リージョンは毎回明示する。シェルの `AWS_REGION` が別の値だと意図しないリージョンへデプロイされ、2 回目以降は WAF スタックが `UPDATE_FAILED` になる） |
-| 削除 | `AWS_REGION=<デプロイ先リージョン> pnpm nx destroy-sandbox infra -- --force`（明示的な指示があったときだけ。TTY の無いシェルでは `--force` が無いと `TtyNotAttached` で失敗する） |
-
-## このディレクトリでの決めごと
-
-- **Tracker SDK は自作しません。** `tracker-sdk.js` を script タグで外部から読み込み、`window.MLEWTracker.Tracker` を使います。自作すると画面上は動いて見えてもイベントがどこにも送信されず、実データで反応を測るというワークショップの目的が達成できません。
-- **CSP に合わせて Tracker を組み込みます。** CloudFront の CSP は `script-src 'self'` なので、SDK のオリジンを `static-website.ts` の `scriptSrc` 経由で `script-src` に追加します。初期化は index.html のインライン script ではなく `packages/website/src/` の TypeScript から行います。インライン script は CSP で実行されません。
+- **Tracker は自作しません。** `template/` にある公式の固定ファイル（SDK と連携コード）をそのままモックにコピーし、生成されたファイルには接続コードだけを書きます（`template/TRACKER_INTEGRATION_GUIDE.md`）。自作すると画面上は動いて見えてもイベントがどこにも送信されず、実データで反応を測るというワークショップの目的が達成できません。
+- **インフラの生成コードは書き換えません。** 設定は公開 props で渡します。CSP・WAF・KMS は生成物の既定値を使います。
 - **Tracker 以外はモックで実装します。** バックエンド API・データベース・外部サービス連携はモック実装にし、MVP として画面が一通り動くことを内部設計の作り込みより先に成立させます。Tracker だけは本物の SDK と本物のエンドポイントを使います。
 - **`template/` 配下と `tracker/` 配下は編集しません。** どちらも参加者全員が共有する配布物で、書き換えると他の参加者の手順と食い違います。変更は `product/` に閉じてください。
-- **削除はユーザーの明示的な指示があったときだけ行います。** `product/` で `AWS_REGION=<デプロイ先リージョン> pnpm nx destroy-sandbox infra -- --force` を実行し、デプロイ先リージョンと us-east-1（WAF）の両方で `describe-stacks --region` を実行し、`product-infra-sandbox-` のスタックが存在しないことを確認します（状態で絞り込むと `DELETE_FAILED` などを見落とします。コマンドは `prompt/prompt.md` の「削除」）。
+- **削除はユーザーの明示的な指示があったときだけ行います。** 手順は `template/DEPLOYMENT_GUIDE.md` の `## 削除` です。
 - 画面に出るテキストは、特別な指定がない限り日本語にします。
-
-## 完了条件
-
-「確認しました」という報告ではなく、それぞれコマンドの出力か該当行を示してください。
-
-- `product/` で `pnpm nx run-many -t build` が成功する（infra の checkov を含む）— 末尾の出力を示す
-- ルーティングが機能する — ランディングページから各画面へ遷移でき、直接 URL でも表示されることを、確認した経路とともに示す
-- （Tracker 情報がある場合）`tracker-sdk.js` の外部読み込みが実在する — `grep -rn --exclude-dir=node_modules --exclude-dir=dist "tracker-sdk.js" product/packages/website/` の出力で、`packages/website/index.html` の script タグの行を示す
-- デプロイ後の CloudFront の URL にアクセスでき、ブラウザのコンソールに CSP 違反（`Refused to load the script` / `Refused to execute inline script`）が出ていない
-- （Tracker 情報がある場合）Tracker への送信が成功している — `/v1/events` への POST が 200 を返す、またはダッシュボードにイベントが表示される
 
 ## ツール別の入口
 

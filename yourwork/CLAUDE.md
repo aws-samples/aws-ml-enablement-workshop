@@ -5,5 +5,5 @@
 ## Claude Code 固有の補足
 
 - モックの実装は `.claude/skills/mock-builder/` の skill から始めます。PR/FAQ と Tracker のエンドポイント情報を集めたうえで `prompt/prompt.md` に沿って進みます。
-- 実装に入る前に plan mode（Shift+Tab で切り替え）で計画を出させると、作り直しが減ります。確定した計画は `product/construction/plan.md` に残してください。
+- 実装に入る前に plan mode（Shift+Tab で切り替え）で計画を出させると、作り直しが減ります。plan mode の時点ではまだ `product/` を作りません。確定した計画は、ワークスペースの生成が終わってから `product/construction/plan.md` に残してください。
 - ワークの内容は `AGENTS.md` 側で管理しています。このファイルには重複して書かないでください。

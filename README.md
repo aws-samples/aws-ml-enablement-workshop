@@ -2,7 +2,7 @@
 
 ML Enablement Workshop は、生成 AI を含めた AI/ML 技術をプロダクトの成長に繋げられるチームを組成するためのワークショップです。
 
-| 組織横断でのチームの組成 | Amazon の開発プロセスの実践 | ~6 カ月での本番リリース |
+| 組織横断でのチームの組成 | Amazon の開発プロセスの実践 | 〜6 カ月での本番リリース |
 |:--------|:---------|:------|
 |![Team](docs/images/top/top_1.jpeg) | ![Measure](docs/images/top/top_2.jpeg) | ![Plan](docs/images/top/top_3.png) |
 | 企画・ビジネス側と開発側が一体で取り組む | 顧客体験から逆算して考える <br/> [Working Backwards](https://aws.amazon.com/jp/executive-insights/content/product-management-at-amazon/#Working_Backwards.3A_being_customer_obsessed) を実践 | 生成 AI を用いた広範・並列な価値検証で実現 |
@@ -14,7 +14,7 @@ ML Enablement Workshop は、生成 AI を含めた AI/ML 技術をプロダク�
 
 * [**Day0**](./docs/organizer/day0.md) で、開始条件の確認と開始前の準備事項を確認します
 * [**実践編**](./docs/organizer/day1.md) で Amazon のプロダクト開発プロセスを実践し、**生成 AI と共に**新規プロダクト / 機能のプレスリリースを複数作成します。同時に、それらから仮説検証を行うためのモックを構築します (参考 : [当日の流れ](https://github.com/aws-samples/aws-ml-enablement-workshop/tree/main/yourwork))
-* [**改善編**](./docs/organizer/day2.md) でモックを通じて得られた知見を統合し、参加者自身で Amazon のプロセスを実践しプレスリリースを更新します。その後、今後 3~6 カ月でリリースするための最初のステップを計画します
+* [**改善編**](./docs/organizer/day2.md) でモックを通じて得られた知見を統合し、参加者自身で Amazon のプロセスを実践しプレスリリースを更新します。その後、今後 3〜6 カ月でリリースするための最初のステップを計画します
 
 | Title |Day0: 目的と役割の確認|実践編: Amazon 流を実践|改善編: 仮説検証の自走を開始|
 |:--------|:---------|:------|:------|
@@ -38,7 +38,7 @@ ML Enablement Workshop のメリットは次の通りです。
 
 * [Working Backwards の例](/docs//working_backwards_example.md)
 
-モックの一例として「EC サイト上の商品ページ自動生成・プレビュー機能」の例を示します。構築にかかる時間は 20~30 分程度で、トップページ、アプリケーション機能 (レスポンスはダミーを使用)、クリックやページ計測のメトリクス集計機能の 3 つから構成されます。メトリクスは改善編で使用します。
+モックの一例として「EC サイト上の商品ページ自動生成・プレビュー機能」の例を示します。構築にかかる時間は 20〜30 分程度で、トップページ、アプリケーション機能 (レスポンスはダミーを使用)、クリックやページ計測のメトリクス集計機能の 3 つから構成されます。メトリクスは改善編で使用します。
 
 | トップページ | 機能ページ | メトリクス |
 |:--------|:---------|:------|
@@ -150,7 +150,7 @@ ML Enablement Workshop 実施前に、**組織全体の AI/ML 活用リテラシ
 
 特定のシナリオで AI/ML のプロジェクトを企画から実装まで学べるハンズオンコンテンツです。
 
-* [サービスの解約率改善シナリオ](./notebooks/scenario_churn/) ( 所要時間 2~3 時間 )
+* [サービスの解約率改善シナリオ](./notebooks/scenario_churn/) ( 所要時間 2〜3 時間 )
    * 携帯電話会社での解約率改善を題材に、ビジネス理解からモデルのテストまで一気通貫で体験できるハンズオン。
 
 ## ML Enablement Workshop に関する FAQ
@@ -174,7 +174,7 @@ ML Enablement Workshop 実施前に、**組織全体の AI/ML 活用リテラシ
    * [日本のスタートアップ企業の成長速度が米国に比べ30分の1以下という現状にデータサイエンティストは何ができるか](https://note.com/piqcy/n/n66c93427d8f0)
 * ML Enablement Workshop を AI/ML の活用を推進するための社内勉強会として実施することはできますか ? 
    * いいえ。 ML Enablement Workshop はアクションプランを作るためのワークショップで、研修を目的としていません。実施に際しては、特定のプロダクト、プロダクト機能を選定して頂く必要があります。
-   * [プロダクトを成長させる生成 AI のユースケースを考えるワークショップ](https://speakerdeck.com/icoxfog417/purodakutowocheng-chang-saserusheng-cheng-xi-ai-noyusukesuwokao-eruwakusiyotupu) は 2~3 時間でユースケースの発案、検証が行えるプログラムになっています。詳細は追加コンテンツを参照してください。
+   * [プロダクトを成長させる生成 AI のユースケースを考えるワークショップ](https://speakerdeck.com/icoxfog417/purodakutowocheng-chang-saserusheng-cheng-xi-ai-noyusukesuwokao-eruwakusiyotupu) は 2〜3 時間でユースケースの発案、検証が行えるプログラムになっています。詳細は追加コンテンツを参照してください。
 
 ### 外部登壇資料
 

@@ -2,10 +2,13 @@
 
 ## 概要
 
-このガイドでは、[Nx Plugin for AWS](https://awslabs.github.io/nx-plugin-for-aws/) で生成したモックアプリを作成し、AWS にデプロイして削除するまでの手順を説明します。成果物は `yourwork/product/` に作ります。
+このガイドでは、[Nx Plugin for AWS](https://awslabs.github.io/nx-plugin-for-aws/) でモックアプリを生成し、AWS にデプロイして削除するまでの手順を説明します。成果物は `yourwork/product/` に作ります。
 
 - ランディングページ（`/`）とアプリ本体（`/app` 配下）を 1 つの website プロジェクトで管理します。
-- インフラは CDK で定義し、`AWS_REGION=<デプロイ先リージョン> pnpm nx deploy-sandbox infra` の 1 コマンドでビルドからデプロイまで実行します。
+- インフラは生成された CDK のコードをそのまま使い、設定は公開 props で渡します。CSP・WAF・KMS・checkov は生成物の既定値に任せます。
+- デプロイ先リージョンは `packages/infra/src/main.ts` に書いて固定します。シェルの環境変数には頼りません。
+- コマンドの書き方（シェルによる違い）は [`AGENTS.md` の「シェルの扱い」](/yourwork/AGENTS.md#シェルの扱い) に従います。
+- 計測（Tracker）の組み込みは [MLEW Tracker 導入ガイド](/yourwork/template/TRACKER_INTEGRATION_GUIDE.md) に従います。
 
 ## 技術スタック
 
@@ -13,7 +16,7 @@
 | --- | --- |
 | フロントエンド | React + TypeScript |
 | ビルドツール | Vite |
-| ルーティング | TanStack Router（ファイルベース、`packages/website/src/routes/*.tsx`） |
+| ルーティング | TanStack Router（ファイルベース、`packages/website/src/routes/`） |
 | UI | shadcn（`packages/common/shadcn`）+ Tailwind CSS v4 |
 | 品質チェック | Biome（format / lint）、Vitest、checkov（infra） |
 | インフラ | AWS CDK（Nx の infra プロジェクト） |
@@ -21,265 +24,195 @@
 
 ## 前提条件
 
-| ツール | 条件・確認方法 |
+着手前に、次をすべて確認します。満たしていない項目があれば、着手せずユーザーに伝えます。バージョンの根拠は [`AGENTS.md` の「検証済みバージョン」](/yourwork/AGENTS.md#検証済みバージョン) にあります。
+
+| 項目 | 条件・確認方法 |
 | --- | --- |
-| Node.js | 22.12 以上（または 20.19 以上）。Vite 8 と Nx の要件のため、Node 18 では動きません |
-| pnpm | `npm install -g pnpm` で導入し、`pnpm --version` で確認します。依存が `catalog:` 指定のため npm では install できません |
-| uv | infra のビルドに含まれる checkov を `uvx` で実行します。無いと `uvx: command not found` でビルドが失敗します |
-| AWS CLI v2 | 認証情報を設定し、`aws sts get-caller-identity` で確認します |
-| CDK bootstrap | アカウント×リージョンごとに初回 1 回、`AWS_REGION=<デプロイ先リージョン> pnpm nx bootstrap infra` を実行します（手順は後述） |
+| Node.js | Node.js 22.13 以上（推奨: 24 LTS）。`node --version` で確認します |
+| pnpm | `pnpm --version` で確認します。依存が `catalog:` 指定のため、npm では install できません |
+| uv | 0.5.29 以上。`uv --version` で確認します。infra の build に含まれる checkov を `uvx` で実行するため、無いと `uvx: command not found` で build が失敗します |
+| AWS CLI v2 と認証情報 | `aws sts get-caller-identity` が成功すること |
+| us-east-1 が使えること | CloudFront 用の WAF は us-east-1 にしか作れないため、SCP などで us-east-1 が制限されていないことを確認します。`aws cloudformation list-stacks --region us-east-1 --max-items 1 --query "length(StackSummaries)" --output json` がエラーにならなければ使えます（参加者向けの準備ガイドと同じコマンドです）。出力の数字は削除済みのスタックも数えるので、判断には使いません。出力形式が text だと、us-east-1 が使える場合でもこのコマンドはエラーになるため、`--output json` は省略しません。`AccessDenied` などのエラーになる場合は、組織の管理者に確認するようユーザーに伝えます。読み取りが通っても書き込みだけが制限されている場合があるため、企業のアカウントでは事前確認の段階でデプロイまで通しておきます |
 
-### リージョン
+CDK bootstrap はこの時点では不要です。手順 9 で、デプロイ先リージョンを `main.ts` に書き、build が通ったあとに行います。
 
-- デプロイ・削除のコマンドには、毎回 `AWS_REGION=<デプロイ先リージョン>` を付けてリージョンを明示します。CDK はプロファイルの既定リージョンより環境変数 `AWS_REGION` を優先するため、シェル（エージェントのシェルを含む）に別の値が入っていると、意図しないリージョンにデプロイされます。
-- `<デプロイ先リージョン>` は、初回は `aws configure get region` の値を使います。値が空なら、エージェントは推測せずユーザーに聞きます（手動の場合は自分で決めて指定します）。2 回目以降は、既存の `product-infra-sandbox-Application` と同じリージョンにします。エージェントは選んだリージョンを `product/construction/plan.md` に記録します。別のリージョンで再デプロイすると、WAF スタックの更新が `UPDATE_FAILED` になります（トラブルシューティング参照）。
-- WAF は常に us-east-1 の別スタックに作られます（CloudFront 用の WAF は us-east-1 にしか作れないため）。
-- Tracker は別のリージョンにあってもかまいません。エンドポイント URL で指定するだけです。
+## リージョンの決め方
+
+モック本体のデプロイ先リージョンは、次の順に決めます。一度決めた値は、bootstrap・デプロイ・削除のすべてで使い続けます。
+
+1. `product/construction/plan.md` に記録があれば、その値（`packages/infra/src/main.ts` の `env.region` と一致しているはずです）
+2. 無ければ、`aws configure get region` の値と、シェルの環境変数 `AWS_REGION` の値を候補にして、`aws cloudformation describe-stacks --region <候補> --stack-name product-infra-sandbox-Application --query "Stacks[0].StackStatus" --output text` で既存のスタックを探し、見つかったリージョン
+3. 無ければ、`aws configure get region` の値
+4. それも空なら、推測せずユーザーに尋ねる
+
+- 決めた値は控えておき、ワークスペースを生成したあとで `product/construction/plan.md` に記録します（`product/` を生成より前に作らないため）。
+- 2 回目以降に別のリージョンでデプロイすると、us-east-1 の WAF スタックの更新が `UPDATE_FAILED` になります（「トラブルシューティング」参照）。同じアカウントに既存のスタックがあるかを上の 2 で探すのはこのためです。
+- WAF は常に us-east-1 の別スタックに作られます。
+- Tracker は別のリージョンにあっても構いません。エンドポイント URL で指定するだけです。
 
 ## 生成されるディレクトリ構造
 
 ```
 yourwork/product/
-├── nx.json                         # Nx の設定（useDaemonProcess を追加する）
+├── nx.json                         # Nx の設定。これがあれば生成済み（useDaemonProcess を追加する）
 ├── package.json
 ├── pnpm-workspace.yaml
+├── construction/
+│   └── plan.md                     # デプロイ先リージョンと実装計画（生成後に作る）
 └── packages/
     ├── website/                    # React アプリ（LP とアプリ本体）
-    │   ├── index.html              # Tracker SDK の script タグを置く
+    │   ├── index.html
     │   ├── public/                 # 画像などの静的ファイル
     │   └── src/
-    │       ├── main.tsx            # エントリポイント（Tracker 初期化とページビュー記録）
+    │       ├── main.tsx            # エントリポイント
     │       ├── config.ts           # アプリ名と Tracker の接続情報
     │       ├── styles.css          # テーマ（Tailwind v4）
-    │       ├── routes/             # TanStack Router のルート（__root.tsx, index.tsx, app/ ...）
-    │       └── services/
-    │           └── mlewTracker.ts  # Tracker の初期化と呼び出し（追加する）
+    │       └── routes/             # TanStack Router のルート
     ├── infra/                      # CDK アプリ
-    │   └── src/stacks/
-    │       └── application-stack.ts  # Website を追加する
+    │   └── src/
+    │       ├── main.ts             # デプロイ先リージョンを書く
+    │       └── stacks/
+    │           └── application-stack.ts  # Website と KMS キーを追加する
     └── common/
-        ├── constructs/             # 共通 CDK コンストラクト
-        │   └── src/core/static-website.ts  # S3 + CloudFront + WAF + KMS の定義（改修する）
+        ├── constructs/             # 生成された共通 CDK コンストラクト（書き換えない）
         └── shadcn/                 # shadcn の UI コンポーネントと globals.css
 ```
 
-## プロジェクト固有の変更箇所
+Tracker の固定ファイルと接続コードを置く場所は、[MLEW Tracker 導入ガイド](/yourwork/template/TRACKER_INTEGRATION_GUIDE.md) を参照してください。
 
-| ファイル | 変更内容 |
-| --- | --- |
-| `nx.json` | `"useDaemonProcess": false` を追加する |
-| `packages/common/constructs/src/core/static-website.ts` | CSP の `script-src` にオリジンを足せる `scriptSrc` プロパティを追加し、KMS キーを destroy で削除されるようにする（後述のコード） |
-| `packages/infra/src/stacks/application-stack.ts` | Website を追加し、Tracker SDK のオリジンを `scriptSrc` に渡す（後述のコード） |
-| `packages/website/index.html` | `<title>` と description を変更し、`<head>` に Tracker SDK の script タグを置く |
-| `packages/website/src/config.ts` | `applicationName` と、Tracker の接続情報（`tracker` ブロック） |
-| `packages/website/src/services/mlewTracker.ts` | Tracker の初期化と `trackView` / `trackClick` のラッパー（新規作成） |
-| `packages/website/src/main.tsx` | 先頭で `initTracker()` を呼び、SPA の画面遷移をページビューとして記録する |
-| `packages/website/src/routes/` | LP とアプリの各画面、レイアウト、404 |
-| `packages/website/src/styles.css` | テーマ（ブランドカラーなど） |
+## 手順
 
-### routes/ の注意点
+`yourwork/` で始めます。`product/nx.json` がすでにあれば生成済みなので、手順 1〜4 は飛ばします。`product/` はあるのに `product/nx.json` が無いときは生成が途中で失敗しているので、`product/` を消してよいかユーザーに確認してから作り直します。
 
-- 生成された `__root.tsx` は全ルートをサイドバー付きの AppLayout で包むため、LP にもサイドバーが出ます。`__root.tsx` は `<Outlet />` だけにし、AppLayout は `routes/app/route.tsx`（`/app` 配下のレイアウト）で使います。
-- 存在しない URL は英語の「Not Found」だけが表示されます。`__root.tsx` の `notFoundComponent` に日本語の 404 と、トップへ戻る Link（`data-track` 付き）を置きます。
-- 生成された AppLayout のパンくずは、クエリ文字列を `?` なしで連結します（`/appscenario=x` のようなリンクになる）。`URLSearchParams` を使い `?` 付きで組み立て直します。
+### 1. ワークスペースを生成する
 
-### styles.css の注意点
+`yourwork/` で次を実行します。バージョンは [`AGENTS.md` の「検証済みバージョン」](/yourwork/AGENTS.md#検証済みバージョン) と揃えます。`product/` は事前に作りません。
 
-- テーマの既定値（`@theme`・`:root` の CSS 変数・`@layer base`）は `packages/common/shadcn/src/styles/globals.css` にあります。生成された `packages/website/src/styles.css` はこれを `@import` する 2 行だけなので、上書きはこのファイルに追記します。
-- Tailwind v4 は CSS-first 構成です。`tailwind.config.js` は使わず、`@theme {}` ブロックで色やアニメーションを定義します（追記先は `packages/website/src/styles.css`）。
-
-### 画像とフォント
-
-- 画像は `packages/website/public/` に置き、`/image.png` のような直接パスで参照します。
-- 外部 URL のプレースホルダー画像や外部フォント（Google Fonts など）は、デプロイ後に CSP でブロックされます。`pnpm dev` では表示されるので気付きにくい点に注意してください。プレースホルダーはローカル画像か CSS / SVG で作ります。
-
-### Tracker の組み込み
-
-`index.html` の script タグ、`mlewTracker.ts` と `main.tsx` のコード、`data-track` の付け方は [MLEW Tracker 導入ガイド](/yourwork/template/TRANCKER_INTEGRATION_GUIDE.md) に従います。CSP のため、`index.html` のインライン script での初期化は実行されません。
-
-`config.ts` には次のブロックを足します（値は Tracker のデプロイ完了通知に書かれたものに置き換えます）。
-
-```ts
-  tracker: {
-    applicationId: 'your-app-id',
-    applicationName: 'あなたのアプリ名',
-    apiEndpoint: 'https://xxxxxxxx.execute-api.us-east-1.amazonaws.com/dev', // 末尾に / を付けない
-    apiKey: 'xxxxxxxx',
-  },
+```
+pnpm create @aws/nx-workspace@1.0.6 product --iac=cdk --no-interactive
 ```
 
-## セットアップ手順
-
-`yourwork/` で次の順に実行します。
-
-### 1. ワークスペースを作成する
-
-```bash
-pnpm create @aws/nx-workspace product --no-interactive
-```
+生成が終わったら、`product/construction/plan.md` を作り、「リージョンの決め方」で決めたデプロイ先リージョンを記録します。
 
 ### 2. website と infra を生成する
 
-```bash
-cd product
+以降はすべて `product/` で実行します。
+
+```
 pnpm nx g @aws/nx-plugin:ts#website website --no-interactive
 pnpm nx g @aws/nx-plugin:ts#infra infra --no-interactive
 ```
 
 ### 3. 同期する
 
-```bash
+```
 pnpm nx sync
 ```
 
-generator の直後は「The workspace is out of sync」で compile が止まるため、必ず実行します。
+generator を実行したあとは、TypeScript のプロジェクト参照の同期が必要になることがあります。同期しないと build が「The workspace is out of sync」で止まります。
 
 ### 4. Nx デーモンを無効にする
 
-`nx.json` に次を追加します。
-
-```json
-  "useDaemonProcess": false
-```
+`nx.json` のトップレベルに `"useDaemonProcess": false` を追加します。
 
 `product/` は親リポジトリの `.gitignore` 対象のため、Nx デーモンがソースの変更を検知できません。デーモンが有効なままだと、変更後もキャッシュが使われ、古いビルドがデプロイされます。
 
-### 5. static-website.ts を改修する
+### 5. デプロイ先リージョンを main.ts に書く
 
-`packages/common/constructs/src/core/static-website.ts` を 2 点改修します。
-
-- CSP の `script-src` に任意のオリジンを足せる `scriptSrc?: string[]` プロパティを追加する（Tracker SDK を読み込むため）
-- KMS キーを `removalPolicy: RemovalPolicy.DESTROY` と `pendingWindow: Duration.days(7)` にする。既定は RETAIN のため、destroy 後もキーが残り $1/月 がかかり続けます
+`packages/infra/src/main.ts` で `ApplicationStage` に渡している `env` の `region` を、デプロイ先リージョンの文字列にします。`account` は `process.env.CDK_DEFAULT_ACCOUNT` のままにします。
 
 ```ts
-// 定数 CONTENT_SECURITY_POLICY を関数に変える
-const buildContentSecurityPolicy = (scriptSrc: string[] = []) => [
-  "default-src 'self'",
-  ["script-src 'self'", ...scriptSrc].join(' '),
-  "style-src 'self' 'unsafe-inline'",
-  "img-src 'self' data:",
-  "font-src 'self' data:",
-  "connect-src 'self' https: wss:",
-  "object-src 'none'",
-  "base-uri 'self'",
-  "frame-ancestors 'none'",
-].join('; ');
-
-// StaticWebsiteProps に追加
-  readonly scriptSrc?: string[];
-
-// constructor の分割代入に scriptSrc を追加し、ResponseHeadersPolicy の
-// contentSecurityPolicy: { contentSecurityPolicy: ..., override: true } の内側の値だけを置き換える
-contentSecurityPolicy: buildContentSecurityPolicy(scriptSrc),
-
-// KMS キー（生成コードでは encryptionKey ?? new Key(...) の式の中にある）
-new Key(this, 'WebsiteKey', {
-  enableKeyRotation,
-  removalPolicy: RemovalPolicy.DESTROY,
-  pendingWindow: Duration.days(7),
-})
+new ApplicationStage(app, 'product-infra-sandbox', {
+  env: {
+    account: process.env.CDK_DEFAULT_ACCOUNT,
+    region: '<デプロイ先リージョン>',
+  },
+});
 ```
 
-貼り付けた直後は Biome の整形チェックで build が失敗するので、`pnpm lint` で整形してください。
+生成直後の `region` は、実行時のシェルの環境変数やプロファイルから決まります。エージェントのシェルにはエージェント自身の設定に由来する `AWS_REGION` が入っていることがあり、そのままだと意図しないリージョンにデプロイされます。ここで固定すれば、bootstrap・デプロイ・削除がシェルの環境変数に左右されません。
 
-### 6. application-stack.ts に Website を追加する
+### 6. application-stack.ts に Website と KMS キーを追加する
 
 生成直後の `ApplicationStack` は空で、このままデプロイしても何も作られません。`packages/infra/src/stacks/application-stack.ts` を次のようにします。
 
 ```ts
 import { Website } from '@product/common-constructs';
-import { Stack, StackProps } from 'aws-cdk-lib';
+import { Duration, RemovalPolicy, Stack, StackProps } from 'aws-cdk-lib';
+import { Key } from 'aws-cdk-lib/aws-kms';
 import { Construct } from 'constructs';
-
-// MLEW Tracker SDK の配信元。website の index.html に書いた SDK URL のオリジンと揃える。
-const TRACKER_SDK_ORIGIN = 'https://xxxxxxxx.cloudfront.net';
 
 export class ApplicationStack extends Stack {
   constructor(scope: Construct, id: string, props?: StackProps) {
     super(scope, id, props);
-    new Website(this, 'Website', { scriptSrc: [TRACKER_SDK_ORIGIN] });
+
+    // destroy で削除されるキー（Website が自動で作るキーは削除後も残り、課金が続くため）
+    const encryptionKey = new Key(this, 'WebsiteKey', {
+      enableKeyRotation: true,
+      removalPolicy: RemovalPolicy.DESTROY,
+      pendingWindow: Duration.days(7),
+    });
+
+    new Website(this, 'Website', { encryptionKey });
   }
 }
 ```
 
-- `TRACKER_SDK_ORIGIN` は Tracker SDK URL のスキームとホストだけを書きます（例 : `https://xxxxxxxx.cloudfront.net`、パスは付けない）。
-- Tracker の情報がまだ無い場合は `scriptSrc` を省略します。あとで追加したら `AWS_REGION=<デプロイ先リージョン> pnpm nx deploy-sandbox infra` を再実行します。
+- KMS キーは `Website` の公開 props `encryptionKey` で渡します。生成された共通コンストラクト（`packages/common/constructs/`）は書き換えません。
+- CSP は生成された既定値のまま使います。Tracker の SDK はモックと同じオリジンから配信するので、CSP の変更は不要です。
 
-### 7. CDK bootstrap（初回のみ）
+### 7. 画面と Tracker を実装する
 
-```bash
-AWS_REGION=<デプロイ先リージョン> pnpm nx bootstrap infra
+- 画面は `packages/website/src/routes/` に作ります。生成物の既知の問題（レイアウト、404、`lang` など）は「既知の問題への対処」を確認します。
+- Tracker の値（API Endpoint / API Key）を受け取っている場合は、[MLEW Tracker 導入ガイド](/yourwork/template/TRACKER_INTEGRATION_GUIDE.md) の `## 固定ファイル` をコピーし、`## 接続コード` を書きます。ユーザーが Tracker を使わないと明示した場合は、どちらも行いません（SDK の script タグも置きません）。あとから Tracker を使うことになったら、組み込んでから手順 10 のデプロイを再実行します。
+- 画像は `packages/website/public/` に置き、`/image.png` のような直接パスで参照します。外部 URL の画像や外部フォント（Google Fonts など）は、生成された CSP によりデプロイ後にブロックされます。`pnpm dev` では表示されるので気付きにくい点に注意してください。
+
+### 8. ビルドする
+
 ```
-
-アカウント×リージョンごとに初回 1 回だけ実行します。別のリージョンにデプロイする場合は、そのリージョンで改めて必要になるため、事前確認と当日で同じリージョンを使います。引数なしの `cdk bootstrap` は、アプリがデプロイする全環境（デプロイ先リージョンと、WAF 用の us-east-1）を bootstrap します。
-
-## ビルドとデプロイ
-
-以下のコマンドはすべて `product/` 直下で実行します。
-
-```bash
-# 依存関係のインストール
 pnpm install
-
-# ビルド（Biome、Vitest、checkov を含む）
 pnpm nx run-many -t build
-
-# デプロイ（ビルドも実行される）。リージョンは毎回明示する
-AWS_REGION=<デプロイ先リージョン> pnpm nx deploy-sandbox infra
 ```
 
-デプロイすると次の 2 スタックが作られます。初回デプロイは 4 分前後かかります。
+build には Biome、Vitest、infra の synth と checkov が含まれます。整形漏れで失敗したら `pnpm lint` で自動修正してから、もう一度ビルドします。
+
+### 9. CDK bootstrap（アカウント×リージョンごとに初回のみ）
+
+```
+pnpm nx bootstrap infra
+```
+
+引数なしの `cdk bootstrap` は、アプリを合成し、そのスタックのデプロイ先の環境をすべて bootstrap します。合成には website の bundle（`dist/packages/website/bundle`）が要るので、手順 8 の build が一度通ってから実行します（無いと `CannotFindAsset` で失敗します）。手順 5 で `region` を固定しているので、対象はデプロイ先リージョンと WAF 用の us-east-1 の 2 つで、シェルの `AWS_REGION` には左右されません。すでに bootstrap 済みの環境では何も変わりません。事前確認と当日で同じリージョンを使えば、当日にやり直す必要はありません。
+
+### 10. デプロイする
+
+```
+pnpm nx deploy-sandbox infra
+```
+
+デプロイ先は `main.ts` の `region` で決まるので、コマンドにリージョンを付ける必要はありません。デプロイすると次の 2 スタックが作られます。初回デプロイは 4 分前後かかります。
 
 | スタック | リージョン |
 | --- | --- |
 | `product-infra-sandbox-Application` | デプロイ先リージョン |
 | `product-infra-sandbox-ApplicationWebsitewaf...` | us-east-1 |
 
-### アクセス URL の確認
-
 デプロイ完了時に CDK の Outputs に出る `...WebsiteDistributionDomainName...` の値（`xxxx.cloudfront.net`）がアクセス先です。あとから確認するときは次を実行します。
 
-```bash
-aws cloudformation describe-stacks \
-  --region <デプロイ先リージョン> \
-  --stack-name product-infra-sandbox-Application \
-  --query 'Stacks[0].Outputs'
+```
+aws cloudformation describe-stacks --region <デプロイ先リージョン> --stack-name product-infra-sandbox-Application --query "Stacks[0].Outputs" --output table
 ```
 
-アプリを更新したときも、同じリージョンを指定して `AWS_REGION=<デプロイ先リージョン> pnpm nx deploy-sandbox infra` を再実行するだけです。
+アプリを更新したときも、`pnpm nx deploy-sandbox infra` を再実行するだけです。
 
 ## セキュリティ設定
 
-### Content-Security-Policy
+CSP・WAF・KMS は生成物の既定値を使います。モック作りで意識するのは次の 2 点です。
 
-CloudFront がすべてのレスポンスに付ける CSP は次のとおりです（`script-src` の末尾に `scriptSrc` で渡したオリジンが加わります）。
+- 外部の script・画像・フォントは読み込めません。Tracker の SDK はモックに同梱し、画像は `public/` に置き、フォントはローカルのものを使います。
+- インライン script は実行されません。Tracker の初期化は TypeScript のコードで行います（[MLEW Tracker 導入ガイド](/yourwork/template/TRACKER_INTEGRATION_GUIDE.md)）。
 
-```
-default-src 'self'; script-src 'self' <scriptSrc のオリジン>; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self' data:; connect-src 'self' https: wss:; object-src 'none'; base-uri 'self'; frame-ancestors 'none'
-```
-
-モック作りに影響するのは次の 3 点です。
-
-- **外部 script は、オリジンを `scriptSrc` に追加したものだけ読み込めます。** Tracker SDK の配信元を `application-stack.ts` で必ず渡します。
-- **インライン script は実行されません。** Tracker の初期化は `index.html` に書かず、`src/services/mlewTracker.ts` で行います。
-- **外部の画像・フォントは読み込めません。** 画像は `public/` に置き、フォントはローカルのものを使います。
-
-API 呼び出し（`connect-src`）は HTTPS / WSS であれば許可されているので、Tracker API への送信はそのまま通ります。
-
-### その他のヘッダー
-
-Strict-Transport-Security、X-Content-Type-Options: nosniff、X-Frame-Options: DENY、Referrer-Policy: strict-origin-when-cross-origin が付きます。
-
-### AWS WAF
-
-CloudFront に us-east-1 の Web ACL が関連付けられ、次の 2 ルールが有効です。
-
-- `AWSManagedRulesCommonRuleSet`（一般的な Web の脆弱性への対策）
-- `AWSManagedRulesKnownBadInputsRuleSet`（既知の不正な入力の遮断）
-
-### S3 と KMS
-
-S3 バケットは非公開で、CloudFront 経由でのみアクセスされます。バケットは KMS キーで暗号化されます。
+CloudFront には us-east-1 の Web ACL（`AWSManagedRulesCommonRuleSet` と `AWSManagedRulesKnownBadInputsRuleSet`）が関連付けられます。S3 バケットは非公開で CloudFront 経由でのみアクセスされ、手順 6 で作った KMS キーで暗号化されます。
 
 ## 費用
 
@@ -292,29 +225,41 @@ S3 バケットは非公開で、CloudFront 経由でのみアクセスされま
 
 - 固定費は時間割りで課金されます。1 週間で削除すれば約 $2 です。
 - リクエスト課金は、モック程度のアクセスならほぼ $0 です。
-- 旧構成（S3 + CloudFront のみ）は固定費がほぼ $0 でしたが、この構成は置いておくだけで費用がかかります。使い終わったら削除してください。
+- 置いておくだけで費用がかかるので、使い終わったら削除してください。
 
 ## 削除
 
-`product/` で次を実行します。
+ユーザーから明示的な削除指示があった場合にのみ実行します。
 
-```bash
-AWS_REGION=<デプロイ先リージョン> pnpm nx destroy-sandbox infra
-```
+### モックのスタックを削除する
 
-確認（y/n）を求められます。エージェントに実行させる場合など TTY の無いシェルでは確認できずに `TtyNotAttached` で失敗するので、`AWS_REGION=<デプロイ先リージョン> pnpm nx destroy-sandbox infra -- --force` を使います。
+1. `product/` で `pnpm nx destroy-sandbox infra -- --force` を実行します。削除先は `main.ts` の `region` で決まります。`destroy-sandbox` の中身は確認付きの `cdk destroy` で、TTY の無いエージェントのシェルでは確認できずに `TtyNotAttached` で失敗するため、`--force` を付けます（`--` の後ろが cdk に渡ります。PowerShell での扱いは [`AGENTS.md` の「シェルの扱い」](/yourwork/AGENTS.md#シェルの扱い)）。S3 バケットは autoDeleteObjects 付きなので、手で空にする必要はありません。
+2. デプロイ先リージョンと us-east-1 の両方で次を実行し、どちらも出力が空であることを確認します。WAF のスタックは us-east-1 にあるため、デプロイ先だけを見ると取り残しに気付けません。状態で絞り込まず存在で確認するのは、`DELETE_FAILED` や `UPDATE_ROLLBACK_COMPLETE` のスタックを見落とさないためです。
+   ```
+   aws cloudformation describe-stacks --region <デプロイ先リージョン> --query "Stacks[?starts_with(StackName,'product-infra-sandbox-')].[StackName,StackStatus]" --output table
+   aws cloudformation describe-stacks --region us-east-1 --query "Stacks[?starts_with(StackName,'product-infra-sandbox-')].[StackName,StackStatus]" --output table
+   ```
+3. KMS キーは 7 日後に削除されます。削除待ちの間は課金されません。
 
-- S3 バケットは autoDeleteObjects 付きなので、手で空にする必要はありません。
-- 削除後、デプロイ先リージョンと us-east-1 の両方でスタックが残っていないことを確認します。どちらも表が空なら完了です。`DELETE_FAILED` などで残っている場合も表に出ます。
+### CDKToolkit スタック（bootstrap で作られたもの）
 
-```bash
-aws cloudformation describe-stacks --region <デプロイ先リージョン> \
-  --query "Stacks[?starts_with(StackName,'product-infra-sandbox-')].[StackName,StackStatus]" --output table
-aws cloudformation describe-stacks --region us-east-1 \
-  --query "Stacks[?starts_with(StackName,'product-infra-sandbox-')].[StackName,StackStatus]" --output table
-```
+モックのスタックを削除しても、bootstrap で作られた `CDKToolkit` スタックは残ります。残るリージョンは、デプロイ先リージョン、us-east-1、Tracker のリージョン（Tracker のデプロイ時に CodeBuild が bootstrap します）です。中身は CloudFormation の実行ロール（管理者権限）などの IAM ロール、ステージング用の S3 バケット（バージョニング有効）、ECR リポジトリで、費用はほぼかかりません。
 
-- KMS キーは 7 日後に削除されます。削除待ちの間は課金されません。
+ユーザーが不要と判断したときだけ削除します。削除する前に、そのリージョンでほかの CDK アプリが CDKToolkit を使っていないことを確かめます。
+
+1. 削除したいリージョンで次を実行し、CDK でデプロイされたスタックの一覧を出します。
+   ```
+   aws cloudformation describe-stacks --region <リージョン> --query "Stacks[?Parameters[?ParameterKey=='BootstrapVersion']].StackName" --output text
+   ```
+   出力が空でなければ、そのリージョンの CDKToolkit はまだ使われています（Tracker のリージョンでは、Tracker を削除するまで `MLEWTrackerStack-<env>` が出ます）。削除せず、出たスタック名をユーザーに伝えます。
+2. 出力が空なら、ステージング用のバケット名を控えてからスタックを削除します。
+   ```
+   aws cloudformation describe-stacks --region <リージョン> --stack-name CDKToolkit --query "Stacks[0].Outputs[?OutputKey=='BucketName'].OutputValue" --output text
+   aws cloudformation delete-stack --region <リージョン> --stack-name CDKToolkit
+   ```
+3. ステージング用のバケット（`cdk-hnb659fds-assets-<アカウント ID>-<リージョン>`）はスタックを削除しても残ります。バージョニングが有効なので、すべてのバージョンと削除マーカーを消して空にしてからバケットを削除します。空にする前に、ユーザーに削除してよいか確認します。
+
+CDKToolkit を削除したリージョンに再びデプロイするときは、手順 9 の bootstrap からやり直します。
 
 ## ローカル開発
 
@@ -337,10 +282,6 @@ aws cloudformation describe-stacks --region us-east-1 \
 
 Nx デーモンがソース変更を検知せず、キャッシュが使われています。`nx.json` に `"useDaemonProcess": false` があるか確認し、無ければ追加してから再デプロイします。
 
-### 「The workspace is out of sync」で止まる
-
-`pnpm nx sync` を実行してから、もう一度ビルドします。
-
 ### Biome のエラーで build が失敗する
 
 整形漏れや lint 違反です。`pnpm lint` で自動修正してから、もう一度ビルドします。
@@ -349,26 +290,37 @@ Nx デーモンがソース変更を検知せず、キャッシュが使われ�
 
 infra の checkov が uv を必要とします。uv をインストールしてから、もう一度ビルドします。
 
-### ブラウザのコンソールに CSP 違反が出る
-
-| メッセージ | 原因と対処 |
-| --- | --- |
-| `Refused to load the script` | SDK の配信元が `script-src` に無い。`application-stack.ts` の `TRACKER_SDK_ORIGIN` を `index.html` の SDK URL のオリジン（スキーム + ホスト）と揃え、再デプロイする |
-| `Refused to execute inline script` | `index.html` にインライン script がある。初期化を `src/services/mlewTracker.ts` に移す |
-| 画像・フォントの読み込み拒否 | 外部 URL を参照している。`public/` に置いたファイルか CSS / SVG に置き換える |
-
-### `TS2353` で `scriptSrc` がエラーになる
-
-`Object literal may only specify known properties, and 'scriptSrc' does not exist` のようなエラーは、`static-website.ts` の改修漏れです。セットアップ手順 5 のとおり `StaticWebsiteProps` に `scriptSrc` を追加します。
-
 ### deploy で bootstrap のエラーが出る
 
-対象のアカウント×リージョンが CDK bootstrap されていません。`AWS_REGION=<デプロイ先リージョン> pnpm nx bootstrap infra` を実行してから、同じリージョンでもう一度デプロイします。WAF 用の us-east-1 も対象になります。
+対象のアカウント×リージョンが CDK bootstrap されていません。`product/` で `pnpm nx bootstrap infra` を実行してから、もう一度デプロイします。
 
 ### 意図しないリージョンにデプロイされる
 
-環境変数 `AWS_REGION` がプロファイルの既定リージョンより優先されています。`echo $AWS_REGION` で確認できます。デプロイのコマンドに `AWS_REGION=<デプロイ先リージョン>` を付けて明示してください。
+`packages/infra/src/main.ts` の `env.region` がデプロイ先リージョンの文字列になっているか確認します（手順 5）。環境変数を参照したままだと、シェルの `AWS_REGION` で決まります。
 
 ### 再デプロイで WAF スタックが `UPDATE_FAILED` になる
 
-`Cannot delete export ...WebAclArn... as it is in use by product-infra-sandbox-Application` が出る場合は、前回と別のリージョンで合成されています。CDK がリージョンをまたぐ参照に切り替え、既存スタックが使っている export を削除しようとして拒否されます。既存の `product-infra-sandbox-Application` があるリージョンを `AWS_REGION=` で指定して再デプロイすると解消します。失敗した時点ではリソースは変更されていません。
+`Cannot delete export ...WebAclArn... as it is in use by product-infra-sandbox-Application` が出る場合は、前回と別のリージョンで合成されています。CDK がリージョンをまたぐ参照に切り替え、既存スタックが使っている export を削除しようとして拒否されます。`main.ts` の `region` を既存の `product-infra-sandbox-Application` があるリージョンに戻して再デプロイすると解消します。失敗した時点ではリソースは変更されていません。
+
+## 既知の問題への対処（@aws/nx-plugin 1.0.6 で確認）
+
+ここにあるのは、`@aws/nx-plugin` 1.0.6 の生成物で確認した問題と対処です。各項目は「X なら Y する」の形で書いているので、条件に当てはまらなければ何もしません。**plugin のバージョンを上げたら、この節の各項目がまだ当てはまるかを見直し、直った項目は削除します**（あわせて [`AGENTS.md` の「検証済みバージョン」](/yourwork/AGENTS.md#検証済みバージョン) を更新します）。
+
+### 生成時
+
+- **`pnpm create` の途中で husky の `.git can't be found` が出たら**、無視して進めます。`product/` が親リポジトリの管理外なだけで、生成には影響しません。
+- **website と infra を生成したあと、build が「The workspace is out of sync」で止まったら**、`pnpm nx sync` を実行してから build をやり直します（1.0.6 では generator の直後に必ず発生します。手順 3）。
+
+### 画面（website）
+
+- **生成された `routes/__root.tsx` が全ルートをサイドバー付きの `AppLayout` で包んでいたら**（LP にもサイドバーが出る）、`__root.tsx` は `<Outlet />` だけにし、`AppLayout` は `routes/app/route.tsx`（`/app` 配下のレイアウト）で使います。
+- **存在しない URL で英語の「Not Found」だけが出たら**、`__root.tsx` の `notFoundComponent` に日本語の 404 と、トップへ戻る Link を置きます（計測は Tracker ガイドの計測対象に従います）。
+- **`packages/website/index.html` が `lang="en"` なら**、`lang="ja"` に変え、`<title>` と `description` もプロダクトに合わせます。
+- **`AppLayout` のパンくずがクエリ文字列を `?` なしで連結していたら**（`/appscenario=x` のようなリンクになる）、`URLSearchParams` を使って `?` 付きで組み立て直します。パンくずに URL の区切り（`app` など）が英語のまま出ていたら、画面名の日本語ラベルに置き換えます。
+- **`packages/website/src/styles.css` が `@import` と `@source` の 2 行だけなら**、テーマの既定値は `packages/common/shadcn/src/styles/globals.css` にあります。色などの上書きは `packages/website/src/styles.css` に `@theme` / `:root` を追記して行い、ベーススタイルは `@layer base` 内に書きます。Tailwind CSS v4 は設定を CSS 側で行うので、`tailwind.config.js` に色を書いても反映されません。
+
+### バージョンを上げたときの確認項目
+
+- **生成された CSP の `connect-src` が Tracker の API（https）を許可しているか**を確認します。1.0.6 の既定値は `connect-src 'self' https: wss:` で、Tracker への送信はこれに依存しています。`pnpm nx run-many -t build` のあと、`dist/packages/infra/cdk.out` の Application スタックのテンプレートで `ContentSecurityPolicy` の値を見ます。`connect-src` が絞られていたら、公開 props で Tracker の API のオリジンを許可します。公開 props で設定できない場合は、生成コードを書き換えずに作業を止め、ユーザーに伝えます。
+- **生成された CSP の `script-src` が `'self'` を含むか**を確認します。Tracker の SDK はモックと同じオリジンから配信しているため、`'self'` が許可されていれば変更は不要です。
+- **`Website` の公開 props に `encryptionKey` がまだあるか**を確認します（手順 6）。無くなっていたら、KMS キーを削除可能にする別の公開 props を探し、見つからなければユーザーに伝えます。

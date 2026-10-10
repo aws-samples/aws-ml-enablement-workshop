@@ -6,13 +6,24 @@ updates:
     schedule:
       interval: "weekly"
     groups:
+      aws-sdk:
+        patterns:
+          - "@aws-sdk/*"
+      typescript:
+        patterns:
+          - "typescript"
+          - "@types/*"
+
+  # Tracker CDK app (separate lockfile)
+  - package-ecosystem: "npm"
+    directory: "/yourwork/tracker/cdk-app"
+    schedule:
+      interval: "weekly"
+    groups:
       aws-cdk:
         patterns:
           - "aws-cdk*"
           - "@aws-cdk/*"
-      aws-sdk:
-        patterns:
-          - "@aws-sdk/*"
       typescript:
         patterns:
           - "typescript"
