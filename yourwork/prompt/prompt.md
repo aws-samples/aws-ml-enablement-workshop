@@ -85,11 +85,11 @@
 2. **画面が配信されている**: website のルート定義の一覧と、LP と各画面の URL に `curl -sI <URL>/<パス>` を実行した結果の 1 行目（HTTP ステータス）を示します。
 3. **（Tracker を使う場合）SDK が同一オリジンから配信されている**: `curl -sI <URL>/tracker-sdk.js` が 200 を返し、`curl -s <URL>/` の出力に `<script src="/tracker-sdk.js"></script>` が含まれることを示します。
 4. **（Tracker を使う場合）Tracker の API がイベントを受け付ける**: アプリのコードとは別に、検証用のテストイベントを 1 件 POST し、200 と `"success":true` が返ることを示します。
-   - 送信する本文は、エージェントのファイル書き込みで `product/construction/verification-event.json` に作ります（シェルの引用符の違いを避けるため）。形式は `{"applicationId":"<モックの applicationId>","events":[{"eventType":"custom","elementName":"verification","timestamp":<現在の UNIX 時刻（ミリ秒）>,"page":"/","url":"<URL>/","sessionId":"verification","applicationName":"<製品名>","createdAt":"<現在時刻の ISO 8601>","version":"verification","properties":{"verification":true}}]}` です。`timestamp` が無いと API が 500 を返します。
+   - 送信する本文は、エージェントのファイル書き込みで `product/construction/verification-event.json` に作ります（シェルの引用符の違いを避けるため）。形式は `{"applicationId":"<モックの applicationId>","events":[{"eventType":"custom","elementName":"verification","timestamp":<現在の UNIX 時刻（ミリ秒）>,"page":"/","url":"<URL>/","sessionId":"verification","applicationName":"<製品名>","createdAt":"<現在時刻の ISO 8601>","version":"verification","properties":{"verification":true}}]}` です。`timestamp` が無いと API が 500 を返します。`timestamp` などの時刻は推測で書かず、実行したコマンドの出力から入れます（例: `node -e "console.log(Date.now(), new Date().toISOString())"`）。
    - 送信は 1 行で、`curl -s -i -X POST "<API Endpoint>/v1/events" -H "Content-Type: application/json" -H "X-Api-Key: <API Key>" --data-binary "@product/construction/verification-event.json"` です。
    - 実行したら、ダッシュボードに `properties.verification` が `true` のイベントが 1 件増えることをユーザーに伝えます。
 5. **ダミー値が残っていない**: `product/packages` を `node_modules` と `dist` を除いて `xxxxxxxx` と `dummyapikey` で検索し、0 件であることを示します（POSIX シェルなら `grep -rnE`、PowerShell なら `Select-String`）。
-6. **（Tracker を使う場合）同じ操作を二重に記録していない**: `product/packages/website/src` で `trackClick(` の呼び出し箇所を検索して一覧にし、どれも `data-track` を付けた要素の handler ではないことを示します（規則は `template/TRACKER_INTEGRATION_GUIDE.md`）。
+6. **（Tracker を使う場合）同じ操作を二重に記録していない**: `product/packages/website/src` で `trackClick(` の呼び出し箇所を検索して一覧にし、どれも `data-track` を付けた要素の handler ではないことを示します（規則は `template/TRACKER_INTEGRATION_GUIDE.md`）。あわせて `data-track-name` の値を一覧にし、すべて英小文字・数字・`-` だけで命名規約（`template/TRACKER_INTEGRATION_GUIDE.md` の `## 命名規約`）に沿うことを示します。
 
 次の項目はブラウザが必要なので、エージェントは確認したと報告せず、デプロイ後の URL と Dashboard URL を添えてユーザーに確認を依頼します。
 

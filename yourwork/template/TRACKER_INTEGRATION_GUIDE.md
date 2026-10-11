@@ -105,6 +105,7 @@ initTracker({ ...Config.tracker, debug: import.meta.env.DEV }, router.history);
 - `trackClick` の `elementName` も同じ規約で付けます。`trackSectionView` / `observeSection` の `sectionName` は `<画面>-<セクション>`（例: `lp-features`）です。
 - クリック以外の出来事（完了・結果の表示など）は `trackClick` で送りません。結果の画面やセクションが表示されたことを `observeSection` / `trackSectionView` で記録します。名前は上と同じ `<画面>-<セクション>` で、表示されたセクションの名前にします（例: 登録の完了は `app-signup-result`）。イベントの種類は `section-view` なので、名前に `-view` や `-completed` は付けません。
 - 同じ画面の同じ役割の要素には、版が変わっても同じ名前を使います。
+- 動的に作る名前（パンくずやリストの項目など）も、表示文言ではなく route のパスなど固定の識別子から作ります。使うのは英小文字・数字・`-` だけで、`<画面>` の部分はその要素がある実際の画面にします（例: `/app/search` のパンくずの「ホーム」は `app-search-breadcrumb-home-link`）。
 
 ## 計測対象
 
@@ -116,6 +117,7 @@ initTracker({ ...Config.tracker, debug: import.meta.env.DEV }, router.history);
 
 ## 確認
 
+- 命名規約に従っていることは、モックのソースから `data-track-name` の値の一覧を出し、すべてが `^[a-z0-9-]+$` に合うことで確かめます。動的に作る名前は、作り方が固定の識別子からになっているかをコードで確かめます。
 - 二重計測が無いことは、`trackClick(` の呼び出し箇所を検索し、どれも `data-track` を付けた要素（とその子孫）の handler の中に無いことで確かめます。
 - `pnpm dev` では `debug: import.meta.env.DEV` により、SDK のログがブラウザのコンソールに出ます。
 - SDK は 5 秒ごと、10 件たまったとき、ページを離れるときにまとめて `<API Endpoint>/v1/events` へ送ります。
