@@ -42,6 +42,8 @@ aws sts get-caller-identity
 aws cloudformation list-stacks --region us-east-1 --max-items 1 --query "length(StackSummaries)" --output json
 ```
 
+このコマンドは読み取りだけを確かめるので、作成や WAF だけを拒否する SCP は見つけられません。企業のアカウントでは、「6. 動作確認」でデプロイまで通して確かめてください。
+
 最後のコマンドが `AccessDenied`（`explicit deny in a service control policy` など）で失敗する場合は、組織の SCP などで us-east-1 が制限されています。このままではモックをデプロイできないため、AWS アカウントの管理者に us-east-1 の利用（CloudFormation、WAF など）を許可してもらうか、制限のないアカウントを用意してください。
 
 ### 2. Node.js と npm のインストール
@@ -58,11 +60,11 @@ npm --version
 
 ### 3. pnpm のインストール
 
-モックは pnpm でワークスペースを作成・ビルドします（npm では依存をインストールできません）。検証済みの pnpm のバージョンは [`yourwork/AGENTS.md` の「検証済みバージョン」](/yourwork/AGENTS.md#検証済みバージョン) を参照してください。
+モックは pnpm でワークスペースを作成・ビルドします（npm では依存をインストールできません）。バージョンは [`yourwork/AGENTS.md` の「検証済みバージョン」](/yourwork/AGENTS.md#検証済みバージョン) の pnpm と揃えます（下のコマンドの `12.4.1` も、表を更新したら合わせて直します）。
 
 ```text
 # インストール
-npm install -g pnpm
+npm install -g pnpm@12.4.1
 
 # インストール確認
 pnpm --version

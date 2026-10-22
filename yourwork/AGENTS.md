@@ -16,14 +16,13 @@
 
 ## 検証済みバージョン
 
-手順はこの組み合わせで確認しています。生成コマンドのバージョンはこの表と揃えます。plugin を上げるときは、この表と `template/DEPLOYMENT_GUIDE.md` の `## 既知の問題への対処（@aws/nx-plugin 1.0.6 で確認）` を見直します。
+手順はこの組み合わせで確認しています（要件ではなく、検証に使った版です。要件は `template/DEPLOYMENT_GUIDE.md` の `## 前提条件`）。生成コマンドのバージョンはこの表と揃えます。plugin を上げるときは、この表と `template/DEPLOYMENT_GUIDE.md` の `## 既知の問題への対処（@aws/nx-plugin 1.0.6 で確認）` を見直します。
 
 | 項目 | バージョン |
 |---|---|
 | `@aws/create-nx-workspace` / `@aws/nx-plugin` | 1.0.6（`pnpm create @aws/nx-workspace@1.0.6 product --iac=cdk --no-interactive`） |
-| Node.js | 22.13 以上（推奨: 24 LTS）。検証環境は 24.13.0 |
+| Node.js | 24.13.0 |
 | pnpm | 12.4.1 |
-| uv | 0.5.29 以上 |
 | 検証日 | 2026-10-10（macOS。Claude Code と Kiro CLI で生成〜build〜deploy〜destroy を確認。Windows は未検証） |
 
 ## シェルの扱い
@@ -41,14 +40,11 @@ Windows では、ネイティブの PowerShell で動かします（WSL2 や Git
 ## 成果物の置き場
 
 - ランディングページ・メインアプリケーション・Nx の infra プロジェクト（AWS CDK）は `product/` に置きます。`product/` は**ファイルではなくディレクトリとして作成**し、作るのは生成コマンドに任せます（先に作ると生成が失敗することがあります）。
-- `product/nx.json` があれば生成済みです。再実行の判定にはこれを使います。
-- 計画・進捗・デプロイ先リージョンは、生成が終わってから `product/construction/plan.md` に記録します。
+- 計画・進捗・デプロイ先リージョンは `product/construction/plan.md` に記録します。作る時期と再実行の判定は `template/DEPLOYMENT_GUIDE.md` の `## 手順` に従います。
 
 ## このディレクトリでの決まりごと
 
-- **Tracker は自作しません。** `template/` にある公式の固定ファイル（SDK と連携コード）をそのままモックにコピーし、生成されたファイルには接続コードだけを書きます（`template/TRACKER_INTEGRATION_GUIDE.md`）。自作すると画面上は動いて見えてもイベントがどこにも送信されず、実データで反応を測るというワークショップの目的が達成できません。
-- **インフラの生成コードは書き換えません。** 設定は公開 props で渡します。CSP・WAF・KMS は生成物の既定値を使います。
-- **Tracker 以外はモックで実装します。** バックエンド API・データベース・外部サービス連携はモック実装にし、MVP として画面が一通り動くことを内部設計の作り込みより先に成立させます。Tracker だけは本物の SDK と本物のエンドポイントを使います。
+- モックの作り方の判断基準（MVP 優先、Tracker 以外はモックで実装、インフラの生成コードは書き換えない、Tracker は自作しない）は `prompt/prompt.md` にあります。
 - **`template/` 配下と `tracker/` 配下は編集しません。** どちらも参加者全員が共有する配布物で、書き換えると他の参加者の手順と食い違います。変更は `product/` に閉じてください。
 - **削除はユーザーの明示的な指示があったときだけ行います。** 手順は `template/DEPLOYMENT_GUIDE.md` の `## 削除` です。
 - 画面に出るテキストは、特別な指定がない限り日本語にします。

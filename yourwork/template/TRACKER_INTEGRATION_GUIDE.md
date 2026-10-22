@@ -119,6 +119,10 @@ initTracker({ ...Config.tracker, debug: import.meta.env.DEV }, router.history);
 
 - 命名規約に従っていることは、モックのソースから `data-track-name` の値の一覧を出し、すべてが `^[a-z0-9-]+$` に合うことで確かめます。動的に作る名前は、作り方が固定の識別子からになっているかをコードで確かめます。
 - 二重計測が無いことは、`trackClick(` の呼び出し箇所を検索し、どれも `data-track` を付けた要素（とその子孫）の handler の中に無いことで確かめます。
+- Tracker の API がイベントを受け付けることは、デプロイ後にアプリのコードとは別の検証用のテストイベントを 1 件 POST し、200 と `"success":true` が返ることで確かめます。
+  - 本文は、エージェントのファイル書き込みで `product/construction/verification-event.json` に作ります（シェルの引用符の違いを避けるため）。形式は `{"applicationId":"<モックの applicationId>","events":[{"eventType":"custom","elementName":"verification","timestamp":<現在の UNIX 時刻（ミリ秒）>,"page":"/","url":"<URL>/","sessionId":"verification","applicationName":"<製品名>","createdAt":"<現在時刻の ISO 8601>","version":"verification","properties":{"verification":true}}]}` です。`timestamp` が無いと API が 500 を返します。時刻は推測で書かず、実行したコマンドの出力から入れます（例: `node -e "console.log(Date.now(), new Date().toISOString())"`）。
+  - 送信は 1 行で、`curl -s -i -X POST "<API Endpoint>/v1/events" -H "Content-Type: application/json" -H "X-Api-Key: <API Key>" --data-binary "@product/construction/verification-event.json"` です（PowerShell では `curl.exe`）。
+  - このイベントはダッシュボードの合計とセッション数にも 1 件ずつ加わります。`properties.verification` が `true` のものが検証用なので、利用者の反応を読むときは除いて考えるよう、ユーザーに伝えます。
 - `pnpm dev` では `debug: import.meta.env.DEV` により、SDK のログがブラウザのコンソールに出ます。
 - SDK は 5 秒ごと、10 件たまったとき、ページを離れるときにまとめて `<API Endpoint>/v1/events` へ送ります。
 - 完了の確認方法（デプロイ後の URL での確認を含む）は `prompt/prompt.md` の完了条件に従います。

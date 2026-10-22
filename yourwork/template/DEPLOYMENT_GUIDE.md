@@ -5,7 +5,7 @@
 このガイドでは、[Nx Plugin for AWS](https://awslabs.github.io/nx-plugin-for-aws/) でモックアプリを生成し、AWS にデプロイして削除するまでの手順を説明します。成果物は `yourwork/product/` に作ります。
 
 - ランディングページ（`/`）とアプリ本体（`/app` 配下）を 1 つの website プロジェクトで管理します。
-- インフラは生成された CDK のコードをそのまま使い、設定は公開 props で渡します。CSP・WAF・KMS・checkov は生成物の既定値に任せます。
+- インフラは生成された CDK のコードをそのまま使い、設定は公開 props で渡します。CSP・WAF・checkov は生成物の既定値に任せ、KMS キーだけは削除できるものを公開 props の `encryptionKey` で渡します（手順 6）。
 - デプロイ先リージョンは `packages/infra/src/main.ts` に書いて固定します。シェルの環境変数には頼りません。
 - コマンドの書き方（シェルによる違い）は [`AGENTS.md` の「シェルの扱い」](/yourwork/AGENTS.md#シェルの扱い) に従います。
 - 計測（Tracker）の組み込みは [MLEW Tracker 導入ガイド](/yourwork/template/TRACKER_INTEGRATION_GUIDE.md) に従います。
@@ -29,7 +29,7 @@
 | 項目 | 条件・確認方法 |
 | --- | --- |
 | Node.js | Node.js 22.13 以上（推奨: 24 LTS）。`node --version` で確認します |
-| pnpm | `pnpm --version` で確認します。依存が `catalog:` 指定のため、npm では install できません |
+| pnpm | `pnpm --version` が [`AGENTS.md` の「検証済みバージョン」](/yourwork/AGENTS.md#検証済みバージョン) の pnpm と一致すること。違う場合は、`npm install -g pnpm@<そのバージョン>` で入れ直し、ターミナルを開き直して `pnpm --version` をもう一度確かめるようユーザーに伝えます（corepack などの別の pnpm が先に見つかると、入れ直しても切り替わりません）。依存が `catalog:` 指定のため、npm では install できません |
 | uv | 0.5.29 以上。`uv --version` で確認します。infra の build に含まれる checkov を `uvx` で実行するため、無いと `uvx: command not found` で build が失敗します |
 | AWS CLI v2 と認証情報 | `aws sts get-caller-identity` が成功すること |
 | us-east-1 が使えること | CloudFront 用の WAF は us-east-1 にしか作れないため、SCP などで us-east-1 が制限されていないことを確認します。`aws cloudformation list-stacks --region us-east-1 --max-items 1 --query "length(StackSummaries)" --output json` がエラーにならなければ使えます（参加者向けの準備ガイドと同じコマンドです）。出力の数字は削除済みのスタックも数えるので、判断には使いません。出力形式が text だと、us-east-1 が使える場合でもこのコマンドはエラーになるため、`--output json` は省略しません。`AccessDenied` などのエラーになる場合は、組織の管理者に確認するようユーザーに伝えます。読み取りが通っても書き込みだけが制限されている場合があるため、企業のアカウントでは事前確認の段階でデプロイまで通しておきます |
@@ -54,7 +54,7 @@ CDK bootstrap はこの時点では不要です。手順 9 で、デプロイ先
 
 ```
 yourwork/product/
-├── nx.json                         # Nx の設定。これがあれば生成済み（useDaemonProcess を追加する）
+├── nx.json                         # Nx の設定（手順 4 で useDaemonProcess を追加する）
 ├── package.json
 ├── pnpm-workspace.yaml
 ├── construction/
@@ -82,7 +82,20 @@ Tracker の固定ファイルと接続コードを置く場所は、[MLEW Tracke
 
 ## 手順
 
-`yourwork/` で始めます。`product/nx.json` がすでにあれば生成済みなので、手順 1〜4 は飛ばします。`product/` はあるのに `product/nx.json` が無いときは生成が途中で失敗しているので、`product/` を消してよいかユーザーに確認してから作り直します。
+`yourwork/` で始めます。
+
+**再実行するとき**は、手順 1〜6 のそれぞれについて結果がすでにあるかを確かめ、無いものだけ実行します。`product/nx.json` は手順 1 で作られるので、それだけで「生成済み」と判断すると、手順 2〜6 の途中で失敗した状態を見落とします（たとえば手順 4 が抜けると、古いビルドが黙ってデプロイされます）。
+
+| 手順 | 飛ばしてよい条件 |
+| --- | --- |
+| 1 | `product/nx.json` がある |
+| 2 | `pnpm nx show projects` の出力に website と infra の両方がある（片方だけなら、無いほうの generator だけ実行します） |
+| 3 | 飛ばさない（何度実行しても結果は変わりません） |
+| 4 | `nx.json` のトップレベルに `"useDaemonProcess": false` がある |
+| 5 | `main.ts` の `env.region` がデプロイ先リージョンの文字列になっている |
+| 6 | `application-stack.ts` で `Website` に `encryptionKey` を渡している |
+
+`product/` はあるのに `product/nx.json` が無いときは、手順 1 が途中で失敗しています。`product/` を消してよいかユーザーに確認してから作り直します。
 
 ### 1. ワークスペースを生成する
 
@@ -207,7 +220,7 @@ aws cloudformation describe-stacks --region <デプロイ先リージョン> --s
 
 ## セキュリティ設定
 
-CSP・WAF・KMS は生成物の既定値を使います。モック作りで意識するのは次の 2 点です。
+CSP と WAF は生成物の既定値を使い、KMS キーは手順 6 で削除できるものを渡します。モック作りで意識するのは次の 2 点です。
 
 - 外部の script・画像・フォントは読み込めません。Tracker の SDK はモックに同梱し、画像は `public/` に置き、フォントはローカルのものを使います。
 - インライン script は実行されません。Tracker の初期化は TypeScript のコードで行います（[MLEW Tracker 導入ガイド](/yourwork/template/TRACKER_INTEGRATION_GUIDE.md)）。
@@ -251,13 +264,14 @@ CloudFront には us-east-1 の Web ACL（`AWSManagedRulesCommonRuleSet` と `AW
    ```
    aws cloudformation describe-stacks --region <リージョン> --query "Stacks[?Parameters[?ParameterKey=='BootstrapVersion']].StackName" --output text
    ```
-   出力が空でなければ、そのリージョンの CDKToolkit はまだ使われています（Tracker のリージョンでは、Tracker を削除するまで `MLEWTrackerStack-<env>` が出ます）。削除せず、出たスタック名をユーザーに伝えます。
+   出力が空でなければ、そのリージョンの CDKToolkit はまだ使われています（Tracker のリージョンでは、Tracker を削除するまで `MLEWTrackerStack-<env>` が出ます）。削除せず、出たスタック名をユーザーに伝えます。このパラメータを持たないスタック（古い synthesizer でデプロイしたものなど）はこの一覧に出ないので、空でも、ほかに CDK アプリをデプロイしていないかユーザーに確認します。
 2. 出力が空なら、ステージング用のバケット名を控えてからスタックを削除します。
    ```
    aws cloudformation describe-stacks --region <リージョン> --stack-name CDKToolkit --query "Stacks[0].Outputs[?OutputKey=='BucketName'].OutputValue" --output text
    aws cloudformation delete-stack --region <リージョン> --stack-name CDKToolkit
    ```
-3. ステージング用のバケット（`cdk-hnb659fds-assets-<アカウント ID>-<リージョン>`）はスタックを削除しても残ります。バージョニングが有効なので、すべてのバージョンと削除マーカーを消して空にしてからバケットを削除します。空にする前に、ユーザーに削除してよいか確認します。
+   `aws cloudformation describe-stacks --region <リージョン> --stack-name CDKToolkit` が `does not exist` のエラーを返せば、削除は完了です。削除は非同期なので、`DELETE_IN_PROGRESS` の間は待ちます。`DELETE_FAILED` になったら、ユーザーに伝えます。
+3. ステージング用のバケット（`cdk-hnb659fds-assets-<アカウント ID>-<リージョン>`）はスタックを削除しても残ります。バージョニングが有効なので、すべてのバージョンと削除マーカーを消して空にしてからバケットを削除します（`aws s3 rb --force` はバージョン付きのオブジェクトを消さないので、それだけではバケットが空にならず削除に失敗します）。空にする前に、ユーザーに削除してよいか確認します。
 
 CDKToolkit を削除したリージョンに再びデプロイするときは、手順 9 の bootstrap からやり直します。
 
@@ -309,7 +323,6 @@ infra の checkov が uv を必要とします。uv をインストールして�
 ### 生成時
 
 - **`pnpm create` の途中で husky の `.git can't be found` が出たら**、無視して進めます。`product/` が親リポジトリの管理外なだけで、生成には影響しません。
-- **website と infra を生成したあと、build が「The workspace is out of sync」で止まったら**、`pnpm nx sync` を実行してから build をやり直します（1.0.6 では generator の直後に必ず発生します。手順 3）。
 
 ### 画面（website）
 
@@ -323,4 +336,5 @@ infra の checkov が uv を必要とします。uv をインストールして�
 
 - **生成された CSP の `connect-src` が Tracker の API（https）を許可しているか**を確認します。1.0.6 の既定値は `connect-src 'self' https: wss:` で、Tracker への送信はこれに依存しています。`pnpm nx run-many -t build` のあと、`dist/packages/infra/cdk.out` の Application スタックのテンプレートで `ContentSecurityPolicy` の値を見ます。`connect-src` が絞られていたら、公開 props で Tracker の API のオリジンを許可します。公開 props で設定できない場合は、生成コードを書き換えずに作業を止め、ユーザーに伝えます。
 - **生成された CSP の `script-src` が `'self'` を含むか**を確認します。Tracker の SDK はモックと同じオリジンから配信しているため、`'self'` が許可されていれば変更は不要です。
+- **生成された `main.ts` が `ApplicationStage` に `env`（`account` と `region`）を渡す形か、生成直後の `ApplicationStack` が空か**を確認します（手順 5・6 はこの形を前提にしています）。形が変わっていたら、手順 5・6 を新しい形に合わせて直します。
 - **`Website` の公開 props に `encryptionKey` がまだあるか**を確認します（手順 6）。無くなっていたら、KMS キーを削除可能にする別の公開 props を探し、見つからなければユーザーに伝えます。
