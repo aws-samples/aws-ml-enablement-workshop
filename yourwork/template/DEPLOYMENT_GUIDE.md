@@ -89,7 +89,7 @@ Tracker の固定ファイルと接続コードを置く場所は、[MLEW Tracke
 | 手順 | 飛ばしてよい条件 |
 | --- | --- |
 | 1 | `product/nx.json` がある |
-| 2 | `pnpm nx show projects` の出力に website と infra の両方がある（片方だけなら、無いほうの generator だけ実行します） |
+| 2 | `pnpm nx show projects` の出力に `@product/website` と `@product/infra` の両方がある（片方だけなら、無いほうの generator だけ実行します） |
 | 3 | 飛ばさない（何度実行しても結果は変わりません） |
 | 4 | `nx.json` のトップレベルに `"useDaemonProcess": false` がある |
 | 5 | `main.ts` の `env.region` がデプロイ先リージョンの文字列になっている |

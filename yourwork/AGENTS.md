@@ -23,7 +23,7 @@
 | `@aws/create-nx-workspace` / `@aws/nx-plugin` | 1.0.6（`pnpm create @aws/nx-workspace@1.0.6 product --iac=cdk --no-interactive`） |
 | Node.js | 24.13.0 |
 | pnpm | 12.4.1 |
-| 検証日 | 2026-10-10（macOS。Claude Code と Kiro CLI で生成〜build〜deploy〜destroy を確認。Windows は未検証） |
+| 検証日 | 2026-10-23（macOS。生成〜build〜deploy〜完了条件の確認〜destroy を確認。2026-10-10 に Claude Code と Kiro CLI でも確認。Windows は未検証） |
 
 ## シェルの扱い
 
