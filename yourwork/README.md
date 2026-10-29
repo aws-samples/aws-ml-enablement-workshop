@@ -366,19 +366,21 @@ Claude Code では、このプロンプトを貼り付けると `mock-builder` �
 
 渡した内容をもとにアプリケーションが自動的に実装され、CDK（Nx Plugin for AWS）で作成した S3 + CloudFront + WAF でホスティングされます。WAF と KMS キーに 1 デプロイあたり月額 約 $8 の固定費がかかるので、使い終わったら削除してください。
 
-モック本体のデプロイ先リージョンはエージェントが決めて `product/construction/plan.md` に記録し、CDK の設定（`packages/infra/src/main.ts`）に固定します。決め方は [`template/DEPLOYMENT_GUIDE.md` の「リージョンの決め方」](./template/DEPLOYMENT_GUIDE.md#リージョンの決め方) にあります。エージェントからリージョンを聞かれたら指定してください。事前確認と当日で同じリージョンを使うと、CDK bootstrap をやり直さずに済みます。CloudFront 用の WAF は us-east-1 にしか作れないため、us-east-1 に別スタックとして作成されます。Tracker のリージョンとそろえる必要はありません。
+モック本体のデプロイ先リージョンはエージェントが決めて `product/construction/plan.md` に記録し、CDK の stage 設定（`packages/common/infra-config/src/stages.config.ts`）に固定します。決め方は [`template/DEPLOYMENT_GUIDE.md` の「リージョンの決め方」](./template/DEPLOYMENT_GUIDE.md#リージョンの決め方) にあります。エージェントからリージョンや AWS のプロファイル名を聞かれたら指定してください（プロファイルを分けていなければ `default` です）。事前確認と当日で同じリージョンを使うと、CDK bootstrap をやり直さずに済みます。CloudFront 用の WAF は us-east-1 にしか作れないため、us-east-1 に別スタックとして作成されます。Tracker のリージョンとそろえる必要はありません。
 
 #### 5. ホスティングしたアプリケーションの削除
 
 AWS にデプロイしたアプリケーションを削除したい場合は、Kiro CLI などの起動中の生成 AI ツールに、`product/ ディレクトリを参照し、デプロイしたアプリケーションを削除したい` と伝えてください。
 エージェントが [`template/DEPLOYMENT_GUIDE.md` の「削除」](./template/DEPLOYMENT_GUIDE.md#削除) に従って各種リソースを削除します。
 
-削除が終わったら、デプロイ先リージョン（`product/construction/plan.md` に記録されています）と us-east-1（WAF）の両方でスタックが残っていないことを確認します。`<デプロイ先リージョン>` を置き換えて実行し、どちらも表が空なら完了です。
+削除が終わったら、デプロイ先リージョンとプロファイル名（どちらも `product/construction/plan.md` に記録されています）と us-east-1（WAF）の両方でスタックが残っていないことを確認します。`<デプロイ先リージョン>` を置き換えて実行し、どちらも表が空なら完了です。
 
 ```text
-aws cloudformation describe-stacks --region <デプロイ先リージョン> --query "Stacks[?starts_with(StackName,'product-infra-sandbox-')].[StackName,StackStatus]" --output table
-aws cloudformation describe-stacks --region us-east-1 --query "Stacks[?starts_with(StackName,'product-infra-sandbox-')].[StackName,StackStatus]" --output table
+aws cloudformation describe-stacks --profile <プロファイル名> --region <デプロイ先リージョン> --query "Stacks[?starts_with(StackName,'product-infra-sandbox-')].[StackName,StackStatus]" --output table
+aws cloudformation describe-stacks --profile <プロファイル名> --region us-east-1 --query "Stacks[?starts_with(StackName,'product-infra-sandbox-')].[StackName,StackStatus]" --output table
 ```
+
+CDK の bootstrap で作られた `CDKToolkit` スタックは、モックを削除しても残ります（費用はほぼかかりません）。不要な場合は、エージェントに CDKToolkit の削除も依頼してください。
 
 ## Test/Iterate
 

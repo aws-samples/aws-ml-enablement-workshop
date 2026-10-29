@@ -10,7 +10,7 @@ ML Enablement Workshop で開発者 / データサイエンティスト担当の
 - **PowerShell の実行ポリシー（Windows）**: `npm` や `pnpm` の実行で「このシステムではスクリプトの実行が無効になっているため…」と表示された場合は、PowerShell で `Set-ExecutionPolicy -Scope CurrentUser RemoteSigned` を実行してから、PowerShell を開き直してください。
 - **AWS アカウント**: モックの CloudFront 用の WAF は us-east-1 にしか作れないため、**us-east-1 が SCP（サービスコントロールポリシー）などで制限されていないこと**が必要です。確認方法は「1. AWS CLI のインストールと設定」にあります。
 - **clone する場所（Windows）**: OneDrive の同期対象のフォルダー（「ドキュメント」「デスクトップ」など）を避け、`C:\mlew\` のような短いパスに clone してください。pnpm は大量のファイルとリンクを作るため、同期対象や長いパスではロック・遅延・パス長の問題が起きやすくなります。
-- **ツールのバージョン**: Node.js 22.13 以上（推奨: 24 LTS）、uv 0.5.29 以上。pnpm を含む検証済みのバージョンは [`yourwork/AGENTS.md` の「検証済みバージョン」](/yourwork/AGENTS.md#検証済みバージョン) を参照してください。
+- **ツールのバージョン**: Node.js・pnpm・uv の必要なバージョンは [`yourwork/template/DEPLOYMENT_GUIDE.md` の「前提条件」](/yourwork/template/DEPLOYMENT_GUIDE.md#前提条件)、検証に使ったバージョンは [`yourwork/AGENTS.md` の「検証済みバージョン」](/yourwork/AGENTS.md#検証済みバージョン) にあります。
 
 ## AWS 環境の事前準備
 
@@ -48,10 +48,10 @@ aws cloudformation list-stacks --region us-east-1 --max-items 1 --query "length(
 
 ### 2. Node.js と npm のインストール
 
-[Node.js ダウンロード](https://nodejs.org/ja/download) から "ビルド済みの Node.js" をダウンロード、インストール。**Node.js 22.13 以上（推奨: 24 LTS）** が必要です。モックが使う Nx は Node.js 20 に対応しておらず、npm での pnpm のインストールにも 22.13 以上が必要です。
+[Node.js ダウンロード](https://nodejs.org/ja/download) から "ビルド済みの Node.js" をダウンロード、インストール。必要なバージョンは [`yourwork/template/DEPLOYMENT_GUIDE.md` の「前提条件」](/yourwork/template/DEPLOYMENT_GUIDE.md#前提条件) にあります。モックが使う Nx は Node.js 20 に対応していないので、20 系は使えません。
 
 ```text
-# Node.js のバージョン確認（v22.13.0 以上。推奨は v24 LTS）
+# Node.js のバージョン確認（前提条件のバージョン以上であること）
 node --version
 
 # npm のバージョン確認（v8.0.0 以上必須）
@@ -60,11 +60,11 @@ npm --version
 
 ### 3. pnpm のインストール
 
-モックは pnpm でワークスペースを作成・ビルドします（npm では依存をインストールできません）。バージョンは [`yourwork/AGENTS.md` の「検証済みバージョン」](/yourwork/AGENTS.md#検証済みバージョン) の pnpm と揃えます（下のコマンドの `12.4.1` も、表を更新したら合わせて直します）。
+モックは pnpm でワークスペースを作成・ビルドします（npm では依存をインストールできません）。メジャーバージョンを [`yourwork/template/DEPLOYMENT_GUIDE.md` の「前提条件」](/yourwork/template/DEPLOYMENT_GUIDE.md#前提条件) の pnpm と揃えます（下のコマンドの `12` は、そのメジャーバージョンです）。
 
 ```text
 # インストール
-npm install -g pnpm@12.4.1
+npm install -g pnpm@12
 
 # インストール確認
 pnpm --version
@@ -72,7 +72,7 @@ pnpm --version
 
 ### 4. uv（Python パッケージマネージャー）のインストール
 
-ワークショップの依存関係のほか、モックのビルド（infra の checkov を `uvx` で実行）にも使います。未インストールだとモックのビルドが失敗します。**uv 0.5.29 以上**が必要です。
+ワークショップの依存関係のほか、モックのビルド（infra の checkov を `uvx` で実行）にも使います。未インストールだとモックのビルドが失敗します。必要なバージョンは [`yourwork/template/DEPLOYMENT_GUIDE.md` の「前提条件」](/yourwork/template/DEPLOYMENT_GUIDE.md#前提条件) にあります。
 
 インストール方法は OS によって異なります。ほかの方法は [uv インストールガイド](https://docs.astral.sh/uv/getting-started/installation/) を参照してください。
 
@@ -91,7 +91,7 @@ powershell -ExecutionPolicy ByPass -c "irm https://astral.sh/uv/install.ps1 | ie
 インストール後にターミナルを開き直し、次を実行します（ここからはどの OS でも同じです）。
 
 ```text
-# インストール確認（0.5.29 以上）
+# インストール確認（前提条件のバージョン以上であること）
 uv --version
 
 # 依存関係のインストール（aws-ml-enablement-workshop ディレクトリで実行）
@@ -227,7 +227,7 @@ kiro-cli --agent mock-builder
 ```
 
 > [!IMPORTANT]
-> **CDK bootstrap はアカウント×リージョンごとに初回 1 回必要です。** bootstrap はエージェントが実行し、モックのデプロイ先リージョンと WAF 用の us-east-1 の両方が対象になります。デプロイ先リージョンはエージェントが決めて `product/construction/plan.md` に記録し、CDK の設定（`packages/infra/src/main.ts`）に固定します。決め方は [`yourwork/template/DEPLOYMENT_GUIDE.md` の「リージョンの決め方」](/yourwork/template/DEPLOYMENT_GUIDE.md#リージョンの決め方) を参照してください。リージョンを聞かれたら答えてください。**事前確認と当日で同じリージョンを使ってください。** そうすれば当日に bootstrap をやり直す必要はありません。
+> **CDK bootstrap はアカウント×リージョンごとに初回 1 回必要です。** bootstrap はエージェントが実行し、モックのデプロイ先リージョンと WAF 用の us-east-1 の両方が対象になります。デプロイ先リージョンはエージェントが決めて `product/construction/plan.md` に記録し、CDK の stage 設定（`packages/common/infra-config/src/stages.config.ts`）に固定します。決め方は [`yourwork/template/DEPLOYMENT_GUIDE.md` の「リージョンの決め方」](/yourwork/template/DEPLOYMENT_GUIDE.md#リージョンの決め方) を参照してください。リージョンや AWS のプロファイル名を聞かれたら答えてください（プロファイルを分けていなければ `default` です）。**事前確認と当日で同じリージョンを使ってください。** そうすれば当日に bootstrap をやり直す必要はありません。
 
 方法 C / 方法 D を利用する場合は、上記の 3. を次のコマンドに置き換えてください（4. 以降は同じです）。
 
@@ -252,11 +252,13 @@ codex
 ### 7. 作成されたモックアプリケーションの削除
 
 - 起動中の AI コーディングツールに「`product/` ディレクトリを参照し、デプロイしたアプリケーションを削除して」と依頼します。エージェントは [`yourwork/template/DEPLOYMENT_GUIDE.md` の「削除」](/yourwork/template/DEPLOYMENT_GUIDE.md#削除) に従って削除します。
-- 削除が終わったら、デプロイ先リージョン（`product/construction/plan.md` に記録されています）と us-east-1 の両方でスタックが残っていないことを確認します。どちらも表が空なら完了です。
+- 削除が終わったら、デプロイ先リージョンとプロファイル名（どちらも `product/construction/plan.md` に記録されています）と us-east-1 の両方でスタックが残っていないことを確認します。どちらも表が空なら完了です。
 
 ```text
-aws cloudformation describe-stacks --region <デプロイ先リージョン> --query "Stacks[?starts_with(StackName,'product-infra-sandbox-')].[StackName,StackStatus]" --output table
-aws cloudformation describe-stacks --region us-east-1 --query "Stacks[?starts_with(StackName,'product-infra-sandbox-')].[StackName,StackStatus]" --output table
+aws cloudformation describe-stacks --profile <プロファイル名> --region <デプロイ先リージョン> --query "Stacks[?starts_with(StackName,'product-infra-sandbox-')].[StackName,StackStatus]" --output table
+aws cloudformation describe-stacks --profile <プロファイル名> --region us-east-1 --query "Stacks[?starts_with(StackName,'product-infra-sandbox-')].[StackName,StackStatus]" --output table
 ```
+
+- CDK の bootstrap で作られた `CDKToolkit` スタックは、モックを削除しても残ります（費用はほぼかかりません）。不要な場合は、エージェントに CDKToolkit の削除も依頼してください。
 
 - WAF と KMS キーに 1 デプロイあたり月額 約 $8 の固定費がかかるため、動作確認が終わったら削除してください
