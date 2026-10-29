@@ -2,7 +2,15 @@
 
 ML Enablement Workshop で開発者 / データサイエンティスト担当の方は、**チーム全員が生成 AI を扱えるように**下記の環境セットアップをワークショップ開始前に完了してください。
 
-なお、Mock の生成以外は [GenU : Generative AI Use Cases](https://aws-samples.github.io/generative-ai-use-cases/en/) で行うこともできます。GenU を使用する場合は、[ワークショップ用のユースケース](/docs/organizer/assets/day0/ML_Enablement_Workshop_GenU.json) をダウンロードし、[ユースケースビルダーにインポート](https://aws-samples.github.io/sample-one-click-generative-ai-solutions/solutions/generative-ai-use-cases-ready-to-use/) してください。
+なお、モックの生成以外は [GenU : Generative AI Use Cases](https://aws-samples.github.io/generative-ai-use-cases/en/) で行うこともできます。GenU を使用する場合は、[ワークショップ用のユースケース](/docs/organizer/assets/day0/ML_Enablement_Workshop_GenU.json) をダウンロードし、[ユースケースビルダーにインポート](https://aws-samples.github.io/sample-one-click-generative-ai-solutions/solutions/generative-ai-use-cases-ready-to-use/) してください。
+
+## 前提条件
+
+- **OS**: macOS / Linux / Windows のいずれでも進められます。**Windows ではネイティブの PowerShell を使ってください**（WSL2 や Git Bash は不要です）。Kiro CLI と Codex CLI は、Windows では PowerShell でコマンドを実行します。このガイドと当日のガイドのコマンドは、注記がない限り PowerShell でもそのまま動く 1 行の形で書いています。
+- **PowerShell の実行ポリシー（Windows）**: `npm` や `pnpm` の実行で「このシステムではスクリプトの実行が無効になっているため…」と表示された場合は、PowerShell で `Set-ExecutionPolicy -Scope CurrentUser RemoteSigned` を実行してから、PowerShell を開き直してください。
+- **AWS アカウント**: モックの CloudFront 用の WAF は us-east-1 にしか作れないため、**us-east-1 が SCP（サービスコントロールポリシー）などで制限されていないこと**が必要です。確認方法は「1. AWS CLI のインストールと設定」にあります。
+- **clone する場所（Windows）**: OneDrive の同期対象のフォルダー（「ドキュメント」「デスクトップ」など）を避け、`C:\mlew\` のような短いパスに clone してください。pnpm は大量のファイルとリンクを作るため、同期対象や長いパスではロック・遅延・パス長の問題が起きやすくなります。
+- **ツールのバージョン**: Node.js・pnpm・uv の必要なバージョンは [`yourwork/template/DEPLOYMENT_GUIDE.md` の「前提条件」](/yourwork/template/DEPLOYMENT_GUIDE.md#前提条件)、検証に使ったバージョンは [`yourwork/AGENTS.md` の「検証済みバージョン」](/yourwork/AGENTS.md#検証済みバージョン) にあります。
 
 ## AWS 環境の事前準備
 
@@ -23,38 +31,67 @@ ML Enablement Workshop で開発者 / データサイエンティスト担当の
 
 [AWS CLI インストール方法](https://docs.aws.amazon.com/ja_jp/cli/latest/userguide/getting-started-install.html)
 
-```bash
+```text
 # AWS CLI の設定（ブラウザで認証）
 aws login
 
 # 設定確認
 aws sts get-caller-identity
+
+# us-east-1 が使えることの確認（数字が 1 つ出れば問題ありません。0 でも構いません。エラーになった場合だけ下の対処が必要です）
+aws cloudformation list-stacks --region us-east-1 --max-items 1 --query "length(StackSummaries)" --output json
 ```
+
+このコマンドは読み取りだけを確かめるので、作成や WAF だけを拒否する SCP は見つけられません。企業のアカウントでは、「6. 動作確認」でデプロイまで通して確かめてください。
+
+最後のコマンドが `AccessDenied`（`explicit deny in a service control policy` など）で失敗する場合は、組織の SCP などで us-east-1 が制限されています。このままではモックをデプロイできないため、AWS アカウントの管理者に us-east-1 の利用（CloudFormation、WAF など）を許可してもらうか、制限のないアカウントを用意してください。
 
 ### 2. Node.js と npm のインストール
 
-[Node.js ダウンロード](https://nodejs.org/ja/download) から "ビルド済みのNode.js" をダウンロード、インストール。
+[Node.js ダウンロード](https://nodejs.org/ja/download) から "ビルド済みの Node.js" をダウンロード、インストール。必要なバージョンは [`yourwork/template/DEPLOYMENT_GUIDE.md` の「前提条件」](/yourwork/template/DEPLOYMENT_GUIDE.md#前提条件) にあります。モックが使う Nx は Node.js 20 に対応していないので、20 系は使えません。
 
-```bash
-# Node.js のバージョン確認（v18.0.0 以上必須）
+```text
+# Node.js のバージョン確認（前提条件のバージョン以上であること）
 node --version
 
 # npm のバージョン確認（v8.0.0 以上必須）
 npm --version
 ```
 
-### 3. uv（Python パッケージマネージャー）のインストール
+### 3. pnpm のインストール
 
-[uv インストールガイド](https://docs.astral.sh/uv/getting-started/installation/)
+モックは pnpm でワークスペースを作成・ビルドします（npm では依存をインストールできません）。メジャーバージョンを [`yourwork/template/DEPLOYMENT_GUIDE.md` の「前提条件」](/yourwork/template/DEPLOYMENT_GUIDE.md#前提条件) の pnpm と揃えます（下のコマンドの `12` は、そのメジャーバージョンです）。
 
-```bash
-# インストール（pip を使う場合）
-pip install uv
-
-# または macOS/Linux
-curl -LsSf https://astral.sh/uv/install.sh | sh
+```text
+# インストール
+npm install -g pnpm@12
 
 # インストール確認
+pnpm --version
+```
+
+### 4. uv（Python パッケージマネージャー）のインストール
+
+ワークショップの依存関係のほか、モックのビルド（infra の checkov を `uvx` で実行）にも使います。未インストールだとモックのビルドが失敗します。必要なバージョンは [`yourwork/template/DEPLOYMENT_GUIDE.md` の「前提条件」](/yourwork/template/DEPLOYMENT_GUIDE.md#前提条件) にあります。
+
+インストール方法は OS によって異なります。ほかの方法は [uv インストールガイド](https://docs.astral.sh/uv/getting-started/installation/) を参照してください。
+
+**macOS / Linux**
+
+```bash
+curl -LsSf https://astral.sh/uv/install.sh | sh
+```
+
+**Windows（PowerShell）**
+
+```powershell
+powershell -ExecutionPolicy ByPass -c "irm https://astral.sh/uv/install.ps1 | iex"
+```
+
+インストール後にターミナルを開き直し、次を実行します（ここからはどの OS でも同じです）。
+
+```text
+# インストール確認（前提条件のバージョン以上であること）
 uv --version
 
 # 依存関係のインストール（aws-ml-enablement-workshop ディレクトリで実行）
@@ -62,7 +99,7 @@ cd aws-ml-enablement-workshop
 uv sync
 ```
 
-### 4. Git のインストール (未インストールであれば) 
+### 5. Git のインストール (未インストールであれば) 
 
 https://git-scm.com/downloads
 
@@ -86,7 +123,7 @@ Kiro CLIは、コマンドラインでAI支援によるコード生成、チャ�
 - [Kiro CLI](https://kiro.dev/docs/cli/installation/) をインストール
 - Kiro CLI でログイン
 
-```bash
+```text
 # Kiro にログイン
 kiro-cli login
 
@@ -113,7 +150,7 @@ Claude Code は、ターミナルで動作する Anthropic のコーディング
 
 - [Claude Code のセットアップ](https://code.claude.com/docs/en/setup) に従ってインストール（対応 OS と OS ごとのインストール方法が記載されています）
 
-```bash
+```text
 # インストールの確認
 claude --version
 
@@ -143,15 +180,18 @@ OpenAI Codex CLI は、ターミナルで動作する OpenAI のコーディン�
 
 - [Codex CLI のドキュメント](https://learn.chatgpt.com/docs/codex/cli) に従ってインストール
 
-```bash
+```text
 # ログイン（ブラウザが開き、ChatGPT アカウントでサインインします）
 codex login
 
 # 認証方法の確認
 codex login status
 
-# ChatGPT アカウントの代わりに OpenAI API キーを使う場合
+# ChatGPT アカウントの代わりに OpenAI API キーを使う場合（環境変数 OPENAI_API_KEY にキーを設定済みの前提）
+# macOS / Linux
 printenv OPENAI_API_KEY | codex login --with-api-key
+# Windows（PowerShell）
+$env:OPENAI_API_KEY | codex login --with-api-key
 
 # 起動
 codex
@@ -168,13 +208,13 @@ codex
 
 **参考ドキュメント**: [Choosing a model](https://platform.claude.com/docs/en/about-claude/models/choosing-a-model)
 
-### 7. モックアプリケーションの動作確認
+### 6. モックアプリケーションの動作確認
 
-```bash
-# 1. zip ファイルを解凍
+```text
+# 1. リポジトリを取得（Day0 で取得済みなら不要。Windows では OneDrive の同期対象を避け、C:\mlew\ のような短いパスで実行）
 git clone https://github.com/aws-samples/aws-ml-enablement-workshop.git
 
-# 2. mock を作成するディレクトリへ移動
+# 2. モックを作成するディレクトリへ移動
 cd aws-ml-enablement-workshop/yourwork
 
 # 3. Kiro CLI のカスタムエージェントを起動
@@ -182,15 +222,18 @@ kiro-cli --agent mock-builder
 
 # 4. 「アプリを作りたい」など適当な指示を入力
 # 5. アプリケーションの詳細を入力
-# 6. Tracker情報は「なし」と回答
-# 7. 20~30分待機
+# 6. Tracker 情報は「なし」と回答
+# 7. 20〜30 分待機（このうちワークスペース作成 約 1.5 分、build 約 50 秒、初回デプロイ 約 4 分）
 ```
+
+> [!IMPORTANT]
+> **CDK bootstrap はアカウント×リージョンごとに初回 1 回必要です。** bootstrap はエージェントが実行し、モックのデプロイ先リージョンと WAF 用の us-east-1 の両方が対象になります。デプロイ先リージョンはエージェントが決めて `product/construction/plan.md` に記録し、CDK の stage 設定（`packages/common/infra-config/src/stages.config.ts`）に固定します。決め方は [`yourwork/template/DEPLOYMENT_GUIDE.md` の「リージョンの決め方」](/yourwork/template/DEPLOYMENT_GUIDE.md#リージョンの決め方) を参照してください。リージョンや AWS のプロファイル名を聞かれたら答えてください（プロファイルを分けていなければ `default` です）。**事前確認と当日で同じリージョンを使ってください。** そうすれば当日に bootstrap をやり直す必要はありません。
 
 方法 C / 方法 D を利用する場合は、上記の 3. を次のコマンドに置き換えてください（4. 以降は同じです）。
 
 **方法 C : Claude Code**
 
-```bash
+```text
 # 3. Claude Code を起動
 claude
 ```
@@ -199,13 +242,23 @@ claude
 
 **方法 D : OpenAI Codex CLI**
 
-```bash
+```text
 # 3. Codex CLI を起動
 codex
 ```
 
 `yourwork/AGENTS.md` が読み込まれた状態で起動します。「アプリを作りたい」と依頼し、作業の起点として `yourwork/prompt/prompt.md` を渡してください。
 
-### 8. 作成されたモックアプリケーションの削除
+### 7. 作成されたモックアプリケーションの削除
 
-- 「作成したアプリケーションを削除して」とカスタムエージェントに指示
+- 起動中の AI コーディングツールに「`product/` ディレクトリを参照し、デプロイしたアプリケーションを削除して」と依頼します。エージェントは [`yourwork/template/DEPLOYMENT_GUIDE.md` の「削除」](/yourwork/template/DEPLOYMENT_GUIDE.md#削除) に従って削除します。
+- 削除が終わったら、デプロイ先リージョンとプロファイル名（どちらも `product/construction/plan.md` に記録されています）と us-east-1 の両方でスタックが残っていないことを確認します。どちらも表が空なら完了です。
+
+```text
+aws cloudformation describe-stacks --profile <プロファイル名> --region <デプロイ先リージョン> --query "Stacks[?starts_with(StackName,'product-infra-sandbox-')].[StackName,StackStatus]" --output table
+aws cloudformation describe-stacks --profile <プロファイル名> --region us-east-1 --query "Stacks[?starts_with(StackName,'product-infra-sandbox-')].[StackName,StackStatus]" --output table
+```
+
+- CDK の bootstrap で作られた `CDKToolkit` スタックは、モックを削除しても残ります（費用はほぼかかりません）。不要な場合は、エージェントに CDKToolkit の削除も依頼してください。
+
+- WAF と KMS キーに 1 デプロイあたり月額 約 $8 の固定費がかかるため、動作確認が終わったら削除してください

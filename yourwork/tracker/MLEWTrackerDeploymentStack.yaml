@@ -14,6 +14,11 @@ Metadata:
           - ApiThrottleRateLimit
           - ErrorAlarmThreshold
           - DurationAlarmThreshold
+      - Label:
+          default: "Source (advanced)"
+        Parameters:
+          - GitRepositoryUrl
+          - GitBranch
 
 Parameters:
   Environment:
@@ -58,6 +63,16 @@ Parameters:
     Default: 10000
     MinValue: 1000
     Description: 'Duration threshold for CloudWatch alarms (milliseconds)'
+
+  GitRepositoryUrl:
+    Type: String
+    Default: https://github.com/aws-samples/aws-ml-enablement-workshop.git
+    Description: 'Git repository to build the tracker from. Change only when testing a fork'
+
+  GitBranch:
+    Type: String
+    Default: main
+    Description: 'Branch of GitRepositoryUrl to build the tracker from'
 
 Resources:
 
@@ -148,6 +163,10 @@ Resources:
             Value: !Ref DeploymentNotificationTopic
           - Name: DEPLOYMENT_STACK_NAME
             Value: !Ref AWS::StackName
+          - Name: GIT_REPOSITORY_URL
+            Value: !Ref GitRepositoryUrl
+          - Name: GIT_BRANCH
+            Value: !Ref GitBranch
       Source:
         Type: NO_SOURCE
         BuildSpec: |
@@ -160,7 +179,7 @@ Resources:
                 - echo "Starting MLEW Tracker deployment"
                 - aws sns publish --topic-arn ${SNSTopicArn} --subject "MLEW Tracker Deployment Started" --message "Deployment of MLEW Tracker has started. You will receive another notification when deployment is complete."
                 - echo "Cloning repository from GitHub..."
-                - git clone https://github.com/aws-samples/aws-ml-enablement-workshop.git
+                - git clone --depth 1 --branch "${GIT_BRANCH}" "${GIT_REPOSITORY_URL}" aws-ml-enablement-workshop
                 - echo "Repository cloned successfully"
             pre_build:
               commands:
@@ -181,6 +200,10 @@ Resources:
                 - echo "Installing CDK dependencies..."
                 - cd $TRACKER_DIR/cdk-app && npm ci --no-audit --no-fund
                 - cd $TRACKER_DIR/cdk-app
+                # Tracker の Lambda はアセットを伴うため、未 bootstrap のリージョンでは deploy が失敗する。
+                # bootstrap は済んでいれば何も変えないので毎回実行する。
+                - ACCOUNT_ID=$(aws sts get-caller-identity --query Account --output text)
+                - npx cdk bootstrap "aws://${ACCOUNT_ID}/${AWS_DEFAULT_REGION}"
                 - |
                   echo "Synthesizing and deploying CDK stack..."
                   npx cdk deploy \
@@ -204,8 +227,8 @@ Resources:
                 - SDK_BUCKET=$(aws cloudformation describe-stacks --stack-name $STACK_NAME --query "Stacks[0].Outputs[?OutputKey=='SdkBucketName'].OutputValue" --output text 2>/dev/null | tr -d '\r')
                 - DASHBOARD_URL=$(aws cloudformation describe-stacks --stack-name $STACK_NAME --query "Stacks[0].Outputs[?OutputKey=='DashboardURL'].OutputValue" --output text 2>/dev/null | tr -d '\r')
                 - SDK_URL=$(aws cloudformation describe-stacks --stack-name $STACK_NAME --query "Stacks[0].Outputs[?OutputKey=='SdkDistributionDomain'].OutputValue" --output text 2>/dev/null | tr -d '\r')
-                - DASHBOARD_DISTRIBUTION_ID=$(aws cloudformation describe-stack-resources --stack-name $STACK_NAME --query "StackResources[?ResourceType=='AWS::CloudFront::Distribution' && LogicalResourceId=='DashboardDistribution'].PhysicalResourceId" --output text 2>/dev/null | tr -d '\r')
-                - SDK_DISTRIBUTION_ID=$(aws cloudformation describe-stack-resources --stack-name $STACK_NAME --query "StackResources[?ResourceType=='AWS::CloudFront::Distribution' && LogicalResourceId=='SdkDistribution'].PhysicalResourceId" --output text 2>/dev/null | tr -d '\r')
+                - DASHBOARD_DISTRIBUTION_ID=$(aws cloudformation describe-stack-resources --stack-name $STACK_NAME --query "StackResources[?ResourceType=='AWS::CloudFront::Distribution' && starts_with(LogicalResourceId, 'DashboardDistribution')].PhysicalResourceId" --output text 2>/dev/null | tr -d '\r')
+                - SDK_DISTRIBUTION_ID=$(aws cloudformation describe-stack-resources --stack-name $STACK_NAME --query "StackResources[?ResourceType=='AWS::CloudFront::Distribution' && starts_with(LogicalResourceId, 'SdkDistribution')].PhysicalResourceId" --output text 2>/dev/null | tr -d '\r')
                 - |
                   cat <<EOF > packages/dashboard/.env.production
                   VITE_API_ENDPOINT=${API_ENDPOINT}
@@ -254,6 +277,13 @@ Resources:
               commands:
                 - |
                   echo "Post-build phase started..."
+                  # build が失敗しても post_build は実行されるため、成功メールを送る前に結果を確かめる
+                  if [ "${CODEBUILD_BUILD_SUCCEEDING}" != "1" ]; then
+                    LOG_URL="https://console.aws.amazon.com/codesuite/codebuild/projects/${CODEBUILD_BUILD_ID%%:*}/build/${CODEBUILD_BUILD_ID}/log?region=${AWS_DEFAULT_REGION}"
+                    aws sns publish --topic-arn "${SNSTopicArn}" --subject "MLEW Tracker Deployment Failed" --message "MLEW Tracker deployment failed. Check the CodeBuild log: ${LOG_URL}"
+                    echo "Deployment failed. Failure notification sent."
+                    exit 1
+                  fi
                   TRACKER_DIR="${CODEBUILD_SRC_DIR}/aws-ml-enablement-workshop/yourwork/tracker"
                   cd $TRACKER_DIR
                   STACK_NAME_DEFAULT="MLEWTrackerStack-${Environment}"
@@ -304,9 +334,6 @@ Resources:
                   echo "Sending completion notification..."
                   aws sns publish --topic-arn "${SNSTopicArn}" --subject "MLEW Tracker Deployment Complete" --message file://deployment-info.txt
                   echo "Deployment completed successfully!"
-          artifacts:
-            files:
-              - deployment-info.txt
       TimeoutInMinutes: 60
 
   # Custom Resource to trigger CodeBuild
@@ -315,6 +342,7 @@ Resources:
     Properties:
       ServiceToken: !GetAtt TriggerFunction.Arn
       ProjectName: !Ref MLEWTrackerDeploymentProject
+      TrackerStackName: !Sub 'MLEWTrackerStack-${Environment}'
       ServiceTimeout: 600
 
   # Lambda function for the Custom Resource
@@ -323,11 +351,12 @@ Resources:
     Properties:
       Handler: index.handler
       Role: !GetAtt TriggerFunctionRole.Arn
-      Runtime: nodejs20.x
+      Runtime: nodejs22.x
       Timeout: 30
       Code:
         ZipFile: |
           const { CodeBuildClient, StartBuildCommand } = require('@aws-sdk/client-codebuild');
+          const { CloudFormationClient, DeleteStackCommand, DescribeStacksCommand } = require('@aws-sdk/client-cloudformation');
           const response = require('cfn-response');
 
           exports.handler = async (event, context) => {
@@ -348,6 +377,21 @@ Resources:
                 });
                 const result = await codebuild.send(command);
                 responseData.BuildId = result.build.id;
+              }
+
+              // CodeBuild が CDK で作った Tracker 本体は、このスタックの管理外なので明示的に消す。
+              // CloudFront の削除に時間がかかるため完了は待たない（スタックのロールで削除が続く）。
+              if (event.RequestType === 'Delete' && event.ResourceProperties.TrackerStackName) {
+                const cfn = new CloudFormationClient({ region: process.env.AWS_REGION });
+                const stackName = event.ResourceProperties.TrackerStackName;
+                try {
+                  await cfn.send(new DescribeStacksCommand({ StackName: stackName }));
+                  await cfn.send(new DeleteStackCommand({ StackName: stackName }));
+                  responseData.DeletedStack = stackName;
+                } catch (error) {
+                  // デプロイに失敗して本体が無い場合は、削除するものが無いので成功として返す
+                  if (!String(error.message).includes('does not exist')) throw error;
+                }
               }
               
               await response.send(event, context, response.SUCCESS, responseData, physicalResourceId);
@@ -378,6 +422,11 @@ Resources:
               - Effect: Allow
                 Action: codebuild:StartBuild
                 Resource: !GetAtt MLEWTrackerDeploymentProject.Arn
+              - Effect: Allow
+                Action:
+                  - cloudformation:DescribeStacks
+                  - cloudformation:DeleteStack
+                Resource: !Sub 'arn:${AWS::Partition}:cloudformation:${AWS::Region}:${AWS::AccountId}:stack/MLEWTrackerStack-${Environment}/*'
 
 Outputs:
   NotificationTopicArn:

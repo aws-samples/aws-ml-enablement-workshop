@@ -139,3 +139,6 @@ node_modules/
 
 # CDK synth output (tracker)
 yourwork/tracker/cdk-app/cdk.out/
+
+# macOS
+.DS_Store
