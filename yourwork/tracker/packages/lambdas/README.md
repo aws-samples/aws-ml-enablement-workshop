@@ -4,7 +4,7 @@
 
 ## 共通仕様
 
-- **ランタイム**: Node.js 20.x（CDK の `NodejsFunction` が esbuild で TypeScript からバンドル）
+- **ランタイム**: Node.js 24.x（CDK の `NodejsFunction` が esbuild で TypeScript からバンドル）
 - **依存ライブラリ**: AWS SDK v3 (`@aws-sdk/client-dynamodb`, `@aws-sdk/lib-dynamodb` など) のみを利用。ランタイムへは CDK のバンドラが必要最小限を含めます。
 - **デプロイ方式**: CDK スタックが各ソースをエントリポイントとして参照し、CodeBuild パイプライン経由で `npm run build` を実行したうえで `cdk deploy` によって Lambda に反映されます。
 - **環境変数**: テーブル名などは CDK から注入されます。ローカル実行時に環境変数が欠けると例外になるため注意してください。
