@@ -38,11 +38,16 @@ aws login
 # 設定確認
 aws sts get-caller-identity
 
+# リージョンの確認（モックと利用状況の記録は、このリージョンにデプロイされます）
+aws configure get region
+
 # us-east-1 が使えることの確認（数字が 1 つ出れば問題ありません。0 でも構いません。エラーになった場合だけ下の対処が必要です）
 aws cloudformation list-stacks --region us-east-1 --max-items 1 --query "length(StackSummaries)" --output json
 ```
 
-このコマンドは読み取りだけを確かめるので、作成や WAF だけを拒否する SCP は見つけられません。企業のアカウントでは、「6. 動作確認」でデプロイまで通して確かめてください。
+初めての `aws login` では `AWS Region [us-east-1]:` と聞かれます。ここで設定したリージョンが、モックのデプロイ先と、モックの利用状況の記録（CloudWatch Logs）の保存先になります（何も入力せずに Enter を押すと us-east-1 になります）。会社の規程などで使うリージョンが決まっている場合は、そのリージョン（例: 東京なら `ap-northeast-1`）を入力してください。あとから変える場合は、`aws configure set region <リージョン>` を実行します（プロファイルを分けている場合は `--profile <プロファイル名>` を付けます）。事前確認と当日で同じリージョンを使ってください。
+
+us-east-1 の確認コマンドは読み取りだけを確かめるので、作成や WAF だけを拒否する SCP は見つけられません。企業のアカウントでは、「6. 動作確認」でデプロイまで通して確かめてください。
 
 最後のコマンドが `AccessDenied`（`explicit deny in a service control policy` など）で失敗する場合は、組織の SCP などで us-east-1 が制限されています。このままではモックをデプロイできないため、AWS アカウントの管理者に us-east-1 の利用（CloudFormation、WAF など）を許可してもらうか、制限のないアカウントを用意してください。
 
@@ -226,7 +231,7 @@ kiro-cli --agent mock-builder
 ```
 
 > [!IMPORTANT]
-> **CDK bootstrap はアカウント×リージョンごとに初回 1 回必要です。** bootstrap はエージェントが実行し、モックのデプロイ先リージョンと WAF 用の us-east-1 の両方が対象になります。デプロイ先リージョンはエージェントが決めて `product/construction/plan.md` に記録し、CDK の stage 設定（`packages/common/infra-config/src/stages.config.ts`）に固定します。決め方は [`yourwork/template/DEPLOYMENT_GUIDE.md` の「リージョンの決め方」](/yourwork/template/DEPLOYMENT_GUIDE.md#リージョンの決め方) を参照してください。リージョンや AWS のプロファイル名を聞かれたら答えてください（プロファイルを分けていなければ `default` です）。**事前確認と当日で同じリージョンを使ってください。** そうすれば当日に bootstrap をやり直す必要はありません。
+> **CDK bootstrap はアカウント×リージョンごとに初回 1 回必要です。** bootstrap はエージェントが実行し、モックのデプロイ先リージョンと WAF 用の us-east-1 の両方が対象になります。デプロイ先リージョンはエージェントが決めて `product/construction/plan.md` に記録し、CDK の stage 設定（`packages/common/infra-config/src/stages.config.ts`）に固定します。決め方は [`yourwork/template/DEPLOYMENT_GUIDE.md` の「リージョンの決め方」](/yourwork/template/DEPLOYMENT_GUIDE.md#リージョンの決め方) を参照してください。AWS のプロファイル名を聞かれたら答えてください（プロファイルを分けていなければ `default` です）。リージョンは「1. AWS CLI のインストールと設定」で設定したものが使われます。**事前確認と当日で同じリージョンを使ってください。** そうすれば当日に bootstrap をやり直す必要はありません。
 
 方法 C / 方法 D を利用する場合は、上記の 3. を次のコマンドに置き換えてください（4. 以降は同じです）。
 
