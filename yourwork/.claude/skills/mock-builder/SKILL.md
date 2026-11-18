@@ -9,22 +9,20 @@ description: PR/FAQ からワークショップ用のモック Web アプリを�
 
 ## 1. 入力を集める
 
-ユーザーに次の 2 つを尋ねます。1 は必須、2 は任意です。
+次の 2 つを集めます。1 は必須、2 は任意です。依頼文に値（またはその置き場所）が書かれていれば、それを使い、聞き直しません。
 
-1. **実装したいアプリケーションの詳細**（Refine で作成した PR/FAQ）。長文をそのまま貼ってもらって構いません。
-2. **（任意）MLEW Tracker のエンドポイント情報**: API Endpoint / API Key / Dashboard URL / Tracker SDK URL。
-
-2 が空のまま進める場合は、計測が動かない状態で完成することと、あとでエンドポイントを差し替える必要があることをユーザーに伝えてから着手します。
+1. **実装したいアプリケーションの詳細**（Refine で作成した PR/FAQ）。依頼文に指定が無ければ、まず `discovery/README.md` の Refine セクションを読みます。そこが空のときだけユーザーに尋ねます（長文をそのまま貼ってもらって構いません）。
+2. **（任意）MLEW Tracker の値**: API Endpoint / API Key / Dashboard URL。受け取った API Endpoint / API Key がプレースホルダーのままなら着手せずユーザーに確認します（判定は `prompt/prompt.md` の `<tracker_configuration>` の直後）。「Tracker を使わない」と明示されたときだけ Tracker なしで進めます。
 
 ## 2. prompt.md を読んで実行する
 
-`prompt/prompt.md` を読み、プレースホルダーに上の回答を当てて実行します。
+`prompt/prompt.md` を読み、プレースホルダーに上で集めた内容を当てて実行します。
 
-- `<application_requirements>` ← 1 の回答
-- `<tracker_configuration>` ← 2 の回答
+- `<application_requirements>` ← 1 の内容
+- `<tracker_configuration>` ← 2 の内容
 
-成果物・実装方針・進め方・完了条件は `prompt/prompt.md` にあるものを使います。このファイルには複製していないので、着手前に読んでください。ディレクトリ全体の決めごと（編集してはいけない場所、ビルドコマンド）は `AGENTS.md` にあります。
+目的・判断基準・完了条件は `prompt/prompt.md`、手順は `template/DEPLOYMENT_GUIDE.md`、計測は `template/TRACKER_INTEGRATION_GUIDE.md`、ディレクトリの決まりごとは `AGENTS.md` にあります。このファイルには複製していないので、着手前に読んでください。
 
-## 3. 完了条件を満たす
+## 3. 完了条件を満たして止まる
 
-`prompt/prompt.md` の「完了条件」の各項目について、コマンドの出力か該当行を示します。自己申告の「確認しました」では完了にしません。
+`prompt/prompt.md` の「完了条件」の各項目について、実行したコマンドとその出力を示します。ブラウザでの確認はユーザーに依頼します。満たしたら作り込みを続けず、止まって報告します。
