@@ -299,7 +299,7 @@ Claude Code では、このプロンプトを貼り付けると `mock-builder` �
 
 渡した内容をもとにアプリケーションが自動的に実装され、CDK（Nx Plugin for AWS）で作成した S3 + CloudFront + WAF でホスティングされます。モックには利用者の操作（ページビュー、ボタンのクリック、セクションの表示）を記録する MLEW Tracker が組み込まれ、記録は同じスタックの CloudWatch RUM が CloudWatch Logs に保存します。WAF と KMS キーに 1 デプロイあたり月額 約 $8 の固定費がかかるので、使い終わったら削除してください。
 
-モック本体のデプロイ先リージョンはエージェントが決めて `product/construction/plan.md` に記録し、CDK の stage 設定（`packages/common/infra-config/src/stages.config.ts`）に固定します。決め方は [`template/DEPLOYMENT_GUIDE.md` の「リージョンの決め方」](./template/DEPLOYMENT_GUIDE.md#リージョンの決め方) にあります。エージェントからリージョンや AWS のプロファイル名を聞かれたら指定してください（プロファイルを分けていなければ `default` です）。事前確認と当日で同じリージョンを使うと、CDK bootstrap をやり直さずに済みます。CloudFront 用の WAF は us-east-1 にしか作れないため、us-east-1 に別スタックとして作成されます。
+モック本体と利用状況の記録は、AWS のプロファイルのリージョン（`aws login` で設定したもの。`aws configure get region` で確認できます）にデプロイされます。エージェントはこのリージョンを `product/construction/plan.md` に記録し、CDK の stage 設定（`packages/common/infra-config/src/stages.config.ts`）に固定します。決め方は [`template/DEPLOYMENT_GUIDE.md` の「リージョンの決め方」](./template/DEPLOYMENT_GUIDE.md#リージョンの決め方) にあります。エージェントから AWS のプロファイル名を聞かれたら答えてください（プロファイルを分けていなければ `default` です）。プロファイルにリージョンが無いときだけ、リージョンも聞かれます。事前確認と当日で同じリージョンを使うと、CDK bootstrap をやり直さずに済みます。CloudFront 用の WAF は us-east-1 にしか作れないため、us-east-1 に別スタックとして作成されます。
 
 > [!IMPORTANT]
 > 記録にはページのパス、ブラウザの種類、匿名の ID、おおまかな地域が含まれます。モックの画面にはダミーのデータだけを使い、個人情報や機密情報を入力させないでください。

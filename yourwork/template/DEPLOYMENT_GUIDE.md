@@ -38,16 +38,15 @@ CDK bootstrap はこの時点では不要です。手順 5 でデプロイ先リ
 
 ## リージョンの決め方
 
-モック本体のデプロイ先リージョンは、次の順に決めます。一度決めた値は、bootstrap・デプロイ・削除のすべてで使い続けます。
+モック本体のデプロイ先リージョンは、AWS のプロファイルのリージョン（参加者が `aws login` で設定したもの）を使います。2 回目以降は、前回決めた値を使い続けます。具体的には次の順に決め、一度決めた値は bootstrap・デプロイ・削除のすべてで使い続けます。
 
 1. `product/packages/common/infra-config/src/stages.config.ts` の `product-infra-sandbox` に `region` があれば、その値。デプロイに使われるのはこの値なので、`product/construction/plan.md` の記録と食い違っていたら、こちらを正として `plan.md` を直します
 2. 無ければ、`product/construction/plan.md` に記録された値
-3. 無ければ、`aws configure get region --profile <プロファイル名>` の値と、シェルの環境変数 `AWS_REGION` の値を候補にして、`aws cloudformation describe-stacks --profile <プロファイル名> --region <候補> --stack-name product-infra-sandbox-Application --query "Stacks[0].StackStatus" --output text` で既存のスタックを探し、見つかったリージョン
-4. 無ければ、`aws configure get region --profile <プロファイル名>` の値
-5. それも空なら、推測せずユーザーに尋ねる
+3. 無ければ、`aws configure get region --profile <プロファイル名>` の値。シェルの環境変数 `AWS_REGION` は使いません（エージェント自身の設定に由来することがあるため）
+4. それも空なら、推測せずユーザーに尋ねる
 
 - 決めた値はプロファイル名と一緒に控えておき、ワークスペースを生成したあとで `product/construction/plan.md` に記録します（`product/` を生成より前に作らないため）。
-- 2 回目以降に別のリージョンでデプロイすると、us-east-1 の WAF スタックの更新が `UPDATE_FAILED` になります（「トラブルシューティング」参照）。同じアカウントに既存のスタックがあるかを上の 3 で探すのはこのためです。
+- モックを削除しないまま `product/` を作り直し、そのあいだにプロファイルのリージョンを変えていると、前回と別のリージョンでデプロイすることになり、us-east-1 の WAF スタックの更新が `UPDATE_FAILED` になります（「トラブルシューティング」参照）。作り直す前にモックを削除しておけば起きません。
 - WAF は常に us-east-1 の別スタックに作られます。
 - Tracker の app monitor と記録（CloudWatch Logs）は、モック本体と同じデプロイ先リージョンに作られます。
 
@@ -348,7 +347,7 @@ infra の checkov が uv を必要とします。uv をインストールして�
 
 ### 再デプロイで WAF スタックが `UPDATE_FAILED` になる
 
-`Cannot delete export ...WebAclArn... as it is in use by product-infra-sandbox-Application` が出る場合は、前回と別のリージョンで合成されています。CDK がリージョンをまたぐ参照に切り替え、既存スタックが使っている export を削除しようとして拒否されます。`stages.config.ts` の `region` を既存の `product-infra-sandbox-Application` があるリージョンに戻して再デプロイすると解消します。失敗した時点ではリソースは変更されていません。
+`Cannot delete export ...WebAclArn... as it is in use by product-infra-sandbox-Application` が出る場合は、前回と別のリージョンで合成されています。CDK がリージョンをまたぐ参照に切り替え、既存スタックが使っている export を削除しようとして拒否されます。`stages.config.ts` の `region` を既存の `product-infra-sandbox-Application` があるリージョン（分からなければユーザーに前回のデプロイ先を確認します）に戻して再デプロイすると解消します。失敗した時点ではリソースは変更されていません。
 
 ## 既知の問題への対処（@aws/nx-plugin 1.0.6 で確認）
 
