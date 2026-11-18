@@ -26,6 +26,7 @@
     "@tailwindcss/postcss": "^4.1.17",
     "@types/react": "^19.1.10",
     "@types/react-dom": "^19.2.3",
+    "@typescript/native": "npm:typescript@^7.0.2",
     "@vitejs/plugin-react": "^5.1.2",
     "autoprefixer": "^10.4.23",
     "eslint": "^9.39.2",
@@ -34,7 +35,7 @@
     "globals": "^17.4.0",
     "postcss": "^8.5.14",
     "tailwindcss": "^4.1.13",
-    "typescript": "^5.9.3",
+    "typescript": "npm:@typescript/typescript6@^6.0.2",
     "typescript-eslint": "^8.39.1",
     "vite": "^7.3.3"
   }
