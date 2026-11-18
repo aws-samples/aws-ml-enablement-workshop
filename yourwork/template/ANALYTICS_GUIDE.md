@@ -48,20 +48,19 @@ filter metadata.domain != "localhost" and application_version != "verification"
 
 ## 4. クエリのレシピ
 
-記録の種類（`event_type`）は次の 4 つです。
+記録の種類（`event_type`）は次の 3 つです。
 
 | event_type | 内容 | 主なフィールド |
 | --- | --- | --- |
 | `com.amazon.rum.page_view_event` | ページビュー（初回表示、Link での遷移、戻る・進む） | `metadata.pageId`（パス） |
 | `mlew.click` | `data-track-name` を付けた要素のクリック | `event_details.elementName`、`event_details.page`（クリックした画面） |
-| `mlew.action` | クリック以外の操作（ドラッグ＆ドロップ、選択の変更など。`trackAction` で記録） | `event_details.actionName`、`event_details.page`、操作ごとの追加の値 |
 | `mlew.section_view` | `data-track-section` を付けたセクション（LP のセクション、結果・完了の表示など）の表示。ページごとに 1 回 | `event_details.sectionName`、`event_details.page` |
 
 - ほかに、訪問の始まり（`com.amazon.rum.session_start_event`）と検証用のイベント（`mlew.verification`）が記録されています。利用者の操作ではないので、操作の件数には数えません。
 - 人の数は `user_details.userId`（ブラウザごと）、訪問の数は `user_details.sessionId`（30 分操作が無いと切れる）で数えます。
 - モックの版（`initTracker` の `version`。既定は `v1`）は `application_version` に入ります。版ごとに分けるときは、`stats` の `by` に `application_version` を足します。
 - 時刻は秒単位で記録されるので、同じ秒の中の順序は分かりません。
-- 名前（`elementName` / `actionName` / `sectionName`）の付け方は [MLEW Tracker 導入ガイド](/yourwork/template/TRACKER_INTEGRATION_GUIDE.md) の「命名規約」にあります（例: `lp-hero-signup-button` は LP のヒーロー領域の登録ボタン）。
+- 名前（`elementName` / `sectionName`）の付け方は [MLEW Tracker 導入ガイド](/yourwork/template/TRACKER_INTEGRATION_GUIDE.md) の「命名規約」にあります（例: `lp-hero-signup-button` は LP のヒーロー領域の登録ボタン）。
 
 ページごとのページビュー:
 ```
@@ -71,11 +70,6 @@ filter metadata.domain != "localhost" and application_version != "verification" 
 要素ごとのクリック:
 ```
 filter metadata.domain != "localhost" and application_version != "verification" | filter event_type = "mlew.click" | stats count(*) as clicks, count_distinct(user_details.sessionId) as sessions by event_details.elementName, event_details.page | sort clicks desc
-```
-
-クリック以外の操作:
-```
-filter metadata.domain != "localhost" and application_version != "verification" | filter event_type = "mlew.action" | stats count(*) as actions, count_distinct(user_details.sessionId) as sessions by event_details.actionName, event_details.page | sort actions desc
 ```
 
 人数と訪問数:
@@ -103,7 +97,7 @@ filter metadata.domain != "localhost" and application_version != "verification" 
 ## 5. 答え方
 
 - 最初に結論を 1〜2 文で答え、そのあとに表を示します。割合には分母も書きます（例: 「LP を見た 12 訪問のうち 5（42%）がアプリに進みました」）。
-- `elementName`、`actionName`、`sectionName` はそのまま見せず、「LP の登録ボタン」のような日本語の呼び名にし、元の名前は表の補足に回します。
+- `elementName` と `sectionName` はそのまま見せず、「LP の登録ボタン」のような日本語の呼び名にし、元の名前は表の補足に回します。
 - 件数が少ない（目安として 30 訪問未満）ときは、傾向として断定しないよう添えます。
 - 0 件のときは、期間、除外の条件、検索できるまでの遅れ（2 分ほど）を確かめてから答えます。
 - グラフを頼まれたときだけ、`product/construction/analytics/` に自己完結の HTML（インライン SVG。外部の script や CDN は使わない）で保存し、パスを伝えます。

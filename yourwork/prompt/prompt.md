@@ -72,7 +72,7 @@
 2. **画面が配信されている**: website のルート定義の一覧を示し、`<URL>/` が 200 を返すことと、その HTML の `<script type="module">` が指す JS が `Content-Type` に `javascript` を含んで 200 を返すことを示します。CloudFront は存在しないパスにも `index.html` を 200 で返す設定なので、各画面のパスへの 200 は画面がある証拠になりません。
 3. **計測の設定が配信されている**: `curl -s <URL>/runtime-config.json` の出力に `"mlewTracker"` と `"appMonitorId"` が含まれることを示します。CloudFront は存在しないパスにも `index.html` を返すので、200 だけでは証拠になりません。
 4. **計測が届いて保存される**: `template/TRACKER_INTEGRATION_GUIDE.md` の `## 確認` の手順で、アプリのコードとは別に検証用のイベントを 1 件送り、`200` が返ることと、`template/ANALYTICS_GUIDE.md` のクエリでそのイベントが見つかることを示します（見つかるまで 2 分ほどかかるので、ほかの条件を確かめている間に待ちます）。検証用のイベントは分析では自動で除かれることをユーザーに伝えます。
-5. **計測が命名規約どおりで、二重に記録していない**: `template/TRACKER_INTEGRATION_GUIDE.md` の `## 確認` の方法で、`data-track-name` / `data-track-section` の値と `trackAction(` の第 1 引数の一覧、`trackAction(` の呼び出し箇所の一覧を示します。
+5. **計測が命名規約どおり**: `template/TRACKER_INTEGRATION_GUIDE.md` の `## 確認` の方法で、`data-track-name` / `data-track-section` の値の一覧を示します。
 
 次の項目はブラウザが必要なので、エージェントは確認したと報告せず、デプロイ後の URL を添えてユーザーに確認を依頼します。
 

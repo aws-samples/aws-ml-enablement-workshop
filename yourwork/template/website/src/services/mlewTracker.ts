@@ -6,7 +6,6 @@
 // - main.tsx で initTracker(router.history) を 1 回呼ぶ
 // - クリックを記録する要素に、data-track-name 属性で名前を付ける
 // - 表示を記録するセクションに、data-track-section 属性で名前を付ける
-// - クリック以外の操作（ドラッグ＆ドロップ、選択の変更など）は、trackAction 関数に名前を渡して記録する
 import { AwsRum } from '@aws-rum/web-slim';
 
 // TanStack Router の router.history のうち、ここで使う subscribe だけを受け取る型
@@ -179,18 +178,4 @@ export const initTracker = (
 
   observeSections();
   void startRum(options.version ?? 'v1');
-};
-
-// クリック以外の操作（ドラッグ＆ドロップ、選択の変更など）を記録する。
-// クリックは data-track-name で記録するので、ここでは記録しない
-export const trackAction = (
-  actionName: string,
-  properties?: Record<string, string | number | boolean>,
-): void => {
-  if (!started) return;
-  recordEvent('mlew.action', {
-    ...properties,
-    actionName,
-    page: window.location.pathname,
-  });
 };

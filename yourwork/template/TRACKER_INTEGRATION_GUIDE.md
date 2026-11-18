@@ -36,12 +36,7 @@ pnpm add @aws-rum/web-slim@3.2.1 --filter @product/website
 - ブラウザごとの匿名の ID と、訪問（セッション）の ID を付ける。認証情報は使わない
 - `runtime-config.json` に設定が無いとき（デプロイ前の `pnpm dev` など）は、送信せずにコンソールへ警告を出す
 
-`mlewTracker.ts` が export する関数は次の 2 つです。
-
-| 関数 | 用途 |
-| --- | --- |
-| `initTracker(history, options?)` | 計測を始める。`main.tsx` で 1 回だけ呼ぶ。`options.version` はモックの版（既定は `v1`）、`options.debug` は記録した内容をコンソールに出すかどうか |
-| `trackAction(actionName, properties?)` | クリック以外の操作（ドラッグ＆ドロップ、選択の変更、キー操作など）を記録する。クリックの handler では呼ばない |
+`mlewTracker.ts` が export する関数は `initTracker(history, options?)` だけです。計測を始める関数で、`main.tsx` で 1 回だけ呼びます。`options.version` はモックの版（既定は `v1`）、`options.debug` は記録した内容をコンソールに出すかどうかです。それ以外の計測は、すべて要素に付ける 2 つの属性（`data-track-name` と `data-track-section`）で行い、計測のための関数は呼びません。
 
 ## 接続コード
 
@@ -77,7 +72,6 @@ initTracker(router.history, { debug: import.meta.env.DEV });
   - `<種類>`: `button` / `link` / `tab` / `toggle` など、要素の種類
   - 例: `lp-hero-signup-button`、`app-sidebar-home-link`、`app-search-form-submit-button`、`not-found-main-home-link`
 - **フォームは `<form>` ではなく送信ボタンに付けます。** `<form>` に付けると、フォーム内のクリック（入力欄やラベルなど）がすべて記録され、送信していなくても数が増えます。
-- `trackAction` の `actionName` も同じ規約で、`<種類>` に操作の種類（`drag` / `drop` / `select` など）を入れます（例: `app-board-card-drop`、`lp-pricing-plan-select`）。
 - `data-track-section` は `<画面>-<セクション>` です（例: `lp-features`）。
 - クリック以外の出来事（完了・結果の表示など）は、結果の画面やセクションに `data-track-section` を付けて、表示されたことを記録します。名前は表示されたセクションの名前にします（例: 登録の完了は `app-signup-result`）。記録の種類が「セクションの表示」なので、名前に `-view` や `-completed` は付けません。
 - 同じ画面の同じ役割の要素には、版が変わっても同じ名前を使います。
@@ -87,16 +81,20 @@ initTracker(router.history, { debug: import.meta.env.DEV });
 
 - すべての CTA、すべてのナビゲーションリンク（ヘッダー・サイドバー・パンくず・フッター・404 ページのトップへ戻るリンクを含む）、すべてのフォーム送信（送信ボタン）に `data-track-name` を付けます。開閉ボタンなどの UI 操作にも付けて構いません。TanStack Router の `Link` にもそのまま付けられます。
 - `data-track-name` を付けた要素が入れ子になっているときは、クリックした位置にいちばん近い要素の名前が 1 回だけ記録されます。
-- クリック以外の操作のうち、PR/FAQ の検証に効くもの（主要な操作のドラッグ＆ドロップなど）は `trackAction` で記録します。クリックは `data-track-name` だけで記録し、クリックの handler（`onClick`）では `trackAction` を呼びません。呼ぶと二重に記録されます。
-- `<select>` の選択の変更は、`onChange` で `trackAction` を呼んで記録します（`<select>` 自体には `data-track-name` を付けません。開くためのクリックが記録されてしまうため）。
+- 記録できるのは、ページの表示、`data-track-name` を付けた要素のクリック、`data-track-section` を付けた要素の表示の 3 つだけです。入力した内容、選んだ値、ドラッグなどのクリック以外の操作は記録しません。
+- そのため、**PR/FAQ の主要な体験の各段階が、ページの表示・セクションの表示・ボタンのクリックのどれかで見えるように画面を作ります。**
+  - 段階のある操作（複数ステップのフォーム、ウィザードなど）は、段階ごとにページかセクションに分けます。
+  - どれが選ばれるかを比べたい選択肢（料金プラン、カテゴリなど）は、`<select>` ではなく選択肢ごとのボタンにし、それぞれに `data-track-name` を付けます（例: `lp-pricing-basic-button`、`lp-pricing-standard-button`）。
+  - 完了・結果・エラーや 0 件の表示など、操作の結果はセクションにして `data-track-section` を付けます。
+  - ドラッグ＆ドロップなどのクリック以外の操作は、その結果として表示されるもの（並べ替えた後の一覧、確認のメッセージなど）をセクションにして記録します。
+- `<select>` や入力欄に `data-track-name` は付けません。付けても、開いたときや入力欄を選んだときのクリックが記録されるだけで、選んだ値や入力した内容は記録されません。
 - LP の主要なセクション（ヒーロー、特徴、料金、FAQ など）と、結果・完了の表示に `data-track-section` を付けます。
 - 画面遷移は TanStack Router の `Link` で行います。`<a href>` は全ページを再読み込みします。
 - ページビューは固定ファイルが記録するので、各画面の `useEffect` などで送りません。
 
 ## 確認
 
-- 命名規約に従っていることは、モックのソース（固定ファイルの `services/mlewTracker.ts` は除く）から `data-track-name` / `data-track-section` の値と `trackAction(` の第 1 引数の一覧を出し、すべてが `^[a-z0-9-]+$` に合うことで確かめます。動的に作る名前は、作り方が固定の識別子からになっているかをコードで確かめます。
-- 二重計測が無いことは、`trackAction(` の呼び出し箇所を検索し、どれも `onClick` の handler の中に無いことで確かめます。
+- 命名規約に従っていることは、モックのソース（固定ファイルの `services/mlewTracker.ts` は除く）から `data-track-name` / `data-track-section` の値の一覧を出し、すべてが `^[a-z0-9-]+$` に合うことで確かめます。動的に作る名前は、作り方が固定の識別子からになっているかをコードで確かめます。
 - 計測の設定が配信されていることは、デプロイ後に `curl -s <URL>/runtime-config.json` の出力に `"mlewTracker"` と `"appMonitorId"` が含まれることで確かめます（PowerShell では `curl.exe`）。
 - app monitor がイベントを受け付けて保存することは、デプロイ後に、アプリのコードとは別の検証用のイベントを 1 件送り、[分析ガイド](/yourwork/template/ANALYTICS_GUIDE.md) のクエリで見つかることで確かめます。
   1. `curl -s <URL>/runtime-config.json` の出力から `appMonitorId` と `region` を控えます。`<URL>` の `https://` を除いた部分（`xxxx.cloudfront.net`）が CloudFront のドメインです。
