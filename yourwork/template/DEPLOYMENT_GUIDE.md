@@ -8,7 +8,7 @@
 - インフラは生成された CDK のコードをそのまま使い、設定は公開 props で渡します。CSP・WAF・checkov は生成物の既定値に任せ、KMS キーだけは削除できるものを公開 props の `encryptionKey` で渡します（手順 6）。
 - デプロイ先リージョンと AWS のプロファイルは、plugin の stage 設定（infra の generator の `--stageConfig`）で生成される `packages/common/infra-config/src/stages.config.ts` に書いて固定します（手順 5）。生成された `main.ts` はこの設定を読むので、書き換えません。シェルの環境変数には頼りません。
 - コマンドの書き方（シェルによる違い）は [`AGENTS.md` の「シェルの扱い」](/yourwork/AGENTS.md#シェルの扱い) に従います。
-- 計測（Tracker）の組み込みは [MLEW Tracker 導入ガイド](/yourwork/template/TRACKER_INTEGRATION_GUIDE.md) に従います。
+- 計測（Tracker）の組み込みは [MLEW Tracker 導入ガイド](/yourwork/template/TRACKER_INTEGRATION_GUIDE.md) に従います。Tracker の受け口（CloudWatch RUM の app monitor）はモックのスタックに含まれ、一緒にデプロイ・削除されます。
 
 ## 技術スタック
 
@@ -49,7 +49,7 @@ CDK bootstrap はこの時点では不要です。手順 5 でデプロイ先リ
 - 決めた値はプロファイル名と一緒に控えておき、ワークスペースを生成したあとで `product/construction/plan.md` に記録します（`product/` を生成より前に作らないため）。
 - 2 回目以降に別のリージョンでデプロイすると、us-east-1 の WAF スタックの更新が `UPDATE_FAILED` になります（「トラブルシューティング」参照）。同じアカウントに既存のスタックがあるかを上の 3 で探すのはこのためです。
 - WAF は常に us-east-1 の別スタックに作られます。
-- Tracker は別のリージョンにあっても構いません。エンドポイント URL で指定するだけです。
+- Tracker の app monitor と記録（CloudWatch Logs）は、モック本体と同じデプロイ先リージョンに作られます。
 
 ## 生成されるディレクトリ構造
 
@@ -65,15 +65,19 @@ yourwork/product/
     │   ├── index.html
     │   ├── public/                 # 画像などの静的ファイル
     │   └── src/
-    │       ├── main.tsx            # エントリポイント
-    │       ├── config.ts           # アプリ名と Tracker の接続情報
+    │       ├── main.tsx            # エントリポイント（Tracker の initTracker を呼ぶ）
+    │       ├── services/
+    │       │   └── mlewTracker.ts  # Tracker の固定ファイル（手順 7 でコピー）
+    │       ├── config.ts           # アプリ名
     │       ├── styles.css          # テーマ（Tailwind v4）
     │       └── routes/             # TanStack Router のルート
     ├── infra/                      # CDK アプリ
     │   └── src/
     │       ├── main.ts             # 生成のまま（stages.config.ts の設定を読む）
     │       └── stacks/
-    │           └── application-stack.ts  # Website と KMS キーを追加する
+    │           └── application-stack.ts  # Website、KMS キー、Tracker を追加する
+    │       └── constructs/
+    │           └── mlew-tracker.ts       # Tracker の固定ファイル（手順 6 でコピー）
     └── common/
         ├── constructs/             # 生成された共通 CDK コンストラクト（書き換えない）
         ├── infra-config/
@@ -83,7 +87,7 @@ yourwork/product/
         └── shadcn/                 # shadcn の UI コンポーネントと globals.css
 ```
 
-Tracker の固定ファイルと接続コードを置く場所は、[MLEW Tracker 導入ガイド](/yourwork/template/TRACKER_INTEGRATION_GUIDE.md) を参照してください。
+Tracker の固定ファイルと接続コードの詳細は、[MLEW Tracker 導入ガイド](/yourwork/template/TRACKER_INTEGRATION_GUIDE.md) を参照してください。
 
 ## 手順
 
@@ -98,7 +102,7 @@ Tracker の固定ファイルと接続コードを置く場所は、[MLEW Tracke
 | 3 | 飛ばさない（何度実行しても結果は変わりません） |
 | 4 | `nx.json` のトップレベルに `"useDaemonProcess": false` がある |
 | 5 | `stages.config.ts` の `product-infra-sandbox` に、デプロイ先リージョンの `region` とプロファイルの `credentials` がある |
-| 6 | `application-stack.ts` で `Website` に `encryptionKey` を渡している |
+| 6 | `application-stack.ts` で `Website` に `encryptionKey` を渡し、`MlewTracker` を置いている（`packages/infra/src/constructs/mlew-tracker.ts` もある） |
 
 `product/` はあるのに `product/nx.json` が無いときは、手順 1 が途中で失敗しています。`product/` を消してよいかユーザーに確認してから作り直します。
 
@@ -158,15 +162,22 @@ generator を実行したあとは、TypeScript のプロジェクト参照の�
 - `credentials` は型で必須です（省くと build が `@product/common-infra-config:compile` で失敗します）。前提条件で確認したプロファイル名を書きます。`deploy-sandbox` と `destroy-sandbox` は、このプロファイルで cdk を実行します。
 - 生成直後の `region` は、実行時のシェルの環境変数やプロファイルから決まります。エージェントのシェルにはエージェント自身の設定に由来する `AWS_REGION` が入っていることがあり、そのままだと意図しないリージョンにデプロイされます。ここで固定すれば、bootstrap・デプロイ・削除のリージョンがシェルの環境変数に左右されません。
 
-### 6. application-stack.ts に Website と KMS キーを追加する
+### 6. application-stack.ts に Website、KMS キー、Tracker を追加する
 
-生成直後の `ApplicationStack` は空で、このままデプロイしても何も作られません。`packages/infra/src/stacks/application-stack.ts` を次のようにします。
+生成直後の `ApplicationStack` は空で、このままデプロイしても何も作られません。まず Tracker の固定ファイルを、内容を変えずにコピーします（コピー先のディレクトリが無ければ作ります）。
+
+| コピー元（`yourwork/` から） | コピー先（`product/` から） |
+| --- | --- |
+| `template/infra/src/constructs/mlew-tracker.ts` | `packages/infra/src/constructs/mlew-tracker.ts` |
+
+`packages/infra/src/stacks/application-stack.ts` を次のようにします。
 
 ```ts
 import { Website } from '@product/common-constructs';
 import { Duration, RemovalPolicy, Stack, StackProps } from 'aws-cdk-lib';
 import { Key } from 'aws-cdk-lib/aws-kms';
 import { Construct } from 'constructs';
+import { MlewTracker } from '../constructs/mlew-tracker.js';
 
 export class ApplicationStack extends Stack {
   constructor(scope: Construct, id: string, props?: StackProps) {
@@ -179,18 +190,23 @@ export class ApplicationStack extends Stack {
       pendingWindow: Duration.days(7),
     });
 
-    new Website(this, 'Website', { encryptionKey });
+    const website = new Website(this, 'Website', { encryptionKey });
+
+    // 計測の受け口（CloudWatch RUM の app monitor）。ID は runtime-config.json でブラウザに渡る
+    new MlewTracker(this, 'Tracker', {
+      distribution: website.cloudFrontDistribution,
+    });
   }
 }
 ```
 
 - KMS キーは `Website` の公開 props `encryptionKey` で渡します。生成された共通コンストラクト（`packages/common/constructs/`）は書き換えません。
-- CSP は生成された既定値のまま使います。Tracker の SDK はモックと同じオリジンから配信するので、CSP の変更は不要です。
+- CSP は生成された既定値のまま使います。Tracker の送信先は既定の `connect-src` が許可する https なので、CSP の変更は不要です。
 
 ### 7. 画面と Tracker を実装する
 
 - 画面は `packages/website/src/routes/` に作ります。生成物の既知の問題（レイアウト、404、`lang` など）は「既知の問題への対処」を確認します。
-- Tracker の値（API Endpoint / API Key）を受け取っている場合は、[MLEW Tracker 導入ガイド](/yourwork/template/TRACKER_INTEGRATION_GUIDE.md) の `## 固定ファイル` をコピーし、`## 接続コード` を書きます。ユーザーが Tracker を使わないと明示した場合は、どちらも行いません（SDK の script タグも置きません）。あとから Tracker を使うことになったら、組み込んでから手順 10 のデプロイを再実行します。
+- Tracker は [MLEW Tracker 導入ガイド](/yourwork/template/TRACKER_INTEGRATION_GUIDE.md) に従い、website の固定ファイルのコピー、`@aws-rum/web-slim` の追加、`main.tsx` の接続コード、計測対象への `data-track-name` / `data-track-section` を行います（infra 側は手順 6 で済んでいます）。
 - 画像は `packages/website/public/` に置き、`/image.png` のような直接パスで参照します。外部 URL の画像や外部フォント（Google Fonts など）は、生成された CSP によりデプロイ後にブロックされます。`pnpm dev` では表示されるので気付きにくい点に注意してください。
 
 ### 8. ビルドする
@@ -237,8 +253,9 @@ aws cloudformation describe-stacks --profile <プロファイル名> --region <�
 
 CSP と WAF は生成物の既定値を使い、KMS キーは手順 6 で削除できるものを渡します。モック作りで意識するのは次の 2 点です。
 
-- 外部の script・画像・フォントは読み込めません。Tracker の SDK はモックに同梱し、画像は `public/` に置き、フォントはローカルのものを使います。
+- 外部の script・画像・フォントは読み込めません。Tracker のコードはモックの bundle に含め、画像は `public/` に置き、フォントはローカルのものを使います。
 - インライン script は実行されません。Tracker の初期化は TypeScript のコードで行います（[MLEW Tracker 導入ガイド](/yourwork/template/TRACKER_INTEGRATION_GUIDE.md)）。
+- Tracker の app monitor は、ブラウザから認証情報なしで送れるように、送信（`rum:PutRumEvents`）だけを誰にでも許可しています。受け付けるのはモックの CloudFront のドメインと `localhost` から送られたものだけですが、ドメインは送る側が名乗る値なので、URL を知っている人が偽の記録を送ることは防げません。記録を読めるのは AWS の認証情報を持つ人だけです。記録にはページのパス、ブラウザの種類、匿名の ID、おおまかな地域（国・都道府県程度）が含まれます。モックの画面にはダミーのデータだけを使い、個人情報や機密情報を入力させないでください。
 
 CloudFront には us-east-1 の Web ACL（`AWSManagedRulesCommonRuleSet` と `AWSManagedRulesKnownBadInputsRuleSet`）が関連付けられます。S3 バケットは非公開で CloudFront 経由でのみアクセスされ、手順 6 で作った KMS キーで暗号化されます。
 
@@ -249,6 +266,7 @@ CloudFront には us-east-1 の Web ACL（`AWSManagedRulesCommonRuleSet` と `AW
 | WAF Web ACL | $5 |
 | WAF ルール 2 個 | $2 |
 | KMS キー | $1 |
+| CloudWatch RUM と CloudWatch Logs（Tracker） | 記録 10 万件あたり $1 と、ログの取り込み・保存。モック程度のアクセスならほぼ $0 |
 | 合計 | **約 $8 / 月 / デプロイ** |
 
 - 固定費は時間割りで課金されます。1 週間で削除すれば約 $2 です。
@@ -268,10 +286,11 @@ CloudFront には us-east-1 の Web ACL（`AWSManagedRulesCommonRuleSet` と `AW
    aws cloudformation describe-stacks --profile <プロファイル名> --region us-east-1 --query "Stacks[?starts_with(StackName,'product-infra-sandbox-')].[StackName,StackStatus]" --output table
    ```
 3. KMS キーは 7 日後に削除されます。削除待ちの間は課金されません。
+4. Tracker の app monitor はスタックと一緒に削除されますが、記録のロググループ（`/aws/vendedlogs/RUMService_product-infra-sandbox-Application-tracker<ID の先頭 8 文字>`）は残ります。記録は 30 日で自動的に消えるので、削除したあとも 30 日間は [分析ガイド](/yourwork/template/ANALYTICS_GUIDE.md) で集計できます。すぐに消したいとユーザーが言ったときだけ、分析ガイドの「1. ロググループを特定する」の 2 つ目のコマンドで名前を出し、`aws logs delete-log-group --profile <プロファイル名> --region <デプロイ先リージョン> --log-group-name <ロググループ名>` で削除します。空になったロググループは費用がかかりません。
 
 ### CDKToolkit スタック（bootstrap で作られたもの）
 
-モックのスタックを削除しても、bootstrap で作られた `CDKToolkit` スタックは残ります。残るリージョンは、デプロイ先リージョン、us-east-1、Tracker のリージョン（Tracker のデプロイ時に CodeBuild が bootstrap します）です。中身は CloudFormation の実行ロール（管理者権限）などの IAM ロール、ステージング用の S3 バケット（バージョニング有効）、ECR リポジトリで、費用はほぼかかりません。
+モックのスタックを削除しても、bootstrap で作られた `CDKToolkit` スタックは残ります。残るリージョンは、デプロイ先リージョンと us-east-1 です。中身は CloudFormation の実行ロール（管理者権限）などの IAM ロール、ステージング用の S3 バケット（バージョニング有効）、ECR リポジトリで、費用はほぼかかりません。
 
 ユーザーが不要と判断したときだけ削除します。削除する前に、そのリージョンでほかの CDK アプリが CDKToolkit を使っていないことを確かめます。
 
@@ -279,7 +298,7 @@ CloudFront には us-east-1 の Web ACL（`AWSManagedRulesCommonRuleSet` と `AW
    ```
    aws cloudformation describe-stacks --profile <プロファイル名> --region <リージョン> --query "Stacks[?Parameters[?ParameterKey=='BootstrapVersion']].StackName" --output text
    ```
-   出力が空でなければ、そのリージョンの CDKToolkit はまだ使われています（Tracker のリージョンでは、Tracker を削除するまで `MLEWTrackerStack-<env>` が出ます）。削除せず、出たスタック名をユーザーに伝えます。このパラメータを持たないスタック（古い synthesizer でデプロイしたものなど）はこの一覧に出ないので、空でも、ほかに CDK アプリをデプロイしていないかユーザーに確認します。
+   出力が空でなければ、そのリージョンの CDKToolkit はまだ使われています。削除せず、出たスタック名をユーザーに伝えます。このパラメータを持たないスタック（古い synthesizer でデプロイしたものなど）はこの一覧に出ないので、空でも、ほかに CDK アプリをデプロイしていないかユーザーに確認します。
 2. 出力が空なら、ステージング用のバケット名を控えてからスタックを削除します。
    ```
    aws cloudformation describe-stacks --profile <プロファイル名> --region <リージョン> --stack-name CDKToolkit --query "Stacks[0].Outputs[?OutputKey=='BucketName'].OutputValue" --output text
@@ -351,8 +370,9 @@ infra の checkov が uv を必要とします。uv をインストールして�
 
 ### バージョンを上げたときの確認項目
 
-- **生成された CSP の `connect-src` が Tracker の API（https）を許可しているか**を確認します。1.0.6 の既定値は `connect-src 'self' https: wss:` で、Tracker への送信はこれに依存しています。`pnpm nx run-many -t build` のあと、`dist/packages/infra/cdk.out` の Application スタックのテンプレートで `ContentSecurityPolicy` の値を見ます。`connect-src` が絞られていたら、公開 props で Tracker の API のオリジンを許可します。公開 props で設定できない場合は、生成コードを書き換えずに作業を止め、ユーザーに伝えます。
+- **生成された CSP の `connect-src` が Tracker の送信先（`https://dataplane.rum.<デプロイ先リージョン>.amazonaws.com`）を許可しているか**を確認します。1.0.6 の既定値は `connect-src 'self' https: wss:` で、Tracker への送信はこれに依存しています。`pnpm nx run-many -t build` のあと、`dist/packages/infra/cdk.out` の Application スタックのテンプレートで `ContentSecurityPolicy` の値を見ます。`connect-src` が絞られていたら、公開 props で送信先のオリジンを許可します。公開 props で設定できない場合は、生成コードを書き換えずに作業を止め、ユーザーに伝えます。
 - **生成された CSP の `img-src` と `font-src` が `'self'` を含むか**を確認します。`public/` に置いた画像とローカルのフォントは、これに依存しています。外部オリジンが許可されるように変わっていても、外部の画像やフォントを使わない方針は変えません（`pnpm dev` と本番で見え方が変わらないようにするため）。上の既知の問題の CSP の値も書き直します。
-- **生成された CSP の `script-src` が `'self'` を含むか**を確認します。Tracker の SDK はモックと同じオリジンから配信しているため、`'self'` が許可されていれば変更は不要です。
+- **生成された CSP の `script-src` が `'self'` を含むか**を確認します。Tracker のコードはモックの bundle に含まれているため、`'self'` が許可されていれば変更は不要です。
+- **`Website` が `runtime-config.json` を `RuntimeConfig` の `connection` から書き出しているか、`RuntimeConfig` と `cloudFrontDistribution` が `@product/common-constructs` から使えるか**を確認します。Tracker の固定ファイル（`mlew-tracker.ts`）はこの形を前提にしています。
 - **`--stageConfig` で生成された `main.ts` が `resolveStage('packages/infra', 'product-infra-sandbox')` で `stages.config.ts` の `region` を読む形か、`deploy-sandbox` / `destroy-sandbox` が `stages.config.ts` のプロファイルを使うスクリプト経由か、`bootstrap` がプロファイルを使わないままか、生成直後の `ApplicationStack` が空か**を確認します（手順 5・6・9 はこの形を前提にしています）。形が変わっていたら、手順 5・6・9 を新しい形に合わせて直します。
 - **`Website` の公開 props に `encryptionKey` がまだあるか**を確認します（手順 6）。無くなっていたら、KMS キーを削除可能にする別の公開 props を探し、見つからなければユーザーに伝えます。

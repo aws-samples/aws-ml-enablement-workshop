@@ -1,6 +1,6 @@
 ---
 name: mock-builder
-description: PR/FAQ からワークショップ用のモック Web アプリを作り、MLEW Tracker を組み込んで AWS にデプロイする。ユーザーが「モックを作りたい」「PR/FAQ を実装したい」「Tracker で計測できるアプリを作りたい」と依頼したとき、または yourwork/product/ に成果物を作る作業のときに使う。
+description: PR/FAQ からワークショップ用のモック Web アプリを作り、MLEW Tracker（CloudWatch RUM）を組み込んで AWS にデプロイする。ユーザーが「モックを作りたい」「PR/FAQ を実装したい」「計測できるアプリを作りたい」と依頼したとき、または yourwork/product/ に成果物を作る作業のときに使う。
 ---
 
 # モックアプリの作成
@@ -9,19 +9,15 @@ description: PR/FAQ からワークショップ用のモック Web アプリを�
 
 ## 1. 入力を集める
 
-次の 2 つを集めます。1 は必須、2 は任意です。依頼文に値（またはその置き場所）が書かれていれば、それを使い、聞き直しません。
+**実装したいアプリケーションの詳細**（Refine で作成した PR/FAQ）を集めます。依頼文に内容（またはその置き場所）が書かれていれば、それを使い、聞き直しません。指定が無ければ、まず `discovery/README.md` の Refine セクションを読みます。そこが空のときだけユーザーに尋ねます（長文をそのまま貼ってもらって構いません）。
 
-1. **実装したいアプリケーションの詳細**（Refine で作成した PR/FAQ）。依頼文に指定が無ければ、まず `discovery/README.md` の Refine セクションを読みます。そこが空のときだけユーザーに尋ねます（長文をそのまま貼ってもらって構いません）。
-2. **（任意）MLEW Tracker の値**: API Endpoint / API Key / Dashboard URL。受け取った API Endpoint / API Key がプレースホルダーのままなら着手せずユーザーに確認します（判定は `prompt/prompt.md` の `<tracker_configuration>` の直後）。「Tracker を使わない」と明示されたときだけ Tracker なしで進めます。
+Tracker（計測）に受け取る値はありません。受け口はモックと一緒にデプロイされます。
 
 ## 2. prompt.md を読んで実行する
 
-`prompt/prompt.md` を読み、プレースホルダーに上で集めた内容を当てて実行します。
+`prompt/prompt.md` を読み、`<application_requirements>` に上で集めた内容を当てて実行します。
 
-- `<application_requirements>` ← 1 の内容
-- `<tracker_configuration>` ← 2 の内容
-
-目的・判断基準・完了条件は `prompt/prompt.md`、手順は `template/DEPLOYMENT_GUIDE.md`、計測は `template/TRACKER_INTEGRATION_GUIDE.md`、ディレクトリの決まりごとは `AGENTS.md` にあります。このファイルには複製していないので、着手前に読んでください。
+目的・判断基準・完了条件は `prompt/prompt.md`、手順は `template/DEPLOYMENT_GUIDE.md`、計測は `template/TRACKER_INTEGRATION_GUIDE.md`、完了条件の検証イベントの確認は `template/ANALYTICS_GUIDE.md`、ディレクトリの決まりごとは `AGENTS.md` にあります。このファイルには複製していないので、着手前に読んでください。
 
 ## 3. 完了条件を満たして止まる
 

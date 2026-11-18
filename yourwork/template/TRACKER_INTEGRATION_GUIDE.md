@@ -1,92 +1,68 @@
 # MLEW Tracker 導入ガイド
 
-モックに MLEW Tracker の計測を組み込む方法です。Tracker の値（API Endpoint / API Key）を受け取っている場合だけ行います。パスは、表で `yourwork/` と書いたもの以外は Nx ワークスペース（`yourwork/product/`）からの相対です。
+モックに MLEW Tracker の計測を組み込む方法です。Tracker は、モックのスタックに含まれる CloudWatch RUM の app monitor に、ページビュー・クリック・セクションの表示を送り、CloudWatch Logs に保存します。記録の集計は [分析ガイド](/yourwork/template/ANALYTICS_GUIDE.md) で行います。パスは、表で `yourwork/` と書いたもの以外は Nx ワークスペース（`yourwork/product/`）からの相対です。
 
 このガイドが扱うのは計測だけです。ワークスペースの生成、デプロイと再デプロイ、リージョン、削除は [デプロイメントガイド](/yourwork/template/DEPLOYMENT_GUIDE.md) に従います。
 
 ## 守ること
 
-- **`template/` にある公式の `tracker-sdk.js` と `mlewTracker.ts` をそのまま使います。** SDK を自作したり、ほかの URL や npm から読み込んだり、Tracker の API を `fetch` などで直接呼んだりしません。自作すると画面上は動いて見えても、イベントは Tracker に届きません。
+- **`template/` にある 2 つの固定ファイルをそのまま使います。** 計測のコードを自作したり、ほかの方法で CloudWatch RUM に送ったりしません。名前と送り方がそろっていないと、[分析ガイド](/yourwork/template/ANALYTICS_GUIDE.md) のクエリで集計できません。
 - **固定ファイルは編集しません。** 生成されたファイルに書くのは、下の「接続コード」だけです。
-- **CSP は生成物の既定値のまま使います。** SDK はモックと同じオリジン（`/tracker-sdk.js`）から配信され、送信先の API は既定の `connect-src` が許可する https なので、CSP を変える必要はありません。インライン script は CSP で実行されないので使いません。
-
-## 必要な値
-
-Tracker のデプロイ完了通知メールで受け取る次の 3 つです（取り直し方は [当日のガイド](/yourwork/README.md) の「2. Tracker システムのデプロイ」）。
-
-| 値 | 使い道 |
-| --- | --- |
-| API Endpoint | `config.ts` の `tracker.apiEndpoint`。例: `https://xxxxxxxx.execute-api.ap-northeast-1.amazonaws.com/dev` |
-| API Key | `config.ts` の `tracker.apiKey` |
-| Dashboard URL | 計測結果を見るダッシュボード。モックには組み込みません |
-
-Tracker はモックと別のリージョンにあっても構いません。API Endpoint の URL で指定するだけです。
+- **CSP は生成物の既定値のまま使います。** 送信先（`https://dataplane.rum.<リージョン>.amazonaws.com`）は既定の `connect-src` が許可する https で、計測のコードはモックの bundle に含まれるので、CSP を変える必要はありません。
+- **受け取る値はありません。** 送信先の app monitor はモックと一緒にデプロイされ、その ID はデプロイ時に `runtime-config.json` へ書かれます。設定ファイルに ID やキーを書く必要はありません。
 
 ## 固定ファイル
 
-次の 2 つを、内容を変えずにコピーします（コピー先のディレクトリが無ければ作ります）。
+次の 2 つを、内容を変えずにコピーします（コピー先のディレクトリが無ければ作ります）。infra 側は [デプロイメントガイド](/yourwork/template/DEPLOYMENT_GUIDE.md) の手順 6 で、website 側は手順 7 でコピーします。
 
 | コピー元（`yourwork/` から） | コピー先（`product/` から） | 役割 |
 | --- | --- | --- |
-| `template/website/public/tracker-sdk.js` | `packages/website/public/tracker-sdk.js` | Tracker SDK（ビルド済み）。`window.MLEWTracker` を定義する |
-| `template/website/src/services/mlewTracker.ts` | `packages/website/src/services/mlewTracker.ts` | SDK の初期化と計測の関数 |
+| `template/infra/src/constructs/mlew-tracker.ts` | `packages/infra/src/constructs/mlew-tracker.ts` | CloudWatch RUM の app monitor を作り、その ID とリージョンを `runtime-config.json` に書く CDK コンストラクト |
+| `template/website/src/services/mlewTracker.ts` | `packages/website/src/services/mlewTracker.ts` | `runtime-config.json` を読んで計測を始め、ページビュー・クリック・セクションの表示を送る |
 
-どちらも生成物の Biome と strict な TypeScript の設定で build が通ることを確認済みです。
+どちらも生成物の Biome と strict な TypeScript の設定で build が通り、infra の checkov も通ることを確認済みです。
 
-`mlewTracker.ts` は、SDK の次の挙動に対処しています。モックの側で同じ対処を書き足す必要はありません。
+`mlewTracker.ts` が使う CloudWatch RUM の Web クライアントを、`product/` で website に追加します。
 
-- 初回ページビューの userId が空になる → ブラウザごとの匿名 ID を、SDK の生成前に保存しておく
-- Link のクリックが遷移先のページで記録される → クリック時点（遷移前）のパスを記録する
-- Link による画面遷移でページビューが記録されない → router の history を購読して記録する（戻る・進むは SDK が記録する）
+```
+pnpm add @aws-rum/web-slim@3.2.1 --filter @product/website
+```
 
-あわせて、`apiEndpoint` / `apiKey` が空なら送信せずにコンソールへエラーを出し、`apiEndpoint` の末尾の `/` は除きます。
+`mlewTracker.ts` は次のことを自動で行います。モックの側で同じことを書き足す必要はありません。
 
-`mlewTracker.ts` が export する関数は次のとおりです。
+- 初回表示、`Link` による画面遷移、ブラウザの戻る・進むのページビューを記録する（router の history を購読する）
+- `data-track-name` を付けた要素のクリックを、クリックした時点（遷移前）の画面のパスと一緒に記録する
+- `data-track-section` を付けた要素が画面に入ったら、ページごとに 1 回記録する（あとから描画された要素も対象）
+- ブラウザごとの匿名の ID と、訪問（セッション）の ID を付ける。認証情報は使わない
+- `runtime-config.json` に設定が無いとき（デプロイ前の `pnpm dev` など）は、送信せずにコンソールへ警告を出す
+
+`mlewTracker.ts` が export する関数は次の 2 つです。
 
 | 関数 | 用途 |
 | --- | --- |
-| `initTracker(config, history)` | SDK を初期化し、ルート遷移のページビューを記録する。`main.tsx` で 1 回だけ呼ぶ |
-| `trackClick(elementName, properties?)` | `data-track` を付けられない操作のクリックを記録する。`data-track` を付けた要素（とその子孫）の handler では呼ばない |
-| `trackSectionView(sectionName, properties?)` | セクションの表示を custom イベント（`section-view`）で記録する。同じページでは 1 セクション 1 回 |
-| `observeSection(element, sectionName, threshold?)` | 要素が画面に入ったら `trackSectionView` を 1 回呼ぶ。戻り値は監視の解除 |
+| `initTracker(history, options?)` | 計測を始める。`main.tsx` で 1 回だけ呼ぶ。`options.version` はモックの版（既定は `v1`）、`options.debug` は記録した内容をコンソールに出すかどうか |
+| `trackAction(actionName, properties?)` | クリック以外の操作（ドラッグ＆ドロップ、選択の変更、キー操作など）を記録する。クリックの handler では呼ばない |
 
 ## 接続コード
 
-生成されたファイルに、次の 3 か所だけを書きます。
+生成されたファイルに書くのは、次の 2 か所だけです。
 
-### `packages/website/index.html`
+### `packages/infra/src/stacks/application-stack.ts`
 
-`<head>` の中に SDK の script タグを置きます。`async` / `defer` は付けません（`main.tsx` より先に `window.MLEWTracker` を定義させるため）。
-
-```html
-    <script src="/tracker-sdk.js"></script>
-```
-
-### `packages/website/src/config.ts`
-
-生成された `export default { ... }` に `tracker` ブロックを足します。値は受け取ったものに置き換えます。
-
-```ts
-  tracker: {
-    applicationId: 'your-app-id', // 製品名に基づいて付ける（英小文字と -）
-    applicationName: 'あなたのアプリ名',
-    apiEndpoint:
-      'https://xxxxxxxx.execute-api.ap-northeast-1.amazonaws.com/dev',
-    apiKey: 'xxxxxxxx',
-  },
-```
+[デプロイメントガイド](/yourwork/template/DEPLOYMENT_GUIDE.md) の手順 6 のコードに含まれています（`Website` を変数に受け、その `cloudFrontDistribution` を `MlewTracker` に渡す）。手順 6 のとおりなら、書き足すものはありません。
 
 ### `packages/website/src/main.tsx`
 
-import を 2 行足し、生成された `createRouter` の直後で `initTracker` を呼びます。`createRouter` の行は生成されたものをそのまま使います。
+import を 1 行足し、生成された `createRouter` の直後で `initTracker` を呼びます。`createRouter` の行は生成されたものをそのまま使います。
 
 ```ts
-import Config from './config';
 import { initTracker } from './services/mlewTracker';
 
 // 生成された const router = createRouter({ ... }); の直後
-initTracker({ ...Config.tracker, debug: import.meta.env.DEV }, router.history);
+initTracker(router.history, { debug: import.meta.env.DEV });
 ```
+
+2 版目以降のモック（v2 など）をデプロイするときは、`{ version: 'v2', debug: import.meta.env.DEV }` のように版を渡します。
 
 書いたあとに build が Biome の整形で失敗したら、`pnpm lint` で整形します。
 
@@ -100,36 +76,44 @@ initTracker({ ...Config.tracker, debug: import.meta.env.DEV }, router.history);
   - `<対象>`: 操作の意味（`signup`、`home`、`search` など）。表示文言の翻訳や連番ではなく、役割で名付けます
   - `<種類>`: `button` / `link` / `tab` / `toggle` など、要素の種類
   - 例: `lp-hero-signup-button`、`app-sidebar-home-link`、`app-search-form-submit-button`、`not-found-main-home-link`
-- **`data-track="true"` と対で付けます。** SDK は `data-track="true"` の要素だけを記録します。
 - **フォームは `<form>` ではなく送信ボタンに付けます。** `<form>` に付けると、フォーム内のクリック（入力欄やラベルなど）がすべて記録され、送信していなくても数が増えます。
-- `trackClick` の `elementName` も同じ規約で付けます。`trackSectionView` / `observeSection` の `sectionName` は `<画面>-<セクション>`（例: `lp-features`）です。
-- クリック以外の出来事（完了・結果の表示など）は `trackClick` で送りません。結果の画面やセクションが表示されたことを `observeSection` / `trackSectionView` で記録します。名前は上と同じ `<画面>-<セクション>` で、表示されたセクションの名前にします（例: 登録の完了は `app-signup-result`）。イベントの種類は `section-view` なので、名前に `-view` や `-completed` は付けません。
+- `trackAction` の `actionName` も同じ規約で、`<種類>` に操作の種類（`drag` / `drop` / `select` など）を入れます（例: `app-board-card-drop`、`lp-pricing-plan-select`）。
+- `data-track-section` は `<画面>-<セクション>` です（例: `lp-features`）。
+- クリック以外の出来事（完了・結果の表示など）は、結果の画面やセクションに `data-track-section` を付けて、表示されたことを記録します。名前は表示されたセクションの名前にします（例: 登録の完了は `app-signup-result`）。記録の種類が「セクションの表示」なので、名前に `-view` や `-completed` は付けません。
 - 同じ画面の同じ役割の要素には、版が変わっても同じ名前を使います。
 - 動的に作る名前（パンくずやリストの項目など）も、表示文言ではなく route のパスなど固定の識別子から作ります。使うのは英小文字・数字・`-` だけで、`<画面>` の部分はその要素がある実際の画面にします（例: `/app/search` のパンくずの「ホーム」は `app-search-breadcrumb-home-link`）。
 
 ## 計測対象
 
-- すべての CTA、すべてのナビゲーションリンク（ヘッダー・サイドバー・パンくず・フッター・404 ページのトップへ戻るリンクを含む）、すべてのフォーム送信（送信ボタン）に `data-track="true"` と `data-track-name` を付けます。開閉ボタンなどの UI 操作にも付けて構いません。
-- 1 つの要素は `data-track` か `trackClick` のどちらか一方で計測します。両方を使うと二重に記録されます。`trackClick` は `data-track` を付けられない操作だけに使います。
-- LP の主要なセクション（ヒーロー、特徴、料金、FAQ など）の表示を `observeSection` で記録します。React では `useEffect` の中で要素に対して呼び、戻り値を cleanup として返します。セクション表示はページビューとして送りません。
+- すべての CTA、すべてのナビゲーションリンク（ヘッダー・サイドバー・パンくず・フッター・404 ページのトップへ戻るリンクを含む）、すべてのフォーム送信（送信ボタン）に `data-track-name` を付けます。開閉ボタンなどの UI 操作にも付けて構いません。TanStack Router の `Link` にもそのまま付けられます。
+- `data-track-name` を付けた要素が入れ子になっているときは、クリックした位置にいちばん近い要素の名前が 1 回だけ記録されます。
+- クリック以外の操作のうち、PR/FAQ の検証に効くもの（主要な操作のドラッグ＆ドロップなど）は `trackAction` で記録します。クリックは `data-track-name` だけで記録し、クリックの handler（`onClick`）では `trackAction` を呼びません。呼ぶと二重に記録されます。
+- LP の主要なセクション（ヒーロー、特徴、料金、FAQ など）と、結果・完了の表示に `data-track-section` を付けます。
 - 画面遷移は TanStack Router の `Link` で行います。`<a href>` は全ページを再読み込みします。
 - ページビューは固定ファイルが記録するので、各画面の `useEffect` などで送りません。
 
 ## 確認
 
-- 命名規約に従っていることは、モックのソースから `data-track-name` の値の一覧を出し、すべてが `^[a-z0-9-]+$` に合うことで確かめます。動的に作る名前は、作り方が固定の識別子からになっているかをコードで確かめます。
-- 二重計測が無いことは、`trackClick(` の呼び出し箇所を検索し、どれも `data-track` を付けた要素（とその子孫）の handler の中に無いことで確かめます。
-- Tracker の API がイベントを受け付けることは、デプロイ後にアプリのコードとは別の検証用のテストイベントを 1 件 POST し、200 と `"success":true` が返ることで確かめます。
-  - 本文は、エージェントのファイル書き込みで `construction/verification-event.json` に作ります（シェルの引用符の違いを避けるため）。形式は `{"applicationId":"<モックの applicationId>","events":[{"eventType":"custom","elementName":"verification","timestamp":<現在の UNIX 時刻（ミリ秒）>,"page":"/","url":"<URL>/","sessionId":"verification","applicationName":"<製品名>","createdAt":"<現在時刻の ISO 8601>","version":"verification","properties":{"verification":true}}]}` です。`timestamp` が無いと API が 500 を返します。時刻は推測で書かず、実行したコマンドの出力から入れます（例: `node -e "console.log(Date.now(), new Date().toISOString())"`）。
-  - 送信は `product/` で、1 行の `curl -s -i -X POST "<API Endpoint>/v1/events" -H "Content-Type: application/json" -H "X-Api-Key: <API Key>" --data-binary "@construction/verification-event.json"` を実行します（PowerShell では `curl.exe`）。
-  - このイベントはダッシュボードの合計とセッション数にも 1 件ずつ加わります。`properties.verification` が `true` のものが検証用なので、利用者の反応を読むときは除いて考えるよう、ユーザーに伝えます。
-- `pnpm dev` では `debug: import.meta.env.DEV` により、SDK のログがブラウザのコンソールに出ます。
-- SDK は 5 秒ごと、10 件たまったとき、ページを離れるときにまとめて `<API Endpoint>/v1/events` へ送ります。
+- 命名規約に従っていることは、モックのソースから `data-track-name` / `data-track-section` の値と `trackAction(` の第 1 引数の一覧を出し、すべてが `^[a-z0-9-]+$` に合うことで確かめます。動的に作る名前は、作り方が固定の識別子からになっているかをコードで確かめます。
+- 二重計測が無いことは、`trackAction(` の呼び出し箇所を検索し、どれも `onClick` の handler の中に無いことで確かめます。
+- 計測の設定が配信されていることは、デプロイ後に `curl -s <URL>/runtime-config.json` の出力に `"mlewTracker"` と `"appMonitorId"` が含まれることで確かめます（PowerShell では `curl.exe`）。
+- app monitor がイベントを受け付けて保存することは、デプロイ後に、アプリのコードとは別の検証用のイベントを 1 件送り、[分析ガイド](/yourwork/template/ANALYTICS_GUIDE.md) のクエリで見つかることで確かめます。
+  1. `curl -s <URL>/runtime-config.json` の出力から `appMonitorId` と `region` を控えます。`<URL>` の `https://` を除いた部分（`xxxx.cloudfront.net`）が CloudFront のドメインです。
+  2. ID と時刻は推測で書かず、コマンドの出力から入れます。`node -e "for (let i = 0; i < 4; i++) console.log(crypto.randomUUID()); console.log(Math.floor(Date.now() / 1000))"` を実行すると、UUID 4 つと現在の UNIX 時刻（秒）が出ます。
+  3. 本文は、エージェントのファイル書き込みで `construction/verification-event.json` に作ります（シェルの引用符の違いを避けるため）。`<...>` を 1 と 2 の値に置き換えます。`metadata` と `details` は JSON を文字列にしたもの（`\"` を含む文字列）なので、このとおりに書きます。
+     ```json
+     {"BatchId":"<UUID 1>","AppMonitorDetails":{"id":"<appMonitorId>","version":"verification"},"UserDetails":{"userId":"<UUID 2>","sessionId":"<UUID 3>"},"RumEvents":[{"id":"<UUID 4>","timestamp":<UNIX 時刻（秒）>,"type":"mlew.verification","metadata":"{\"domain\":\"<CloudFront のドメイン>\",\"pageId\":\"/\",\"version\":\"1.0.0\"}","details":"{\"verification\":true}"}]}
+     ```
+  4. 送信は `product/` で、1 行の `curl -s -i -X POST "https://dataplane.rum.<region>.amazonaws.com/appmonitors/<appMonitorId>" -H "Content-Type: application/json" --data-binary "@construction/verification-event.json"` を実行し、`200` が返ることを確かめます（PowerShell では `curl.exe`）。`400` なら、本文のメッセージ（UUID の形式など）に従って直します。
+  5. **`200` だけでは保存された証拠になりません。** `metadata` の `domain` がモックのドメインと違うと、`200` が返っても記録は黙って捨てられます。送ってから 2 分ほど待ち、[分析ガイド](/yourwork/template/ANALYTICS_GUIDE.md) の手順でロググループを特定して、クエリ `filter application_version = "verification" | fields @timestamp, event_type, metadata.domain` を実行し、`event_type` が `mlew.verification` の行が出ることを確かめます。出なければ、3 の `domain` を確かめて送り直します。
+  6. 検証用のイベントは `application_version` が `verification` なので、分析では自動で除かれます。
+- `pnpm dev` では `debug: import.meta.env.DEV` により、記録した内容がブラウザのコンソールに `[MLEW Tracker]` 付きで出ます。デプロイ前は `runtime-config.json` が無いので、送信はせず警告が 1 回出ます。
+- 記録は数秒ごとと、ページを離れるときにまとめて送られ、送ってから 2 分ほどで分析のクエリで見つかるようになります。
 - 完了の確認方法（デプロイ後の URL での確認を含む）は `prompt/prompt.md` の完了条件に従います。
 
 | 症状 | 原因と対処 |
 | --- | --- |
-| コンソールに `[MLEW Tracker] SDK が読み込まれていません` | `index.html` の `<head>` に script タグが無いか、`async` / `defer` が付いている。`packages/website/public/tracker-sdk.js` があるかも確認する |
-| コンソールに `tracker.apiEndpoint / tracker.apiKey が空` | `config.ts` の `tracker` ブロックに値を入れる |
-| CORS エラーや 403 が出る | API Key が誤っている。受け取った値と `config.ts` を見比べる |
+| コンソールに `[MLEW Tracker] /runtime-config.json に mlewTracker の設定が無い` | デプロイ前の `pnpm dev` なら正常です。デプロイ後の URL で出るなら、`application-stack.ts` に `MlewTracker` が無いか、デプロイが古いままです。接続コードを確かめて再デプロイします |
+| 送信が `400` で `domain ... does not match` | app monitor が受け付けるのは、モックの CloudFront のドメインと `localhost` だけです。別のドメインから開いていないか確かめます |
+| クリックが記録されない | 要素に `data-track-name` が付いているか、値が空でないかを確かめます |
 | 値を直したのにデプロイ先に反映されない | 再デプロイする（手順はデプロイメントガイド） |

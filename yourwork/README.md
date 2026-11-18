@@ -229,12 +229,12 @@ Invent を始める前に、事前準備したソリューションを評価し�
 yourwork
 ├── .kiro/                  # カスタムエージェント等、Kiro CLI 用設定ファイルディレクトリ
 ├── .claude/
-│   └── skills/             # Claude Code 用のスキル（mock-builder）
+│   └── skills/             # Claude Code 用のスキル（mock-builder、mock-analytics）
 ├── AGENTS.md               # ツール共通の作業規約（OpenAI Codex CLI 等が読み込みます）
 ├── CLAUDE.md               # Claude Code 用の入口。AGENTS.md を読み込みます
 ├── prompt/                 # プロンプトファイルディレクトリ
 │   └── prompt.md           # アプリケーション仕様記述ファイル（ツール非依存）
-├── template/               # デプロイ手順と Tracker 導入のガイド
+├── template/               # デプロイ手順、Tracker（計測）の導入と利用状況の分析のガイド
 └── product/                # 生成されるアプリケーション（生成 AI ツールにより作成されます)
                             # Nx Plugin for AWS のワークスペース（packages/website: 画面、packages/infra: AWS CDK）
 ```
@@ -259,71 +259,7 @@ pwd
 cd /your/working/directory/aws-ml-enablement-workshop/yourwork 
 ```
 
-#### 2. Tracker システムのデプロイ（オプション）
-
-> [!NOTE]
-> この手順はオプションです。構築したモックアプリケーションの View 数や Click 数などのメトリクスを計測したい場合はデプロイしてください。
-
-ワークショップで使用するモックアプリケーションの分析 Tracker システムをデプロイします。このシステムはユーザーの操作を記録し、ダッシュボードで可視化します。
-
-`{任意のメールアドレス}` を実際のメールアドレスに置き換えて、次の 1 行を実行します。Tracker のデプロイ先リージョンは東京リージョン（ap-northeast-1）にしています（モック本体とは別のリージョンでも構いません）。
-
-```text
-aws cloudformation deploy --template-file ./tracker/MLEWTrackerDeploymentStack.yaml --stack-name mlew-tracker-stack --parameter-overrides NotificationEmailAddress={任意のメールアドレス} Environment=dev --capabilities CAPABILITY_IAM --region ap-northeast-1
-```
-
-デプロイ実行後、指定したメールアドレスに「**MLEW Tracker Deployment Notifications <no-reply@sns.amazonaws.com>**」からメールが届きます。メール本文の「**Confirm subscription**」リンクをクリックして、SNS通知の購読を確認してください。
-
-10 分ほど待つと、デプロイ完了通知メールが再度届きます。メールには以下のような情報が記載されているので、控えておいてください。
-
-```
-Access Information:
-----------------------
-API Endpoint: https://xxxxxxxxxx.execute-api.ap-northeast-1.amazonaws.com/dev
-API Key: XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-Dashboard URL: https://dxxxxxxxxxx.cloudfront.net
-```
-
-この 3 つの値（API Endpoint / API Key / Dashboard URL）を `4. モック構築の実行` の Prompt 4.3 に貼り付けます。メールにほかの行（SDK の URL など）があっても使いません。SDK はモックに同梱されます。API Endpoint の末尾には `/` を付けません。
-
-> [!IMPORTANT]
-> API Key は、公開したモックの JavaScript にそのまま含まれるため、モックの URL を知っている人なら誰でも読めます。このキーがあれば、Tracker へのイベントの送信と、Tracker に記録されたイベント（ページの URL、ブラウザの種類、匿名の ID など）の読み取りができます。モックの画面にはダミーのデータだけを使い、個人情報や機密情報を入力させないでください。ワークショップが終わったら、下の手順で Tracker を削除してください。
-
-失敗した場合は「MLEW Tracker Deployment Failed」メール（ログへのリンク付き）が届きます。Tracker はアカウントに 1 つなので、同じアカウントで別リージョンにもう 1 つデプロイすることはできません。
-
-**完了メールが届かない・見失った場合**は、CDK が作る子スタック `MLEWTrackerStack-dev`（`dev` は `Environment` の値）から 3 つの値を取り直せます。次の 2 つのコマンドはどちらも 1 行で、PowerShell でもそのまま動きます。`ap-northeast-1` は Tracker をデプロイしたリージョンに合わせてください。
-
-1 つ目のコマンドで `ApiEndpoint` / `DashboardURL` / `ApiKeyId` の表を表示します。
-
-```text
-aws cloudformation describe-stacks --region ap-northeast-1 --stack-name MLEWTrackerStack-dev --query "Stacks[0].Outputs[?OutputKey=='ApiEndpoint' || OutputKey=='DashboardURL' || OutputKey=='ApiKeyId'].[OutputKey,OutputValue]" --output table
-```
-
-`ApiKeyId` は ID なので、キーの値ではありません。2 つ目のコマンドの `<ApiKeyId の値>` を、表の `ApiKeyId` の値に `<` `>` ごと置き換えて実行すると、API Key の値が出力されます。
-
-```text
-aws apigateway get-api-key --region ap-northeast-1 --api-key <ApiKeyId の値> --include-value --query "value" --output text
-```
-
-| 値 | 組み立て方 |
-| --- | --- |
-| API Endpoint | `ApiEndpoint` の値そのまま（末尾に `/` を付けない） |
-| API Key | 上の `get-api-key` の出力（`ApiKeyId` の値ではない） |
-| Dashboard URL | `https://` + `DashboardURL` の値 |
-
-**Tracker を削除する場合**は、親スタックを削除します。子スタック `MLEWTrackerStack-dev` の削除も自動で始まります。
-
-```text
-aws cloudformation delete-stack --region ap-northeast-1 --stack-name mlew-tracker-stack
-```
-
-子スタックの削除は非同期で進み、数分（実測 3 分）〜20 分かかります。次のコマンドが `does not exist` のエラーを返せば完了です。`DELETE_FAILED` で止まった場合や削除が始まらない場合は、`aws cloudformation delete-stack --region ap-northeast-1 --stack-name MLEWTrackerStack-dev` で子スタックを直接削除します。
-
-```text
-aws cloudformation describe-stacks --region ap-northeast-1 --stack-name MLEWTrackerStack-dev --query "Stacks[0].StackStatus"
-```
-
-#### 3. 生成 AI ツールの起動
+#### 2. 生成 AI ツールの起動
 
 モックの仕様書は `prompt/prompt.md` で、ツールに依存しません。各ツールの設定ファイルはこの仕様書へ案内するための入口にすぎないので、設定が効いていないと感じたときは `prompt/prompt.md` の内容を直接渡せば同じ結果が得られます。
 
@@ -347,29 +283,37 @@ claude
 codex
 ```
 
-起動したら、どのツールでも `4. モック構築の実行` のプロンプトを貼り付けます。
+起動したら、どのツールでも `3. モック構築の実行` のプロンプトを貼り付けます。
 
-#### 4. モック構築の実行
+#### 3. モック構築の実行
 
 > [!IMPORTANT]
-> 事前に、Refine で作成した PR/FAQ（顧客パートと提供者・会社パート）が `discovery/README.md` の Refine セクションに記載されているか確認してください。Tracker を使う場合は、`2. Tracker システムのデプロイ` で控えた 3 つの値を手元に用意してください。
+> 事前に、Refine で作成した PR/FAQ（顧客パートと提供者・会社パート）が `discovery/README.md` の Refine セクションに記載されているか確認してください。
 
-次のプロンプトの `{...}` 3 か所を、`2. Tracker システムのデプロイ` で控えた値に置き換えて貼り付けます。PR/FAQ はツールが `discovery/README.md` から読み込むので、貼り付ける必要はありません。
+次のプロンプトをそのまま貼り付けます。PR/FAQ はツールが `discovery/README.md` から読み込むので、貼り付ける必要はありません。
 
 **🤖[Prompt 4.3]**
-> `prompt/prompt.md` を読み、記載された実装の方針・進め方・完了条件に従ってモックを構築し、AWS にデプロイしてください。`<application_requirements>` には `discovery/README.md` の Refine セクションにある PR/FAQ（顧客パートと提供者・会社パートの両方）を、`<tracker_configuration>` には次の値を使ってください。`prompt/prompt.md` 自体は書き換えず、成果物は `product/` に作成してください。完了したら、`prompt/prompt.md` の完了条件の各項目についてコマンドの出力か該当行を示し、デプロイした CloudFront の URL を教えてください。
->
-> \- API Endpoint : `{API Endpoint}`  
-> \- API Key : `{API Key}`  
-> \- Dashboard URL : `{Dashboard URL}`
-
-Tracker をデプロイしていない場合は、3 行の値を消して「Tracker は使わない」の 1 行に置き換えてください。この場合、モックは計測が動かない状態で完成します。
+> `prompt/prompt.md` を読み、記載された実装の方針・進め方・完了条件に従ってモックを構築し、AWS にデプロイしてください。`<application_requirements>` には `discovery/README.md` の Refine セクションにある PR/FAQ（顧客パートと提供者・会社パートの両方）を使ってください。`prompt/prompt.md` 自体は書き換えず、成果物は `product/` に作成してください。完了したら、`prompt/prompt.md` の完了条件の各項目についてコマンドの出力か該当行を示し、デプロイした CloudFront の URL を教えてください。
 
 Claude Code では、このプロンプトを貼り付けると `mock-builder` スキルが使われます。スキルが呼ばれない場合は、先頭に `/mock-builder ` を付けて貼り付けてください。
 
-渡した内容をもとにアプリケーションが自動的に実装され、CDK（Nx Plugin for AWS）で作成した S3 + CloudFront + WAF でホスティングされます。WAF と KMS キーに 1 デプロイあたり月額 約 $8 の固定費がかかるので、使い終わったら削除してください。
+渡した内容をもとにアプリケーションが自動的に実装され、CDK（Nx Plugin for AWS）で作成した S3 + CloudFront + WAF でホスティングされます。モックには利用者の操作（ページビュー、ボタンのクリック、セクションの表示）を記録する MLEW Tracker が組み込まれ、記録は同じスタックの CloudWatch RUM が CloudWatch Logs に保存します。WAF と KMS キーに 1 デプロイあたり月額 約 $8 の固定費がかかるので、使い終わったら削除してください。
 
-モック本体のデプロイ先リージョンはエージェントが決めて `product/construction/plan.md` に記録し、CDK の stage 設定（`packages/common/infra-config/src/stages.config.ts`）に固定します。決め方は [`template/DEPLOYMENT_GUIDE.md` の「リージョンの決め方」](./template/DEPLOYMENT_GUIDE.md#リージョンの決め方) にあります。エージェントからリージョンや AWS のプロファイル名を聞かれたら指定してください（プロファイルを分けていなければ `default` です）。事前確認と当日で同じリージョンを使うと、CDK bootstrap をやり直さずに済みます。CloudFront 用の WAF は us-east-1 にしか作れないため、us-east-1 に別スタックとして作成されます。Tracker のリージョンとそろえる必要はありません。
+モック本体のデプロイ先リージョンはエージェントが決めて `product/construction/plan.md` に記録し、CDK の stage 設定（`packages/common/infra-config/src/stages.config.ts`）に固定します。決め方は [`template/DEPLOYMENT_GUIDE.md` の「リージョンの決め方」](./template/DEPLOYMENT_GUIDE.md#リージョンの決め方) にあります。エージェントからリージョンや AWS のプロファイル名を聞かれたら指定してください（プロファイルを分けていなければ `default` です）。事前確認と当日で同じリージョンを使うと、CDK bootstrap をやり直さずに済みます。CloudFront 用の WAF は us-east-1 にしか作れないため、us-east-1 に別スタックとして作成されます。
+
+> [!IMPORTANT]
+> 記録にはページのパス、ブラウザの種類、匿名の ID、おおまかな地域が含まれます。モックの画面にはダミーのデータだけを使い、個人情報や機密情報を入力させないでください。
+
+#### 4. モックの利用状況の確認
+
+モックを触ってもらったあと、起動中の生成 AI ツールに利用状況を尋ねると、エージェントが記録を集計して日本語で答えます。記録は操作から 2 分ほどで集計できるようになります。
+
+**🤖[Prompt 4.4]**
+> デプロイしたモックの利用状況を教えてください。何人が訪れ、LP からアプリ画面に進んだのはどれくらいか、ページごとの閲覧数と、どのボタンが何回押されたかを知りたいです。
+
+「登録ボタンを押した人のうち、検索まで進んだのは何人？」「時間ごとの推移をグラフにして」のように、知りたいことをそのまま尋ねても構いません。Claude Code では `mock-analytics` スキルが使われます（呼ばれない場合は先頭に `/mock-analytics ` を付けます）。Kiro CLI では `kiro-cli --agent mock-analytics` で起動したエージェントに尋ねます。集計の手順は [`template/ANALYTICS_GUIDE.md`](./template/ANALYTICS_GUIDE.md) にあります。
+
+モックを削除したあとも、記録は 30 日間残り、同じように集計できます。
 
 #### 5. ホスティングしたアプリケーションの削除
 

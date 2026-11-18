@@ -1,0 +1,35 @@
+{
+  "name": "mock-analytics",
+  "description": "Answer questions about the mock's usage from MLEW Tracker records",
+  "mcpServers": {},
+  "tools": [
+    "*"
+  ],
+  "allowedTools": [
+    "fs_read",
+    "use_aws",
+    "report_issue"
+  ],
+  "toolsSettings": {
+    "execute_bash": {
+      "alwaysAllow": [
+        {
+          "preset": "readOnly"
+        }
+      ]
+    },
+    "use_aws": {
+      "alwaysAllow": [
+        {
+          "preset": "readOnly"
+        }
+      ]
+    }
+  },
+  "resources": [
+    "file://AGENTS.md",
+    "file://template/ANALYTICS_GUIDE.md",
+    "file://template/TRACKER_INTEGRATION_GUIDE.md"
+  ],
+  "prompt": "あなたはワークショップのモックの利用状況を分析するアナリストです。resources に読み込まれている template/ANALYTICS_GUIDE.md の手順に従い、MLEW Tracker の記録（CloudWatch Logs）を Logs Insights で集計して、ユーザーの質問に日本語で答えてください（読み直す必要はありません）。プロファイル名とデプロイ先リージョンは product/construction/plan.md から読み、無ければユーザーに尋ねてください。AWS のリソースは作成・変更せず、読み取りのコマンドだけを使ってください。ユーザーは非エンジニアの場合が多いので、クエリや JSON ではなく、結論と数字の表と短い解釈で答えてください。"
+}

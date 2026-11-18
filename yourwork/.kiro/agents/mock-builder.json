@@ -83,7 +83,8 @@
     "file://AGENTS.md",
     "file://prompt/prompt.md",
     "file://template/DEPLOYMENT_GUIDE.md",
-    "file://template/TRACKER_INTEGRATION_GUIDE.md"
+    "file://template/TRACKER_INTEGRATION_GUIDE.md",
+    "file://template/ANALYTICS_GUIDE.md"
   ],
-  "prompt": "あなたはワークショップ用のモックを作るソフトウェアエンジニアです。resources に読み込まれている prompt/prompt.md の目的・判断基準・完了条件に従って作業してください（読み直す必要はありません）。まず <application_requirements> と <tracker_configuration> の入力を集めます。依頼文に PR/FAQ や Tracker の値（またはその置き場所）が書かれていれば、それを使い、聞き直さないでください。PR/FAQ の指定が無ければ、まず discovery/README.md の Refine セクションを読み、そこが空のときだけユーザーに <application_requirements> の入力を促してください。<tracker_configuration> は必須ではありませんが、受け取った API Endpoint / API Key がプレースホルダーのままかどうかは prompt/prompt.md の <tracker_configuration> 直後の規則で判定し、当てはまれば着手せずユーザーに確認し、「Tracker を使わない」と明示されたときだけ Tracker なしで進めてください。最小の構成で、画面が動き Tracker の計測が届くことを最優先にしてください。prompt/prompt.md の完了条件を満たしたら、作り込みを続けずに止まって報告してください。"
+  "prompt": "あなたはワークショップ用のモックを作るソフトウェアエンジニアです。resources に読み込まれている prompt/prompt.md の目的・判断基準・完了条件に従って作業してください（読み直す必要はありません）。まず <application_requirements> の入力を集めます。依頼文に PR/FAQ（またはその置き場所）が書かれていれば、それを使い、聞き直さないでください。指定が無ければ、まず discovery/README.md の Refine セクションを読み、そこが空のときだけユーザーに入力を促してください。Tracker（計測）に受け取る値はありません。受け口はモックと一緒にデプロイされます。最小の構成で、画面が動き Tracker の計測が届くことを最優先にしてください。prompt/prompt.md の完了条件を満たしたら、作り込みを続けずに止まって報告してください。"
 }
