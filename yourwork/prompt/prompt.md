@@ -2,27 +2,18 @@
 
 # このプロンプトで作るもの
 
-`<application_requirements>` で定義された Web アプリケーションを、MVP として動作する状態まで実装し、`<tracker_configuration>` の MLEW Tracker で利用者の反応を計測できる形にして AWS にデプロイします。モックはプロダクトの仮説を実際の利用者で検証するための道具で、本番運用するアプリケーションではありません。
+`<application_requirements>` で定義された Web アプリケーションを、MVP として動作する状態まで実装し、MLEW Tracker（CloudWatch RUM）で利用者の反応を計測できる形にして AWS にデプロイします。モックはプロダクトの仮説を実際の利用者で検証するための道具で、本番運用するアプリケーションではありません。
 
 判断に迷ったときは、次の基準で決めてください。
 
 - **MVP 優先**: 要件を満たす最小の構成を選びます。機能を増やすより、画面が一通り動くことを先に成立させます。
-- **モック前提**: バックエンド API・データベース・外部サービス連携はモック実装で構いません。認証・多言語対応・監視は作りません。Tracker だけは例外で、実際の SDK と実際のエンドポイントを使います。
+- **モック前提**: バックエンド API・データベース・外部サービス連携はモック実装で構いません。認証・多言語対応・監視は作りません。Tracker だけは例外で、固定ファイルを使って実際の CloudWatch RUM に送ります。
 - **UI の動作確認を最優先**: 内部設計の美しさよりも、画面が表示され操作でき、計測が届くことを優先します。
-- **インフラは生成物に任せる**: Nx Plugin for AWS が生成したインフラのコードは書き換えず、設定は公開 props と、plugin が設定用に生成するファイル（デプロイ先の `stages.config.ts`）で渡します。セキュリティ（CSP・WAF・checkov）は生成物の既定値に任せます。
+- **インフラは生成物に任せる**: Nx Plugin for AWS が生成したインフラのコードは書き換えず、設定は公開 props と、plugin が設定用に生成するファイル（デプロイ先の `stages.config.ts`）で渡します。Tracker の app monitor は、固定ファイルの `MlewTracker` を `application-stack.ts` に置いて作ります。セキュリティ（CSP・WAF・checkov）は生成物の既定値に任せます。
 
 <application_requirements>
 {ここに作成したいアプリケーションの詳細を入力してください}
 </application_requirements>
-
-<tracker_configuration>
-- **API Endpoint**: `https://xxxxxxxx.execute-api.ap-northeast-1.amazonaws.com/dev`
-- **API Key**: `dummyapikey`
-- **Dashboard URL**: `https://xxxxxxxx.cloudfront.net`
-</tracker_configuration>
-
-- **受け取った Tracker の値がプレースホルダーのままなら着手しません。** 依頼文などで受け取った API Endpoint / API Key が、`{` を含む、`xxxxxxxx` を含む、`dummyapikey` である、のどれかに当たるときは、正しい値をユーザーに確認してから進めます。ダミー値のままデプロイすると、計測が届かないモックが完成してしまうためです。値の取り直し方は `README.md` の「2. Tracker システムのデプロイ」にあるので、ユーザーにはそこを案内します。
-- ユーザーが「Tracker を使わない」と明示したときだけ、Tracker なしで進めます。この場合は、計測が動かない状態で完成することを先に伝えます。
 
 # 成果物
 
@@ -41,6 +32,7 @@
 | 前提条件、リージョンの決め方、生成からデプロイまでの手順、削除 | `template/DEPLOYMENT_GUIDE.md`（`## 前提条件` / `## リージョンの決め方` / `## 削除`） |
 | 生成物の既知の問題への対処 | `template/DEPLOYMENT_GUIDE.md` の `## 既知の問題への対処（@aws/nx-plugin 1.0.6 で確認）` |
 | 計測（固定ファイル、接続コード、命名規約、計測対象） | `template/TRACKER_INTEGRATION_GUIDE.md` |
+| 計測結果の集計（完了条件の検証イベントの確認に使う） | `template/ANALYTICS_GUIDE.md` |
 | 検証済みバージョン、シェルの扱い、ディレクトリの決まりごと | `AGENTS.md`（`## 検証済みバージョン` / `## シェルの扱い`） |
 
 コマンドはエージェントが使うシェルに合わせて書きます。シェルで書き方が変わる部分の扱いは `AGENTS.md` の `## シェルの扱い` に従います。
@@ -56,7 +48,7 @@
 
 # Tracker の統合
 
-計測の目的は、実際の利用者の反応を、モックの版（v1 / v2 など）をまたいで同じ名前で比べることです。そのため、計測は `template/TRACKER_INTEGRATION_GUIDE.md` の固定ファイル・命名規約・計測対象にそのまま従い、Tracker を自作したり、固定ファイルを書き換えたりしません。自作すると、見た目は動いていてもイベントが届かず、この目的が果たせません。
+計測の目的は、実際の利用者の反応を、モックの版（v1 / v2 など）をまたいで同じ名前で比べることです。そのため、計測は `template/TRACKER_INTEGRATION_GUIDE.md` の固定ファイル・命名規約・計測対象にそのまま従い、Tracker を自作したり、固定ファイルを書き換えたりしません。自作すると、見た目は動いていても名前や送り方がそろわず、`template/ANALYTICS_GUIDE.md` の集計で比べられません。
 
 # 進め方
 
@@ -78,15 +70,14 @@
 
 1. **build が通る**: `product/` で `pnpm nx run-many -t build` が成功する（Biome、Vitest、infra の synth と checkov を含む）。末尾の出力を示します。
 2. **画面が配信されている**: website のルート定義の一覧を示し、`<URL>/` が 200 を返すことと、その HTML の `<script type="module">` が指す JS が `Content-Type` に `javascript` を含んで 200 を返すことを示します。CloudFront は存在しないパスにも `index.html` を 200 で返す設定なので、各画面のパスへの 200 は画面がある証拠になりません。
-3. **（Tracker を使う場合）SDK が同一オリジンから配信されている**: `curl -sI <URL>/tracker-sdk.js` の `Content-Type` が `javascript` を含み、`curl -s <URL>/tracker-sdk.js` の本文に `MLEWTracker` が含まれ、`curl -s <URL>/` の出力に `<script src="/tracker-sdk.js"></script>` が含まれることを示します。SDK を置き忘れても、同じ理由でステータスは 200 になります（`Content-Type` が `text/html` なら `index.html` が返っています）。
-4. **（Tracker を使う場合）Tracker の API がイベントを受け付ける**: `template/TRACKER_INTEGRATION_GUIDE.md` の `## 確認` の手順で、アプリのコードとは別に検証用のテストイベントを 1 件 POST し、200 と `"success":true` が返ることを示します。実行したら、ダッシュボードに検証用のイベントが 1 件増えることをユーザーに伝えます。
-5. **ダミー値が残っていない**: `product/packages` を `node_modules` と `dist` を除いて `xxxxxxxx`、`dummyapikey`、`your-app-id` で検索し、0 件であることを示します（POSIX シェルなら `grep -rnE`、PowerShell なら `Select-String`）。
-6. **（Tracker を使う場合）計測が命名規約どおりで、二重に記録していない**: `template/TRACKER_INTEGRATION_GUIDE.md` の `## 確認` の方法で、`data-track-name` の値の一覧と `trackClick(` の呼び出し箇所の一覧を示します。
+3. **計測の設定が配信されている**: `curl -s <URL>/runtime-config.json` の出力に `"mlewTracker"` と `"appMonitorId"` が含まれることを示します。CloudFront は存在しないパスにも `index.html` を返すので、200 だけでは証拠になりません。
+4. **計測が届いて保存される**: `template/TRACKER_INTEGRATION_GUIDE.md` の `## 確認` の手順で、アプリのコードとは別に検証用のイベントを 1 件送り、`200` が返ることと、`template/ANALYTICS_GUIDE.md` のクエリでそのイベントが見つかることを示します（見つかるまで 2 分ほどかかるので、ほかの条件を確かめている間に待ちます）。検証用のイベントは分析では自動で除かれることをユーザーに伝えます。
+5. **計測が命名規約どおり**: `template/TRACKER_INTEGRATION_GUIDE.md` の `## 確認` の方法で、`data-track-name` / `data-track-section` の値の一覧を示します。
 
-次の項目はブラウザが必要なので、エージェントは確認したと報告せず、デプロイ後の URL と Dashboard URL を添えてユーザーに確認を依頼します。
+次の項目はブラウザが必要なので、エージェントは確認したと報告せず、デプロイ後の URL を添えてユーザーに確認を依頼します。
 
 - ブラウザの開発者ツールのコンソールに CSP 違反（`Refused to load` / `Refused to execute`）が出ていない
-- （Tracker を使う場合）LP からアプリ画面へ Link で遷移したときのページビューと、ボタンのクリックがダッシュボードに届いている
+- LP からアプリ画面へ Link で遷移したときのページビューと、ボタンのクリックが記録されている。ユーザーが操作したら、2 分ほど待って `template/ANALYTICS_GUIDE.md` で集計して確かめられること（「モックの利用状況を教えて」と頼めばよいこと）を伝えます
 
 # 削除
 

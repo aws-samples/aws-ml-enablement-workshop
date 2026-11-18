@@ -1,6 +1,6 @@
 # AGENTS.md — ML Enablement Workshop / yourwork
 
-このディレクトリは、ワークショップで立てた仮説（Refine で作成した PR/FAQ）を、実際の利用者に触ってもらえる Web アプリのモックにするための作業場所です。モックには MLEW Tracker を組み込み、利用者の反応を実データで計測します。
+このディレクトリは、ワークショップで立てた仮説（Refine で作成した PR/FAQ）を、実際の利用者に触ってもらえる Web アプリのモックにするための作業場所です。モックには MLEW Tracker（CloudWatch RUM）を組み込み、利用者の反応を実データで計測し、その記録をエージェントが集計して答えます。
 
 カレントディレクトリは `aws-ml-enablement-workshop/yourwork` です。以下のパスはすべてここからの相対パスです。
 
@@ -11,6 +11,7 @@
 | `prompt/prompt.md` | 作るものの目的・判断基準・完了条件。作業の起点 |
 | `template/DEPLOYMENT_GUIDE.md` | 前提条件、リージョンの決め方、生成からデプロイまでの手順、削除、既知の問題への対処 |
 | `template/TRACKER_INTEGRATION_GUIDE.md` | Tracker の固定ファイル、接続コード、命名規約、計測対象 |
+| `template/ANALYTICS_GUIDE.md` | デプロイしたモックの利用状況（ページビュー、クリック、人数、LP からアプリへの流れ）の集計と答え方。利用状況を聞かれたときに読む |
 
 完了条件は `prompt/prompt.md` の「完了条件」、前提ツールは `template/DEPLOYMENT_GUIDE.md` の `## 前提条件` にあります。このファイルには重複して書きません。
 
@@ -45,7 +46,7 @@ Windows では、ネイティブの PowerShell で動かします（WSL2 や Git
 ## このディレクトリでの決まりごと
 
 - モックの作り方の判断基準（MVP 優先、Tracker 以外はモックで実装、インフラの生成コードは書き換えない、Tracker は自作しない）は `prompt/prompt.md` にあります。
-- **`template/` 配下と `tracker/` 配下は編集しません。** どちらも参加者全員が共有する配布物で、書き換えると他の参加者の手順と食い違います。変更は `product/` に閉じてください。
+- **`template/` 配下は編集しません。** 参加者全員が共有する配布物で、書き換えると他の参加者の手順と食い違います。変更は `product/` に閉じてください。
 - **削除はユーザーの明示的な指示があったときだけ行います。** 手順は `template/DEPLOYMENT_GUIDE.md` の `## 削除` です。
 - 画面に出るテキストは、特別な指定がない限り日本語にします。
 
@@ -53,6 +54,6 @@ Windows では、ネイティブの PowerShell で動かします（WSL2 や Git
 
 | ツール | 入口 |
 |---|---|
-| Kiro CLI | `kiro-cli --agent mock-builder`（定義は `.kiro/agents/mock-builder.json`） |
-| Claude Code | `claude`。`.claude/skills/mock-builder/` の skill が作業の導線です |
-| OpenAI Codex CLI | `codex`。このファイルを自動で読み込みます |
+| Kiro CLI | モック構築は `kiro-cli --agent mock-builder`、利用状況の分析は `kiro-cli --agent mock-analytics`（定義は `.kiro/agents/`） |
+| Claude Code | `claude`。`.claude/skills/mock-builder/`（モック構築）と `.claude/skills/mock-analytics/`（利用状況の分析）の skill が作業の導線です |
+| OpenAI Codex CLI | `codex`。このファイルを自動で読み込みます。利用状況を聞かれたら `template/ANALYTICS_GUIDE.md` に従います |

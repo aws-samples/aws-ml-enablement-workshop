@@ -6,9 +6,8 @@
 | --- | --- |
 | `DEPLOYMENT_GUIDE.md` | 前提条件、リージョンの決め方、生成からデプロイまでの手順、削除、既知の問題への対処 |
 | `TRACKER_INTEGRATION_GUIDE.md` | Tracker の固定ファイルの置き方、接続コード、命名規約、計測対象 |
-| `website/public/tracker-sdk.js` | 固定ファイル。ビルド済みの Tracker SDK（UMD、nanoid を含む単体ビルド）。`window.MLEWTracker` を定義する |
-| `website/src/services/mlewTracker.ts` | 固定ファイル。SDK の初期化と計測の関数。import を持たず、`window.MLEWTracker` とブラウザ標準 API だけに依存する |
+| `ANALYTICS_GUIDE.md` | Tracker の記録（CloudWatch Logs）から利用状況を集計する Logs Insights のクエリと答え方 |
+| `infra/src/constructs/mlew-tracker.ts` | 固定ファイル。CloudWatch RUM の app monitor を作り、その ID とリージョンを `runtime-config.json` に書く CDK コンストラクト |
+| `website/src/services/mlewTracker.ts` | 固定ファイル。`runtime-config.json` を読み、`@aws-rum/web-slim` でページビュー・クリック・セクションの表示を送る |
 
-固定ファイルは、Tracker を使うモックに内容を変えずにコピーします（`TRACKER_INTEGRATION_GUIDE.md`）。
-
-`tracker-sdk.js` の出どころ: `yourwork/tracker/` で `npm ci` と `npm run build:sdk` を実行した `packages/tracker-sdk/dist/tracker-sdk.js` から末尾の `//# sourceMappingURL=` 行を除き、生成されたワークスペースの `biome.json`（Biome 2.5.15）で `biome format --write` したものです。
+固定ファイルは、モックに内容を変えずにコピーします（`DEPLOYMENT_GUIDE.md` の手順 6 と `TRACKER_INTEGRATION_GUIDE.md`）。どちらも、生成されたワークスペースの `biome.json`（Biome 2.5.15）で整形してあります。
