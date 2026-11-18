@@ -4,9 +4,9 @@
 //
 // モックの側で書くのは次だけ:
 // - main.tsx で initTracker(router.history) を 1 回呼ぶ
-// - クリックを記録する要素に data-track-name="<名前>" を付ける
-// - 表示を記録するセクションに data-track-section="<名前>" を付ける
-// - クリック以外の操作（ドラッグ＆ドロップ、選択の変更など）は trackAction("<名前>") を呼ぶ
+// - クリックを記録する要素に、data-track-name 属性で名前を付ける
+// - 表示を記録するセクションに、data-track-section 属性で名前を付ける
+// - クリック以外の操作（ドラッグ＆ドロップ、選択の変更など）は、trackAction 関数に名前を渡して記録する
 import { AwsRum } from '@aws-rum/web-slim';
 
 // TanStack Router の router.history のうち、ここで使う subscribe だけを受け取る型

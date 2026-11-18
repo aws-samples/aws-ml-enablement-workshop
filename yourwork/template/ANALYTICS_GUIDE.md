@@ -29,7 +29,7 @@ aws logs start-query --profile <プロファイル名> --region <デプロイ先
 aws logs get-query-results --profile <プロファイル名> --region <デプロイ先リージョン> --query-id <queryId> --output json
 ```
 
-- `status` が `Complete` になるまで、`get-query-results` を数秒おきに繰り返します。30 回で終わらなければ、期間を短くして実行し直します。
+- `status` が `Complete` になるまで、`get-query-results` を数秒おきに繰り返します。結果の `@ptr` は AWS のアカウント ID を含むので、ユーザーへの答えや貼り付ける出力には含めません。30 回で終わらなければ、期間を短くして実行し直します。
 - 期間は、指定が無ければ過去 30 日（記録の保持期間）から現在までです。時刻はコマンドの出力から入れ、推測しません（現在: `node -e "console.log(Math.floor(Date.now()/1000))"`、ISO 8601 の時刻から: `node -e "console.log(Date.parse('2026-01-01T00:00:00Z')/1000)"`）。
 - **イベントは発生から 2 分ほどで検索できるようになります。** 「今触ったのに出てこない」ときは、2〜3 分待ってから実行し直します。
 - クエリ文字列の引用符は、シェルによって扱いが違います。うまく渡らないときは、クエリをファイルに書いてから渡します（PowerShell なら `--query-string (Get-Content <ファイル> -Raw)`、POSIX シェルなら `--query-string "$(cat <ファイル>)"`）。
@@ -57,6 +57,7 @@ filter metadata.domain != "localhost" and application_version != "verification"
 | `mlew.action` | クリック以外の操作（ドラッグ＆ドロップ、選択の変更など。`trackAction` で記録） | `event_details.actionName`、`event_details.page`、操作ごとの追加の値 |
 | `mlew.section_view` | `data-track-section` を付けたセクション（LP のセクション、結果・完了の表示など）の表示。ページごとに 1 回 | `event_details.sectionName`、`event_details.page` |
 
+- ほかに、訪問の始まり（`com.amazon.rum.session_start_event`）と検証用のイベント（`mlew.verification`）が記録されています。利用者の操作ではないので、操作の件数には数えません。
 - 人の数は `user_details.userId`（ブラウザごと）、訪問の数は `user_details.sessionId`（30 分操作が無いと切れる）で数えます。
 - モックの版（`initTracker` の `version`。既定は `v1`）は `application_version` に入ります。版ごとに分けるときは、`stats` の `by` に `application_version` を足します。
 - 時刻は秒単位で記録されるので、同じ秒の中の順序は分かりません。
@@ -82,14 +83,14 @@ filter metadata.domain != "localhost" and application_version != "verification" 
 filter metadata.domain != "localhost" and application_version != "verification" | stats count_distinct(user_details.userId) as users, count_distinct(user_details.sessionId) as sessions
 ```
 
-LP → CTA → アプリのファネル（訪問単位）。先に「要素ごとのクリック」を実行して LP の CTA の `elementName` を確かめ、`/signup/` をそれに合う正規表現に置き換えます。同じ訪問で各段階を通ったかを数え、順序は見ません。
+LP → CTA → アプリのファネル（訪問単位）。先に「要素ごとのクリック」を実行して LP の CTA の `elementName` を確かめ、`/signup/` をそれに合う正規表現に置き換えます（CTA が複数あるときは、すべてに合う正規表現にします。例: `/^lp-.*-start-button$/`）。結果・完了の画面まで進んだかは、「セクションごとの到達数」で結果のセクション（例: `app-result-summary`）を見ます。同じ訪問で各段階を通ったかを数え、順序は見ません。
 ```
 filter metadata.domain != "localhost" and application_version != "verification" | filter event_type in ["com.amazon.rum.page_view_event", "mlew.click"] | fields (event_type = "com.amazon.rum.page_view_event" and metadata.pageId = "/") as lp, (event_type = "mlew.click" and event_details.elementName like /signup/) as cta, (event_type = "com.amazon.rum.page_view_event" and metadata.pageId like /^\/app/) as app | stats max(lp) as sawLp, max(cta) as sawCta, max(app) as sawApp by user_details.sessionId | stats count(*) as sessions, sum(sawLp) as step1Lp, sum(sawLp * sawCta) as step2Cta, sum(sawLp * sawCta * sawApp) as step3App
 ```
 
 時間ごとの推移（`bin` は UTC です。答えるときは日本時間に直します）:
 ```
-filter metadata.domain != "localhost" and application_version != "verification" | stats count(*) as events by bin(1h) as t, event_type | sort t asc
+filter metadata.domain != "localhost" and application_version != "verification" and event_type != "com.amazon.rum.session_start_event" | stats count(*) as events by bin(1h) as t, event_type | sort t asc
 ```
 
 セクションごとの到達数（LP のどこまで読まれたか、結果・完了の画面まで進んだか）:

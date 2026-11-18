@@ -88,13 +88,14 @@ initTracker(router.history, { debug: import.meta.env.DEV });
 - すべての CTA、すべてのナビゲーションリンク（ヘッダー・サイドバー・パンくず・フッター・404 ページのトップへ戻るリンクを含む）、すべてのフォーム送信（送信ボタン）に `data-track-name` を付けます。開閉ボタンなどの UI 操作にも付けて構いません。TanStack Router の `Link` にもそのまま付けられます。
 - `data-track-name` を付けた要素が入れ子になっているときは、クリックした位置にいちばん近い要素の名前が 1 回だけ記録されます。
 - クリック以外の操作のうち、PR/FAQ の検証に効くもの（主要な操作のドラッグ＆ドロップなど）は `trackAction` で記録します。クリックは `data-track-name` だけで記録し、クリックの handler（`onClick`）では `trackAction` を呼びません。呼ぶと二重に記録されます。
+- `<select>` の選択の変更は、`onChange` で `trackAction` を呼んで記録します（`<select>` 自体には `data-track-name` を付けません。開くためのクリックが記録されてしまうため）。
 - LP の主要なセクション（ヒーロー、特徴、料金、FAQ など）と、結果・完了の表示に `data-track-section` を付けます。
 - 画面遷移は TanStack Router の `Link` で行います。`<a href>` は全ページを再読み込みします。
 - ページビューは固定ファイルが記録するので、各画面の `useEffect` などで送りません。
 
 ## 確認
 
-- 命名規約に従っていることは、モックのソースから `data-track-name` / `data-track-section` の値と `trackAction(` の第 1 引数の一覧を出し、すべてが `^[a-z0-9-]+$` に合うことで確かめます。動的に作る名前は、作り方が固定の識別子からになっているかをコードで確かめます。
+- 命名規約に従っていることは、モックのソース（固定ファイルの `services/mlewTracker.ts` は除く）から `data-track-name` / `data-track-section` の値と `trackAction(` の第 1 引数の一覧を出し、すべてが `^[a-z0-9-]+$` に合うことで確かめます。動的に作る名前は、作り方が固定の識別子からになっているかをコードで確かめます。
 - 二重計測が無いことは、`trackAction(` の呼び出し箇所を検索し、どれも `onClick` の handler の中に無いことで確かめます。
 - 計測の設定が配信されていることは、デプロイ後に `curl -s <URL>/runtime-config.json` の出力に `"mlewTracker"` と `"appMonitorId"` が含まれることで確かめます（PowerShell では `curl.exe`）。
 - app monitor がイベントを受け付けて保存することは、デプロイ後に、アプリのコードとは別の検証用のイベントを 1 件送り、[分析ガイド](/yourwork/template/ANALYTICS_GUIDE.md) のクエリで見つかることで確かめます。
@@ -105,7 +106,7 @@ initTracker(router.history, { debug: import.meta.env.DEV });
      {"BatchId":"<UUID 1>","AppMonitorDetails":{"id":"<appMonitorId>","version":"verification"},"UserDetails":{"userId":"<UUID 2>","sessionId":"<UUID 3>"},"RumEvents":[{"id":"<UUID 4>","timestamp":<UNIX 時刻（秒）>,"type":"mlew.verification","metadata":"{\"domain\":\"<CloudFront のドメイン>\",\"pageId\":\"/\",\"version\":\"1.0.0\"}","details":"{\"verification\":true}"}]}
      ```
   4. 送信は `product/` で、1 行の `curl -s -i -X POST "https://dataplane.rum.<region>.amazonaws.com/appmonitors/<appMonitorId>" -H "Content-Type: application/json" --data-binary "@construction/verification-event.json"` を実行し、`200` が返ることを確かめます（PowerShell では `curl.exe`）。`400` なら、本文のメッセージ（UUID の形式など）に従って直します。
-  5. **`200` だけでは保存された証拠になりません。** `metadata` の `domain` がモックのドメインと違うと、`200` が返っても記録は黙って捨てられます。送ってから 2 分ほど待ち、[分析ガイド](/yourwork/template/ANALYTICS_GUIDE.md) の手順でロググループを特定して、クエリ `filter application_version = "verification" | fields @timestamp, event_type, metadata.domain` を実行し、`event_type` が `mlew.verification` の行が出ることを確かめます。出なければ、3 の `domain` を確かめて送り直します。
+  5. **`200` だけでは保存された証拠になりません。** `metadata` の `domain` がモックのドメインと違うと、`200` が返っても記録は黙って捨てられます。送ってから 2 分ほど待ち、[分析ガイド](/yourwork/template/ANALYTICS_GUIDE.md) の手順でロググループを特定して、クエリ `filter application_version = "verification" | fields @timestamp, event_type, metadata.domain` を実行し、`event_type` が `mlew.verification` の行が出ることを確かめます。結果を示すときは、この 3 つのフィールドだけを示し、`@ptr` の値は示しません（AWS のアカウント ID を含むため）。5 分待っても出なければ、3 の `domain` を確かめて送り直します。
   6. 検証用のイベントは `application_version` が `verification` なので、分析では自動で除かれます。
 - `pnpm dev` では `debug: import.meta.env.DEV` により、記録した内容がブラウザのコンソールに `[MLEW Tracker]` 付きで出ます。デプロイ前は `runtime-config.json` が無いので、送信はせず警告が 1 回出ます。
 - 記録は数秒ごとと、ページを離れるときにまとめて送られ、送ってから 2 分ほどで分析のクエリで見つかるようになります。

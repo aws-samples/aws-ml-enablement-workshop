@@ -232,7 +232,7 @@ pnpm nx bootstrap infra -- --profile <プロファイル名>
 pnpm nx deploy-sandbox infra
 ```
 
-デプロイ先とプロファイルは `stages.config.ts` で決まるので、コマンドにリージョンやプロファイルを付ける必要はありません。デプロイすると次の 2 スタックが作られます。初回デプロイは 4 分前後かかり、その間は出力がほとんど進みませんが、終わるまで待ちます。
+デプロイ先とプロファイルは `stages.config.ts` で決まるので、コマンドにリージョンやプロファイルを付ける必要はありません。デプロイすると次の 2 スタックが作られます。初回デプロイは 5 分前後かかり、その間は出力がほとんど進みませんが、終わるまで待ちます。
 
 完了時に `Stack deployed using Express Mode. Resources still stabilizing: ...` と出ることがありますが、デプロイは成功しています。CloudFront への反映には数分かかることがあるので、URL が期待どおりに応答しなくても、デプロイを再実行せずに数分待ってから確かめます。
 
@@ -255,7 +255,7 @@ CSP と WAF は生成物の既定値を使い、KMS キーは手順 6 で削除�
 
 - 外部の script・画像・フォントは読み込めません。Tracker のコードはモックの bundle に含め、画像は `public/` に置き、フォントはローカルのものを使います。
 - インライン script は実行されません。Tracker の初期化は TypeScript のコードで行います（[MLEW Tracker 導入ガイド](/yourwork/template/TRACKER_INTEGRATION_GUIDE.md)）。
-- Tracker の app monitor は、ブラウザから認証情報なしで送れるように、送信（`rum:PutRumEvents`）だけを誰にでも許可しています。受け付けるのはモックの CloudFront のドメインと `localhost` から送られたものだけですが、ドメインは送る側が名乗る値なので、URL を知っている人が偽の記録を送ることは防げません。記録を読めるのは AWS の認証情報を持つ人だけです。記録にはページのパス、ブラウザの種類、匿名の ID、おおまかな地域（国・都道府県程度）が含まれます。モックの画面にはダミーのデータだけを使い、個人情報や機密情報を入力させないでください。
+- Tracker の app monitor は、ブラウザから認証情報なしで送れるように、送信（`rum:PutRumEvents`）だけを誰にでも許可しています。受け付けるのはモックの CloudFront のドメインと `localhost` から送られたものだけですが、ドメインは送る側が名乗る値なので、URL を知っている人が偽の記録を送ることは防げず、分析では本物と見分けられません（費用は記録 10 万件あたり $1 です）。記録を読めるのは AWS の認証情報を持つ人だけです。記録にはページのパス、ブラウザの種類、匿名の ID、おおまかな地域（国・都道府県程度）が含まれます。モックの画面にはダミーのデータだけを使い、個人情報や機密情報を入力させないでください。
 
 CloudFront には us-east-1 の Web ACL（`AWSManagedRulesCommonRuleSet` と `AWSManagedRulesKnownBadInputsRuleSet`）が関連付けられます。S3 バケットは非公開で CloudFront 経由でのみアクセスされ、手順 6 で作った KMS キーで暗号化されます。
 
