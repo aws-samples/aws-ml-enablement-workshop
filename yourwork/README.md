@@ -274,7 +274,7 @@ aws cloudformation deploy --template-file ./tracker/MLEWTrackerDeploymentStack.y
 
 デプロイ実行後、指定したメールアドレスに「**MLEW Tracker Deployment Notifications <no-reply@sns.amazonaws.com>**」からメールが届きます。メール本文の「**Confirm subscription**」リンクをクリックして、SNS通知の購読を確認してください。
 
-10〜15 分ほど待つと、デプロイ完了通知メールが再度届きます。メールには以下のような情報が記載されているので、控えておいてください。
+10 分ほど待つと、デプロイ完了通知メールが再度届きます。メールには以下のような情報が記載されているので、控えておいてください。
 
 ```
 Access Information:
@@ -285,6 +285,9 @@ Dashboard URL: https://dxxxxxxxxxx.cloudfront.net
 ```
 
 この 3 つの値（API Endpoint / API Key / Dashboard URL）を `4. モック構築の実行` の Prompt 4.3 に貼り付けます。メールにほかの行（SDK の URL など）があっても使いません。SDK はモックに同梱されます。API Endpoint の末尾には `/` を付けません。
+
+> [!IMPORTANT]
+> API Key は、公開したモックの JavaScript にそのまま含まれるため、モックの URL を知っている人なら誰でも読めます。このキーがあれば、Tracker へのイベントの送信と、Tracker に記録されたイベント（ページの URL、ブラウザの種類、匿名の ID など）の読み取りができます。モックの画面にはダミーのデータだけを使い、個人情報や機密情報を入力させないでください。ワークショップが終わったら、下の手順で Tracker を削除してください。
 
 失敗した場合は「MLEW Tracker Deployment Failed」メール（ログへのリンク付き）が届きます。Tracker はアカウントに 1 つなので、同じアカウントで別リージョンにもう 1 つデプロイすることはできません。
 
